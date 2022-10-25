@@ -11,6 +11,12 @@ defmodule Gotham.Clocks.Clock do
   end
 
   @doc false
+  def createset(clock, attrs) do
+    clock
+    |> cast(attrs, [:time, :status, :user])
+    |> validate_required([:time, :status, :user])
+  end
+
   def changeset(clock, attrs) do
     clock
     |> cast(attrs, [:time, :status])

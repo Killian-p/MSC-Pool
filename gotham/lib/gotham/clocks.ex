@@ -51,7 +51,7 @@ defmodule Gotham.Clocks do
   """
   def create_clock(attrs \\ %{}) do
     %Clock{}
-    |> Clock.changeset(attrs)
+    |> Clock.createset(attrs)
     |> Repo.insert()
   end
 

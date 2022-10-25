@@ -40,4 +40,13 @@ defmodule GothamWeb.ClockController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def add_user_clock(conn, %{"clock" => clock_params, "userID" => id}) do
+    with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user", id)) do
+      conn
+      |> put_status(:created)
+      # |> put_resp_header("location", Routes.clock_path(conn, :show, clock))
+      |> render("show.json", clock: clock)
+    end
+  end
 end
