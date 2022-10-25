@@ -37,6 +37,13 @@ defmodule GothamcityhallWeb.Router do
       post "/:userID", ClockController, :create
     end
 
+    scope "/workingtimes", WorkingtimeController do
+      get "/", WorkingtimeController, :show
+      get "/:userID/:id", WorkingtimeController, :show
+      post "/:userID", WorkingtimeController, :create
+      put "/:id", WorkingtimeController, :update
+      delete "/:id", WorkingtimeController, :delete
+
   end
 
   # Enables LiveDashboard only for development
