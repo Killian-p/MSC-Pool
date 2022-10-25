@@ -51,7 +51,7 @@ defmodule Gotham.Workingtimes do
   """
   def create_workingtime(attrs \\ %{}) do
     %Workingtime{}
-    |> Workingtime.changeset(attrs)
+    |> Workingtime.createset(attrs)
     |> Repo.insert()
   end
 

@@ -11,9 +11,15 @@ defmodule Gotham.Workingtimes.Workingtime do
   end
 
   @doc false
-  def changeset(workingtime, attrs) do
+  def createset(workingtime, attrs) do
     workingtime
     |> cast(attrs, [:start, :end, :user])
     |> validate_required([:start, :end, :user])
+  end
+
+  def changeset(workingtime, attrs) do
+    workingtime
+    |> cast(attrs, [:start, :end])
+    |> validate_required([:start, :end])
   end
 end
