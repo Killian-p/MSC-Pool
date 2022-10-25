@@ -24,9 +24,17 @@ defmodule GothamcityhallWeb.Router do
   scope "/api", GothamcityhallWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit, :index]
-    resources "/workingtimes", WorkingtimeController, except:  [:new, :edit, :index]
-    resources "/clocks", ClockController, only: [:create, :update, :show]
+    scope "/users", UserController do
+      get "/", UserController, :show
+      get "/:userID", UserController, :show
+      post "/", UserController, :create
+      put "/:userID", UserController, :update
+      delete "/:userID", UserController, :delete
+    end
+
+    # resources "/users", UserController, except: [:new, :edit, :index]
+    # resources "/workingtimes", WorkingtimeController, except:  [:new, :edit, :index]
+    # resources "/clocks", ClockController, only: [:create, :update, :show]
   end
 
   # Enables LiveDashboard only for development
