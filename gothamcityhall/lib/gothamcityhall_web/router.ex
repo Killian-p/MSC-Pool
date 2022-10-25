@@ -21,9 +21,13 @@ defmodule GothamcityhallWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", GothamcityhallWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", GothamcityhallWeb do
+    pipe_through :api
+
+    resources "/users", UserController, except: [:new, :edit, :index]
+    resources "/workingtimes", WorkingtimeController, except:  [:new, :edit, :index]
+    resources "/clocks", ClockController, only: [:create, :update, :show]
+  end
 
   # Enables LiveDashboard only for development
   #
