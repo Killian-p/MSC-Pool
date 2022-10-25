@@ -32,9 +32,11 @@ defmodule GothamcityhallWeb.Router do
       delete "/:userID", UserController, :delete
     end
 
-    # resources "/users", UserController, except: [:new, :edit, :index]
-    # resources "/workingtimes", WorkingtimeController, except:  [:new, :edit, :index]
-    # resources "/clocks", ClockController, only: [:create, :update, :show]
+    scope "/clocks", ClockController do
+      get "/:userID", ClockController, :show
+      post "/:userID", ClockController, :create
+    end
+
   end
 
   # Enables LiveDashboard only for development
