@@ -14,5 +14,6 @@ defmodule Gothamcityhall.User do
     user
     |> cast(attrs, [:firstname, :email])
     |> validate_required([:firstname, :email])
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
   end
 end
