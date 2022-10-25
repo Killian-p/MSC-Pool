@@ -21,9 +21,31 @@ defmodule GothamcityWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", GothamcityWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", GothamcityWeb do
+    pipe_through :api
+
+     scope "/users" do
+      get "/", UserController, :show
+      get "/:userID", UserController, :show
+      post "/", UserController, :create
+      put "/:userID", UserController, :update
+      delete "/:userID", UserController, :delete
+    end
+
+    scope "/workingtimes" do
+      get "/", WorkingtimeController, :show
+      get "/:userID/:id", WorkingtimeController, :show
+      post "/:userID", WorkingtimeController, :create
+      put "/:id", WorkingtimeController, :update
+      delete "/:id", WorkingtimeController, :delete
+    end
+
+    scope "/clocks" do
+      get "/:userID", ClockController, :show
+      post "/:userID", ClockController, :create
+    end
+
+  end
 
   # Enables LiveDashboard only for development
   #
