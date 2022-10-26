@@ -101,4 +101,15 @@ defmodule Gotham.Workingtimes do
   def change_workingtime(%Workingtime{} = workingtime, attrs \\ %{}) do
     Workingtime.changeset(workingtime, attrs)
   end
+
+
+  def get_user_workingtime(userID, workingtimeID) do
+    workId = String.to_integer(workingtimeID)
+    userId = String.to_integer(userID)
+
+    Repo.one(from worktime in "workingtimes",
+      where: worktime.user == ^userId and worktime.id == ^workId,
+      select: [:start, :id, :end]
+    )
+  end
 end
