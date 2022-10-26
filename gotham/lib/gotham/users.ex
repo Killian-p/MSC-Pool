@@ -101,4 +101,18 @@ defmodule Gotham.Users do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  def get_user_by_mail_and_username(username, email) do
+    Repo.all(from user in "users", where: user.username == ^username and  user.email == ^email, select: [:email, :username, :id])
+  end
+
+  def get_user_by_username(username) do
+    Repo.all(from user in "users", where: user.username == ^username, select: [:email, :username, :id])
+  end
+
+  def get_user_by_mail(email) do
+    Repo.all(from user in "users", where: user.email == ^email, select: [:email, :username, :id])
+  end
 end
+# user.username == ^username and 
+# |> Enum.into(%{})
