@@ -8,6 +8,22 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/workingTimes',
+      name: 'workingTimes',
+    },
+    {
+      path: '/workingTime',
+      name: 'workingTime',
+    },
+    {
+      path: '/clock',
+      name: 'clock',
+    },
+    {
+      path: '/chartManager',
+      name: 'chartManager',
     }
   ]
 })
