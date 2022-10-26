@@ -11,7 +11,6 @@ defmodule GothamWeb.WorkingtimeView do
   end
 
   def render("workingtime.json", %{workingtime: workingtime}) do
-    IO.inspect(workingtime)
     %{
       id: workingtime.id,
       start: workingtime.start,

@@ -40,4 +40,32 @@ defmodule GothamWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def get_user_by_query_params(conn, _params) do
+    username = Map.get(conn.query_params, "username")
+    email = Map.get(conn.query_params, "email")
+
+    cond do
+      !is_nil(username) && !is_nil(email) -> 
+        render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
+      !is_nil(username) ->
+        render(conn, "index.json", users: Users.get_user_by_username(username))
+      !is_nil(email) ->
+        render(conn, "index.json", users: Users.get_user_by_mail(email))
+    end
+  end
 end
+
+
+# user = Users.get_user_by_mail_and_username(username, email)
+# render(conn, "show.json", user: user)
+
+# user = Users.get_user_by_username(username)
+# render(conn, "show.json", user: user)
+
+# user = Users.get_user_by_mail(email)
+# render(conn, "show.json", user: user)
+
+
+# user = Users.get_user_by_params(username, email)
+# render(conn, "show.json", user: user)
