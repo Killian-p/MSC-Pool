@@ -7,9 +7,10 @@
 <style scoped>
 .navUser{
     background-color: rgb(173, 173, 238);
-    position: fixed;
+    position: relative;
     top: 0;
     width: 100%;
     border: 1px;
+    height: 10vh;
 }
 </style>

@@ -4,9 +4,19 @@ import User from './components/User.vue';
 </script>
 
 <template>
-<RouterView></RouterView>
+  <div>
+    <User/>
+  </div>
+  <div class="main">
+    <RouterView/>
+  </div>
+
+
 </template>
 
 <style scoped>
-
+.main{
+  background-color: gray;
+  height: 90vh;
+}
 </style>
