@@ -4,7 +4,7 @@ import User from './components/User.vue';
 </script>
 
 <template>
-<User/>  
+<RouterView></RouterView>
 </template>
 
 <style scoped>
