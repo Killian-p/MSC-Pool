@@ -3,11 +3,25 @@
     <div class="nav">
         <div class="box">
             <a href="/">Se connecter</a>
-                <div id="app">
-                    <button @click=createUser()>
-                        créer un utilisateur
-                    </button>
-                </div>
+            <div id="app">
+                <form action="http://localhost:4000/api/users" method="post">
+                <label>
+                    Email :
+                </label>
+                <input name="email" type="email" id="email" required/>
+                <label>
+                    Username :
+                </label>
+                <input name="username" type="text" id="username" required/>
+                <button type="submit">
+                créer un utilisateur
+                </button>
+
+                </form>
+                <button @click=seeUsers()>
+                    voir la liste des utilisateurs
+                </button>
+            </div>
         </div>
         <div class="box">
             <a href="/workingTimes">workingTimes</a>
@@ -45,20 +59,23 @@ export default {
   computed: {
   },
   methods: {
-    createUser(){
+    seeUsers(){
         let a;
-        axios.get("http://localhost:4000/api/users")
+        axios.get("http://localhost:4000/api/users?email=williams@quelquechose")
         .then((response) => {
             a = response.data;
-            console.log(response);
+            console.log(a);
         })
         .catch(console.error);
-        // axios.post('localhost:4000/api/users', {
-        // username: 'victor',
-        // email: 'Williams@quelquechose'
-        // }).then((response) => {
-        //     console.log(response);
-        // });
+    },
+    createUser(){
+        axios.post('http://localhost:4000/api/users/', { user :{
+            username: 'victor',
+            email: 'Williams@quelquechose'
+        }
+        }).then((response) => {
+            console.log(response);
+        }).catch(console.error);
     }
   },
   watch: {
