@@ -58,19 +58,39 @@ defmodule GothamWeb.WorkingtimeController do
     # render(conn, "show.json", workingtime: workingtime)
   end
 
-  def get_multiple_working_time(conn, _params) do
+  def get_multiple_working_time(conn, %{"userID" => userId}) do
     startDate = Map.get(conn.query_params, "start")
     endDate = Map.get(conn.query_params, "end")
 
     cond do
-      !is_nil(startDate) && !is_nil(endDate) -> 
-        render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_start_and_end(startDate, endDate))
+      !is_nil(startDate) && !is_nil(endDate) ->
+
+        with {:ok, dateStart} <- NaiveDateTime.from_iso8601(startDate),
+          {:ok, dateEnd} <- NaiveDateTime.from_iso8601(endDate) do
+          render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_start_and_end(userId, dateStart, dateEnd))
+        else
+          {:error, _ } -> put_status(conn, :bad_request) |> json(%{message: "Start date doesn't have good format"})
+          {:error, _ } -> put_status(conn, :bad_request) |> json(%{message: "End date doesn't have good format"})
+        end
+
       !is_nil(startDate) ->
-        render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_start(startDate))
+        case NaiveDateTime.from_iso8601(startDate) do
+          {:ok, date} ->
+            render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_start(userId, date))
+          {:error, _} ->
+            put_status(conn, :bad_request) |> json(%{message: "Start date doesn't have good format"})
+        end
+
       !is_nil(endDate) ->
-        render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_end(endDate))
+        case NaiveDateTime.from_iso8601(endDate) do
+          {:ok, date} ->
+            render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_end(userId, date))
+          {:error, _} ->
+            put_status(conn, :bad_request) |> json(%{message: "End date doesn't have good format"})
+        end
+
       true ->
-        put_status(conn, :bad_request) |> json(%{data: %{message: "At least start date or end date is required"}})   
+        put_status(conn, :bad_request) |> json(%{message: "At least start date or end date is required"})
     end
   end
 end
