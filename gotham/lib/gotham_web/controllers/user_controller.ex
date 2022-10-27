@@ -52,6 +52,8 @@ defmodule GothamWeb.UserController do
         render(conn, "index.json", users: Users.get_user_by_username(username))
       !is_nil(email) ->
         render(conn, "index.json", users: Users.get_user_by_mail(email))
+      true ->
+        put_status(conn, :bad_request) |> json(%{data: %{message: "At least username or email is required"}})   
     end
   end
 end
