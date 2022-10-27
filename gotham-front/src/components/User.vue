@@ -1,9 +1,9 @@
 <template>
     <div class="navUser">
     <div class="nav">
-        <div class="box">
             <div id="app">
-                <form v-on:submit.prevent="createUser" method="post">
+                <div v-if="idCurrentUser == null">
+                    <form v-on:submit.prevent="createUser" method="post">
                     <div>
                         <label>
                     Email :
@@ -19,11 +19,11 @@
                         créer un utilisateur
                     </button>
                 </div>
-                
-
                 </form>
+                </div>
+                
             </div>
-            <div class="box">
+            <div class="box" v-if="idCurrentUser == null">
                 <form v-on:submit.prevent="getUser" method="get">
                     <div>
                         <label>
@@ -40,9 +40,10 @@
                         Se connecter
                     </button>
                 </div>
+                <span v-if="!userExists" style="color: red;">Identifiants incorrects</span>
                 </form>
             </div>
-            <div class="box">
+            <div class="box" v-if="idCurrentUser != null">
                 <form v-on:submit.prevent="updateUser" method="put">
                     <div>
                         <label>
@@ -64,12 +65,11 @@
                 </form>
             </div>
             
-            <div class="box">
+            <div class="box" v-if="idCurrentUser != null">
                 <button @click="deleteUser" :disabled="idCurrentUser == null">
                     Supprimer l'utilisateur
                 </button>
             </div>
-        </div>
         
     </div>
     
@@ -96,6 +96,7 @@ export default {
         editEmail: null,
         connectionUsername: null,
         connectionEmail: null,
+        userExists: true,
     }
   },
   mounted () {
@@ -127,6 +128,7 @@ export default {
             this.idCurrentUser = res.data.data.id;
             this.username= "";
             this.email= "";
+            this.userExists = true;
         }).catch(console.error)
         this.connected=true;
     },
@@ -153,10 +155,18 @@ export default {
         });
     },
     getUser(){
-        debugger;
         axios.get('http://localhost:4000/api/users', { params: { username: this.connectionUsername, email: this.connectionEmail } })
         .then(_ => {
-            debugger;
+            if(_.data.data.length == 0){
+                this.userExists = false;
+            }else {
+            this.idCurrentUser = _.data.data[0].id;
+            this.editEmail = this.connectionEmail;
+            this.editUsername = this.connectionUsername;
+            this.connectionUsername= "";
+            this.connectionEmail= "";
+            this.userExists = true;
+            }
         })
         .catch(console.error);
     }
@@ -177,11 +187,15 @@ export default {
 }
 .nav{
     justify-content: space-between;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .box{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    width: 50vw;
 }
 
 .createUser{
