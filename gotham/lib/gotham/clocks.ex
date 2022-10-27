@@ -101,4 +101,11 @@ defmodule Gotham.Clocks do
   def change_clock(%Clock{} = clock, attrs \\ %{}) do
     Clock.changeset(clock, attrs)
   end
+
+  def user_has_clock(userId) do
+    Repo.exists?(from clock in "clocks",
+      where: clock.user == ^String.to_integer(userId),
+      select: [:status]
+    )
+  end
 end
