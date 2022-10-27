@@ -7,8 +7,12 @@ import axios from 'axios'
 export default {
   components: {
   },
-  props: [
-  ],
+  props: {
+    idUser: {
+      type: Number,
+    }
+  }
+  ,
   data () {
     return {
     }
