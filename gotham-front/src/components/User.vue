@@ -3,16 +3,16 @@
     <div class="nav">
         <div class="box">
             <a href="/">Se connecter</a>
-            <div id="app">
-                <form action="http://localhost:4000/api/users" method="post">
+            <div v-if="!this.connected" id="app">
+                <form v-on:submit.prevent="createUser" method="post">
                 <label>
                     Email :
                 </label>
-                <input name="email" type="email" id="email" required/>
+                <input type="email" id="email" v-model="email" required/>
                 <label>
                     Username :
                 </label>
-                <input name="username" type="text" id="username" required/>
+                <input type="text" id="username" v-model="username" required/>
                 <button type="submit">
                 créer un utilisateur
                 </button>
@@ -49,7 +49,9 @@ export default {
   ],
   data () {
     return {
-        count: 0
+        connected: false,
+        username: '',
+        email: '',
     }
   },
   mounted () {
@@ -61,7 +63,7 @@ export default {
   methods: {
     seeUsers(){
         let a;
-        axios.get("http://localhost:4000/api/users?email=williams@quelquechose")
+        axios.get("http://localhost:4000/api/users?email=Williams@quelquechose")
         .then((response) => {
             a = response.data;
             console.log(a);
@@ -69,13 +71,23 @@ export default {
         .catch(console.error);
     },
     createUser(){
-        axios.post('http://localhost:4000/api/users/', { user :{
-            username: 'victor',
-            email: 'Williams@quelquechose'
-        }
-        }).then((response) => {
-            console.log(response);
-        }).catch(console.error);
+        axios.post('http://localhost:4000/api/users', {
+            user:{
+                username: this.username,
+                email: this.email
+            }
+        })
+        .then((res) => {
+            console.log(res);
+        }).catch(console.error)
+        this.connected=true;
+        // axios.post('http://localhost:4000/api/users/', { user :{
+        //     username: 'victor',
+        //     email: 'Williams@quelquechose'
+        // }
+        // }).then((response) => {
+        //     console.log(response);
+        // }).catch(console.error);
     }
   },
   watch: {
