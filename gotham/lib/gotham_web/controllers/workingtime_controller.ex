@@ -57,4 +57,20 @@ defmodule GothamWeb.WorkingtimeController do
     # workingtime = userWorkingtime.getWorkingtime!(id)
     # render(conn, "show.json", workingtime: workingtime)
   end
+
+  def get_multiple_working_time(conn, _params) do
+    startDate = Map.get(conn.query_params, "start")
+    endDate = Map.get(conn.query_params, "end")
+
+    cond do
+      !is_nil(startDate) && !is_nil(endDate) -> 
+        render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_start_and_end(startDate, endDate))
+      !is_nil(startDate) ->
+        render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_start(startDate))
+      !is_nil(endDate) ->
+        render(conn, "index.json", workingtimes: Workingtimes.get_user_workingtime_by_end(endDate))
+      true ->
+        put_status(conn, :bad_request) |> json(%{data: %{message: "At least start date or end date is required"}})   
+    end
+  end
 end

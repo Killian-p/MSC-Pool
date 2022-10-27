@@ -112,4 +112,28 @@ defmodule Gotham.Workingtimes do
       select: [:start, :id, :end]
     )
   end
+
+  def get_user_workingtime_by_start_and_end(startDate, endDate) do
+    Repo.all(from worktime in "workingtimes",
+      where: worktime.start > ^startDate and worktime.end < ^endDate,
+      select: [:start, :id, :end]
+    )
+  end
+
+  def get_user_workingtime_by_start(startDate) do
+    # IO.inspect convert(startDate, Calendar.Gregorian)
+    # IO.inspect Date.utc_today()
+    IO.inspect startDate
+    Repo.all(from worktime in "workingtimes",
+      # where: worktime.start > ^startDate,
+      select: [:start, :id, :end]
+    )
+  end
+
+  def get_user_workingtime_by_end(endDate) do
+    Repo.all(from worktime in "workingtimes",
+      where: worktime.end < ^endDate,
+      select: [:start, :id, :end]
+    )
+  end
 end
