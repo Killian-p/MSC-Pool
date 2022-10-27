@@ -17,7 +17,7 @@ defmodule GothamWeb.Router do
     end
 
     scope "/workingtimes" do
-      # get "/", WorkingtimeController, :index
+      get "/:userID", WorkingtimeController, :get_multiple_working_time
       get "/:userID/:id", WorkingtimeController, :get_one_working_time
       post "/:userID", WorkingtimeController, :add_user_working_time
       put "/:id", WorkingtimeController, :update
