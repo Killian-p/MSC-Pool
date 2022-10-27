@@ -2,7 +2,9 @@
     <div class="navUser">
     <div class="nav">
         <div class="box">
-            <a :v-if="idCurrentUser == null" href="/">Se connecter</a>
+            <div v-if="idCurrentUser == null">
+                <a href="/">Se connecter</a>
+            </div>
             <div v-if="!this.connected" id="app">
                 <form v-on:submit.prevent="createUser" method="post">
                 <label>
@@ -18,23 +20,12 @@
                 </button>
 
                 </form>
-                <button @click=seeUsers()>
+                <!-- <button @click=seeUsers()>
                     voir la liste des utilisateurs
-                </button>
+                </button> -->
             </div>
         </div>
-        <div class="box">
-            <a href="/workingTimes">workingTimes</a>
-        </div>
-        <div class="box">
-            <a href="/workingTime">workingTime</a>
-        </div>
-        <div class="box">
-            <a href="/clock">clock</a>
-        </div>
-        <div class="box">
-            <a href="/chartManager">chartManager</a>
-        </div>
+        
     </div>
     
   </div>
@@ -45,8 +36,11 @@ import axios from 'axios'
 export default {
   components: {
   },
-  props: [
-  ],
+  props: {
+    idUser: {
+      type: Number,
+    }
+  },
   data () {
     return {
         connected: false,
@@ -80,9 +74,8 @@ export default {
         })
         .then((res) => {
             console.log(res);
+            this.$emit("logged", res.data.data.id)
             this.idCurrentUser = res.data.data.id;
-
-            // this.idCurrentUser = res.data.id
         }).catch(console.error)
         this.connected=true;
         // axios.post('http://localhost:4000/api/users/', { user :{
@@ -92,7 +85,7 @@ export default {
         // }).then((response) => {
         //     console.log(response);
         // }).catch(console.error);
-    }
+    },
   },
   watch: {
   }
@@ -111,8 +104,5 @@ export default {
 .nav{
     display: flex;
     justify-content: space-between;
-}
-.box{
-    margin: 2px;
 }
 </style>
