@@ -161,6 +161,7 @@ export default {
                 this.userExists = false;
             }else {
             this.idCurrentUser = _.data.data[0].id;
+            this.$emit("logged", _.data.data[0].id)
             this.editEmail = this.connectionEmail;
             this.editUsername = this.connectionUsername;
             this.connectionUsername= "";
