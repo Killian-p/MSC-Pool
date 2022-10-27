@@ -22,9 +22,25 @@
                 
 
                 </form>
-                <!-- <button @click=seeUsers()>
-                    voir la liste des utilisateurs
-                </button> -->
+            </div>
+            <div class="box">
+                <form v-on:submit.prevent="getUser" method="get">
+                    <div>
+                        <label>
+                    Email :
+                </label>
+                <input type="email" id="email" v-model="connectionEmail" required/>
+                    </div>
+                <label>
+                    Username :
+                </label>
+                <input type="text" id="username" v-model="connectionUsername" required/>
+                <div>
+                    <button type="submit">
+                        Se connecter
+                    </button>
+                </div>
+                </form>
             </div>
             <div class="box">
                 <form v-on:submit.prevent="updateUser" method="put">
@@ -47,9 +63,7 @@
 
                 </form>
             </div>
-            <div class="box">
-                a²
-            </div>
+            
             <div class="box">
                 <button @click="deleteUser" :disabled="idCurrentUser == null">
                     Supprimer l'utilisateur
@@ -80,6 +94,8 @@ export default {
         idCurrentUser: null,
         editUsername: null,
         editEmail: null,
+        connectionUsername: null,
+        connectionEmail: null,
     }
   },
   mounted () {
@@ -136,6 +152,14 @@ export default {
             this.idCurrentUser = null;
         });
     },
+    getUser(){
+        debugger;
+        axios.get('http://localhost:4000/api/users', { params: { username: this.connectionUsername, email: this.connectionEmail } })
+        .then(_ => {
+            debugger;
+        })
+        .catch(console.error);
+    }
   },
   watch: {
   }
