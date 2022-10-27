@@ -53,9 +53,6 @@ defmodule GothamWeb.WorkingtimeController do
   def get_one_working_time(conn, %{"userID" => userId, "id" => id}) do
     userWorkingtime = Workingtimes.get_user_workingtime(userId, id)
     render(conn, "show.json", workingtime: userWorkingtime)
-    # IO.inspect(userWorkingtime)
-    # workingtime = userWorkingtime.getWorkingtime!(id)
-    # render(conn, "show.json", workingtime: workingtime)
   end
 
   def get_multiple_working_time(conn, %{"userID" => userId}) do
