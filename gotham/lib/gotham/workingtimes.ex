@@ -113,26 +113,57 @@ defmodule Gotham.Workingtimes do
     )
   end
 
-  def get_user_workingtime_by_start_and_end(startDate, endDate) do
+  def get_user_workingtime_by_start_and_end(userId, startDate, endDate) do
+    id = String.to_integer(userId)
+
     Repo.all(from worktime in "workingtimes",
-      where: worktime.start > ^startDate and worktime.end < ^endDate,
+      where: worktime.start > ^startDate and worktime.end < ^endDate and worktime.user == ^id,
       select: [:start, :id, :end]
     )
   end
 
-  def get_user_workingtime_by_start(startDate) do
+  def get_user_workingtime_by_start(userId, startDate) do
     # IO.inspect convert(startDate, Calendar.Gregorian)
     # IO.inspect Date.utc_today()
-    IO.inspect startDate
+    # start = NaiveDateTime.from_iso8601(startDate)
+    # {:ok, date} = NaiveDateTime.from_iso8601(startDate)
+    # IO.inspect startDate
+
+    # case NaiveDateTime.from_iso8601(startDate) do
+    #   {:ok, date} ->
+    id = String.to_integer(userId)
+
+
     Repo.all(from worktime in "workingtimes",
-      # where: worktime.start > ^startDate,
+      where: worktime.start > ^startDate and worktime.user == ^id,
       select: [:start, :id, :end]
     )
+      # {:error, _} ->
+
+    # end
+
+    # with {:ok, date} <- NaiveDateTime.from_iso8601(startDate) do
+    #   Repo.all(from worktime in "workingtimes",
+    #   where: worktime.start > ^date,
+    #   select: [:start, :id, :end]
+    # )
+      # conn
+      # |> put_status(:created)
+      # # |> put_resp_header("location", Routes.workingtime_path(conn, :show, workingtime))
+      # |> render("show.json", workingtime: workingtime)
+    # end
+    # IO.inspect start
+    # Repo.all(from worktime in "workingtimes",
+    #   where: worktime.start > ^startDate,
+    #   select: [:start, :id, :end]
+    # )
   end
 
-  def get_user_workingtime_by_end(endDate) do
+  def get_user_workingtime_by_end(userId, endDate) do
+    id = String.to_integer(userId)
+
     Repo.all(from worktime in "workingtimes",
-      where: worktime.end < ^endDate,
+      where: worktime.end < ^endDate and worktime.user == ^id,
       select: [:start, :id, :end]
     )
   end
