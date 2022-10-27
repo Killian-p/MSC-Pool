@@ -3,11 +3,11 @@
         <label>
             starting date :
         </label>
-        <input type="date" id="startingDate" v-model="startingDate" required/>
+        <input type="datetime-local" id="startingDate" v-model="startingDate" required/>
         <label>
             ending date :
         </label>
-        <input type="date" id="endingDate" v-model="endingDate" required/>
+        <input type="datetime-local" id="endingDate" v-model="endingDate" required/>
         <button type="submit">
         Créer un nouveau working Time
         </button>
@@ -26,8 +26,8 @@ export default {
   },
   data () {
     return {
-        startingDate: '',
-        endingDate: '',
+        startingDate: null,
+        endingDate: null,
     }
   },
   mounted () {
@@ -38,7 +38,15 @@ export default {
   },
   methods: {
     createWorkingTime(){
-      axios.post("http://localhost:4000/api/workingtimes")
+      axios.post(`http://localhost:4000/api/workingtimes/${this.idUser}`,{
+        workingtime: {
+            start: new Date(this.startingDate).toISOString(),
+            end: new Date(this.endingDate).toISOString(),
+        }
+      })
+      .then(_ => {
+        debugger;
+      })
     }
   },
   watch: {

@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     seeWorkingTimes(){
-      debugger;
         axios.get("http://localhost:4000/api/workingtimes/1/1")
         .then((response) => {
           this.endTime = response.data.data.end
