@@ -2,7 +2,7 @@
     <div class="navUser">
     <div class="nav">
         <div class="box">
-            <a href="/">Se connecter</a>
+            <a :v-if="idCurrentUser == null" href="/">Se connecter</a>
             <div v-if="!this.connected" id="app">
                 <form v-on:submit.prevent="createUser" method="post">
                 <label>
@@ -52,6 +52,7 @@ export default {
         connected: false,
         username: '',
         email: '',
+        idCurrentUser: null,
     }
   },
   mounted () {
@@ -79,6 +80,9 @@ export default {
         })
         .then((res) => {
             console.log(res);
+            this.idCurrentUser = res.data.data.id;
+
+            // this.idCurrentUser = res.data.id
         }).catch(console.error)
         this.connected=true;
         // axios.post('http://localhost:4000/api/users/', { user :{
