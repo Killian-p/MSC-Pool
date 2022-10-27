@@ -9,9 +9,7 @@ import ChartManager from './components/ChartManager.vue';
 
 <template>
   <div class="main">
-    <div>
-    <User @logged="loggin" :id-user="idCurrentUser"/>
-  </div>
+    
     <div class="nav">
       <div class="box">
       <button class="form-control" @click="selectComponent('workingTimes')">workingTimes</button>
@@ -40,6 +38,10 @@ import ChartManager from './components/ChartManager.vue';
 
     </ChartManager>
   </div>
+  
+  </div>
+  <div>
+    <User @logged="loggin" :id-user="idCurrentUser"/>
   </div>
   
 
