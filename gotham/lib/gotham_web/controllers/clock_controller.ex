@@ -1,6 +1,7 @@
 defmodule GothamWeb.ClockController do
   use GothamWeb, :controller
 
+  alias Gotham.Workingtimes
   alias Gotham.Clocks
   alias Gotham.Clocks.Clock
 
@@ -45,7 +46,18 @@ defmodule GothamWeb.ClockController do
     cond do
       Clocks.user_has_clock(userId) ->
         clock = Clocks.get_clock!(userId)
+        IO.inspect clock.time
+        IO.inspect Map.get(clock_params, "time")
+        data = %{start: clock.time, end: Map.get(clock_params, "time"), user: userId}
         with {:ok, %Clock{} = clock} <- Clocks.update_clock(clock, Map.put(clock_params, "status", !clock.status)) do
+          IO.inspect clock.status
+          cond do
+            !clock.status ->
+              IO.inspect "set to false"
+              Workingtimes.create_workingtime(data)
+            true ->
+              IO.inspect "set to true"
+            end
           render(conn, "show.json", clock: clock)
         end
       true ->

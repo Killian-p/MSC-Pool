@@ -1,13 +1,9 @@
 <template>
-  <body><canvas id="line-chart" width="450" height="100"></canvas></body>
+  workingtimes
 </template>
 
 <script>
-import Chart from 'chart.js/auto';
-import axios from 'axios'
 export default {
-  components: {
-  },
   props: {
     idUser: {
       type: Number,
@@ -90,6 +86,6 @@ export default {
   }
 }
 </script>
+<style scoped>
 
-<style scoped lang="scss">
 </style>
