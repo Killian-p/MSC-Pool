@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  back-end:
+    build:
+      context: './gotham'
+    command: sh -c 'mix ecto.setup && mix phx.server'
+    container_name: 'back-end'
+    restart: 'unless-stopped'
+    environment:
+      - 'DATABASE_URL=ecto://postgres:postgres@postgres-db:5432/gotham_dev'
+    depends_on:
+      - 'postgres-db'
+    ports:
+      - '4000:4000'
+    networks:
+      - backend
+
+  postgres-db:
+    image: 'postgres:15.0-alpine'
+    container_name: 'postgres-db'
+    environment:
+      - 'POSTGRES_PASSWORD=postgres'
+    volumes:
+      - 'postgres-data:/var/lib/postgresql/data:rw'
+    ports:
+      - '5432:5432'
+    networks:
+      - backend
+
+  front-end:
+    build:
+      context: './gotham-front'
+    command: sh -c 'npm run dev'
+    container_name: 'front-end'
+    ports:
+      - '5173:5173'
+    depends_on:
+      - 'back-end'
+    networks:
+      - backend
+
+volumes:
+  postgres-data:
+
+networks:
+  backend:
