@@ -11,37 +11,10 @@ export default {
   },
   data () {
     return {
-      startTime: null,
-      endTime: null,
-      labelStart: null,
-      labelEnd: null,
-      arrayStart: null,
-      arrayEnd: null,
-      startDate: null,
-      endDate: null,
-      workTime: null,
     }
   },
-  async mounted () {
-    await this.seeWorkingTimes();
-    new Chart(document.getElementById("line-chart"), {
-      type: 'line',
-      data: {
-        labels: this.labelStart,
-        datasets: [{
-          data: this.workTime,
-          label: "User1",
-          borderColor: "#3e95cd",
-          fill: false
-        }],
-      },
-      options: {
-        title: {
-          display: true,
-          text: 'Working times per user'
-        }
-      }
-    });
+  mounted () {
+   
 
   },
   created () {
@@ -50,37 +23,8 @@ export default {
   computed: {
   },
   methods: {
-    async seeWorkingTimes(){
-        await axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
-          start: new Date("2010-07-08T06:00:00Z").toISOString(),
-        }})
-        .then((response) => {
-          let arrayOfDates = response.data.data;
-          this.labelStart = new Array();
-          this.labelEnd = new Array();
-          this.workTime = new Array();
-          arrayOfDates.forEach(_ => 
-          {
-          this.arrayStart = _.start.split("T");
-          this.arrayEnd = _.end.split("T");
+      
 
-          this.startDate = this.arrayStart[1];
-          this.endDate = this.arrayEnd[1];
-
-          this.labelStart.push(this.arrayStart[0].toString());
-          this.labelEnd.push(this.arrayEnd[0].toString());
-
-          this.workTime.push((new Date(_.end).valueOf() - new Date(_.start).valueOf()) / 3600000);
-          
-          
-          })
-          // console.log(this.labelStart);
-          // console.log(this.labelEnd);
-          // console.log(this.workTime);
-          
-        })
-        .catch(console.error);
-    },
   },
   watch: {
   }
