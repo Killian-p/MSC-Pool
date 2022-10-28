@@ -70,21 +70,16 @@ export default {
           this.arrayStart = _.start.split("T");
           this.arrayEnd = _.end.split("T");
 
-          this.startDate = parseInt(this.arrayStart[1]);
-          this.endDate = parseInt(this.arrayEnd[1]);
+          this.startDate = this.arrayStart[1];
+          this.endDate = this.arrayEnd[1];
 
           this.labelStart.push(this.arrayStart[0].toString());
           this.labelEnd.push(this.arrayEnd[0].toString());
 
-          console.log(this.endDate);
-          console.log(this.startDate);
-          this.workTime.push(this.endDate - this.startDate);
+          this.workTime.push((new Date(_.end).valueOf() - new Date(_.start).valueOf()) / 3600000);
           
 
           })
-          // console.log(this.labelStart);
-          // console.log(this.labelEnd);
-          // console.log(this.workTime);
           
         })
         .catch(console.error);

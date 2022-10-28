@@ -8,6 +8,25 @@ export default {
     idUser: {
       type: Number,
     }
+  },
+  data () {
+    return {
+    }
+  },
+  mounted () {
+   
+
+  },
+  created () {
+    
+  },
+  computed: {
+  },
+  methods: {
+      
+
+  },
+  watch: {
   }
 }
 </script>
