@@ -5,7 +5,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 export default {
   components: {
   },
@@ -21,15 +21,26 @@ export default {
   mounted () {
   },
   created () {
+
   },
   computed: {
   },
   methods: {
-    async userClocks(){
-      console.log(new Date(Date.now()))
-        // await axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
-        //   start: new Date().toISOString(),
-        // }})
+    getLocalIsoString(){
+      const timeZoneOffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      return (new Date(Date.now() - timeZoneOffset)).toISOString().slice(0, -1);
+    },
+    userClocks(){
+        axios.post(`http://localhost:4000/api/clocks/${this.idUser}`, {
+          clock:{
+            time: this.getLocalIsoString()
+          }
+        }).then(
+          (res) => console.log(res)
+          )
+        .catch(
+          console.error
+          );
     },
   },
   watch: {
