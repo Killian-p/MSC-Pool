@@ -6,11 +6,11 @@ defmodule GothamWeb.UserControllerTest do
   alias Gotham.Users.User
 
   @create_attrs %{
-    email: "some email",
+    email: "test@test.fr",
     username: "some username"
   }
   @update_attrs %{
-    email: "some updated email",
+    email: "newtest@test.fr",
     username: "some updated username"
   }
   @invalid_attrs %{email: nil, username: nil}
@@ -35,7 +35,7 @@ defmodule GothamWeb.UserControllerTest do
 
       assert %{
                "id" => ^id,
-               "email" => "some email",
+               "email" => "test@test.fr",
                "username" => "some username"
              } = json_response(conn, 200)["data"]
     end
@@ -57,7 +57,7 @@ defmodule GothamWeb.UserControllerTest do
 
       assert %{
                "id" => ^id,
-               "email" => "some updated email",
+               "email" => "newtest@test.fr",
                "username" => "some updated username"
              } = json_response(conn, 200)["data"]
     end

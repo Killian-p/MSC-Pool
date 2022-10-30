@@ -21,10 +21,10 @@ defmodule Gotham.UsersTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{email: "some email", username: "some username"}
+      valid_attrs = %{email: "test@test.fr", username: "some username"}
 
       assert {:ok, %User{} = user} = Users.create_user(valid_attrs)
-      assert user.email == "some email"
+      assert user.email == "test@test.fr"
       assert user.username == "some username"
     end
 
@@ -34,10 +34,10 @@ defmodule Gotham.UsersTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{email: "some updated email", username: "some updated username"}
+      update_attrs = %{email: "newtest@test.fr", username: "some updated username"}
 
       assert {:ok, %User{} = user} = Users.update_user(user, update_attrs)
-      assert user.email == "some updated email"
+      assert user.email == "newtest@test.fr"
       assert user.username == "some updated username"
     end
 
