@@ -30,7 +30,7 @@
 #         run: mix test
 
 
-name: Build and test
+name: Build, test and deploy
 
 on:
   push:
@@ -42,8 +42,7 @@ permissions:
   contents: read
 
 jobs:
-  tests:
-
+  test:
     name: Build and test
     runs-on: ubuntu-latest
     services:
@@ -57,7 +56,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up Elixir
@@ -77,3 +75,36 @@ jobs:
     - name: Run tests
       working-directory: ./gotham
       run: mix test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the docker_compose
+      run: docker-compose up -d --build
+    - name: Buid the application
+      run: docker-compose exec -T front-end npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
+        env:
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME : ${{ secrets.HOSTNAME  }}
+            USER_NAME : ${{ secrets.USER_NAME  }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          
+            #Now we have got the access of EC2 and we will start the deploy .
+            cd /home/ubuntu/CounterApp &&
+            git checkout master &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            docker-compose -f docker-compose.prod.yml up -d --build 
+          '
