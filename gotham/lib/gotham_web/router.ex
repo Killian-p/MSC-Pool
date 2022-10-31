@@ -25,7 +25,7 @@ defmodule GothamWeb.Router do
     end
 
     scope "/clocks" do
-      # get "/:userID", ClockController, :show
+      get "/:userID", ClockController, :show
       post "/:userID", ClockController, :add_user_clock
     end
   end
