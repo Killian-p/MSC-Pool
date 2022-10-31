@@ -1,10 +1,14 @@
 <template>
-  <body><canvas id="line-chart" width="450" height="100"></canvas></body>
+  <body>
+    <div class ="Chart1"><canvas id="bar-chart" width="450" height="100"></canvas></div>
+    <div class ="Chart2"><canvas id="pie-chart" width="300" height="100"></canvas></div>
+    
+  </body>
 </template>
 
 <script>
 import Chart from 'chart.js/auto';
-import axios from 'axios'
+import axios from 'axios';
 export default {
   components: {
   },
@@ -24,31 +28,75 @@ export default {
       startDate: null,
       endDate: null,
       workTime: null,
+      sumWorktime: null,
     }
   },
   async mounted () {
     await this.seeWorkingTimes();
+    await this.SumFuction();
     console.log(this.labelStart[15]);
     console.log(this.workTime[15]);
-    new Chart(document.getElementById("line-chart"), {
-      type: 'line',
+    new Chart(document.getElementById("bar-chart"), {
+      type: 'bar',
       data: {
         labels: this.labelStart,
+        color: "#3e95cd",
         datasets: [{
           data: this.workTime,
-          label: "User1",
-          borderColor: "#3e95cd",
+          label: "User",
+          backgroundColor: "#3e95cd",
           fill: false
         }],
       },
       options: {
+        scales: {
+          y: {
+            ticks: { color: 'white', beginAtZero: true }
+          },
+          x: {
+            ticks: { color: 'white', beginAtZero: true }
+          }
+        },
         title: {
           display: true,
-          text: 'Working times per user'
+          text: 'Working times'
+        },
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: 'rgb(255, 255, 255)'
+                }
+            }
         }
       }
     });
-
+    new Chart(document.getElementById("pie-chart"), {
+      type: 'pie',
+      data: {
+        labels: ["Normal", "Night", "Sup. Hours", "Compensation"],
+        datasets: [{
+          label: "blablabla",
+          backgroundColor: ["#48cd3e", "#453ecd", "#cdc33e", "#de2121"],
+          data: [this.sumWorktime,50, 10, 4]
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Hours type'
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'right',
+            labels: {
+              color: 'rgb(255, 255, 255)'
+            }
+          }
+        }
+      }
+    });
   },
   created () {
     
@@ -69,20 +117,23 @@ export default {
           {
           this.arrayStart = _.start.split("T");
           this.arrayEnd = _.end.split("T");
-
           this.startDate = this.arrayStart[1];
           this.endDate = this.arrayEnd[1];
-
           this.labelStart.push(this.arrayStart[0].toString());
           this.labelEnd.push(this.arrayEnd[0].toString());
-
           this.workTime.push((new Date(_.end).valueOf() - new Date(_.start).valueOf()) / 3600000);
           
-
           })
           
         })
         .catch(console.error);
+    },
+    SumFuction() {
+      console.log(this.workTime);
+      this.workTime.forEach(element => {
+        this.sumWorktime += element;
+      });
+      console.log(this.sumWorktime)
     },
   },
   watch: {
@@ -90,5 +141,5 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 </style>
