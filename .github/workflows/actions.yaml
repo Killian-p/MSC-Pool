@@ -4,13 +4,12 @@ on: push
   
 jobs:
   test:
-    runs-on: ${{ matrix.os}}
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ubuntu-20.04, windows-2022, macos-12]
+    runs-on: ubuntu-latest
     steps:
-      - name: go into back-end folder
-        run: ls
-      - name: execute tests
-        run: mix test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: '22.2'
+          elixir-version: '1.14.1'
+      - run: mix deps.get
+      - run: mix test
