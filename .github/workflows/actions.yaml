@@ -102,7 +102,7 @@ jobs:
           
             #Now we have got the access of EC2 and we will start the deploy .
             cd /home/ec2-user/MSC-Pool &&
-            git checkout master &&
+            git checkout main &&
             git fetch --all &&
             git reset --hard origin/master &&
             git pull origin master &&
