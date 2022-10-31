@@ -11,6 +11,6 @@ jobs:
         os: [ubuntu-20.04, windows-2022, macos-12]
     steps:
       - name: go into back-end folder
-        run: cd gotham
+        run: ls
       - name: execute tests
         run: mix test
