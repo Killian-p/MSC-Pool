@@ -8,11 +8,13 @@ defmodule Gotham.ClocksFixtures do
   Generate a clock.
   """
   def clock_fixture(attrs \\ %{}) do
+    user = Gotham.UsersFixtures.user_fixture()
     {:ok, clock} =
       attrs
       |> Enum.into(%{
         status: true,
-        time: ~U[2022-10-24 11:47:00Z]
+        time: ~U[2022-10-24 11:47:00Z],
+        user: user.id
       })
       |> Gotham.Clocks.create_clock()
 

@@ -8,11 +8,13 @@ defmodule Gotham.WorkingtimesFixtures do
   Generate a workingtime.
   """
   def workingtime_fixture(attrs \\ %{}) do
+  user = Gotham.UsersFixtures.user_fixture()
     {:ok, workingtime} =
       attrs
       |> Enum.into(%{
         end: ~U[2022-10-24 11:47:00Z],
-        start: ~U[2022-10-24 11:47:00Z]
+        start: ~U[2022-10-24 11:47:00Z],
+        user: user.id
       })
       |> Gotham.Workingtimes.create_workingtime()
 
