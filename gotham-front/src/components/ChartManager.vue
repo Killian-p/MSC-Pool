@@ -1,7 +1,7 @@
 <template>
   <body>
-    <div class ="Chart1"><canvas id="bar-chart" width="450" height="100"></canvas></div>
-    <div class ="Chart2"><canvas id="pie-chart" width="300" height="100"></canvas></div>
+    <div class ="barChart"><canvas id="bar-chart" width="450" height="100"></canvas></div>
+    <div class ="pieChart"><canvas id="pie-chart" width="300" height="100"></canvas></div>
     
   </body>
 </template>
