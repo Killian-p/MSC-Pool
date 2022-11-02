@@ -48,7 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Login to AWS
-      run: docker login -u AWS -p $(aws ecr get-login-password --region eu-west-3) ${{ secrets.AWS_REPO_URI }}
+      run: aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ${{ secrets.AWS_REPO_URI }}
     - name: Build back-end image
       run: docker build -t gotham-back:latest gotham-back:${{ github.GITHUB_SHA }} ./gotham/
     - name: Buid front-end image
