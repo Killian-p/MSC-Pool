@@ -28,37 +28,57 @@ export default {
       startTime: null,
       endTime: null,
       labelStart: null,
-      labelEnd: null,
       arrayStart: null,
       arrayEnd: null,
       workTime: null,
+      filteredDate: null,
       sumWorktime: null,
-      startingDate: "2022-10-28T06:00:00",
-      endingDate: new Date().toISOString(),
+      workingTimes: null,
+      startingDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("Z")[0],
+      endingDate: new Date().toISOString().split("Z")[0],
     }
   },
   async mounted () {
     await this.seeWorkingTimes();
     this.SumFuction();
-    console.log(this.endingDate);
-    console.log(this.labelStart[15]);
-    console.log(this.workTime[15]);
+    this.filterDate();
+    console.log(this.workingTimes[1]);
     new Chart(document.getElementById("bar-chart"), {
       type: 'bar',
       data: {
-        labels: this.labelStart,
+        labels: this.filteredDate,
         color: "#3e95cd",
-        datasets: [{
+        datasets: [
+          {
           data: this.workTime,
-          label: "User",
-          backgroundColor: "#3e95cd",
+          label: "Normal Hours",
+          backgroundColor: "#2ded02",
           fill: false
-        }],
+        },
+        {
+          data: [1,3,2,2,3,1,1,1,1],
+          label: "Extra hours",
+          backgroundColor: "#e9ed02",
+          fill: false
+        },
+        {
+          data: [1,3,2,2,3,1,1,1,1],
+          label: "Night hours",
+          backgroundColor: "#1e02ed",
+          fill: false
+        },
+      ],
       },
       options: {
         scales: {
-          y: {ticks: { color: 'white', beginAtZero: true }},
-          x: {ticks: { color: 'white', beginAtZero: true }}
+          y: {
+            ticks: { color: 'white', beginAtZero: true },
+            stacked: true,
+          },
+          x: {
+            ticks: { color: 'white', beginAtZero: true },
+            stacked: true
+          }
         },
         title: {
           display: true,
@@ -75,11 +95,10 @@ export default {
     new Chart(document.getElementById("pie-chart"), {
       type: 'pie',
       data: {
-        labels: ["Normal", "Night", "Sup. Hours", "Compensation"],
+        labels: ["Normal", "Night", "Sup. Hours"],
         datasets: [{
-          label: "blablabla",
-          backgroundColor: ["#48cd3e", "#453ecd", "#cdc33e", "#de2121"],
-          data: [this.sumWorktime,50, 10, 4]
+          backgroundColor: ["#48cd3e", "#453ecd", "#cdc33e"],
+          data: [this.sumWorktime,50, 10]
         }]
       },
       options: {
@@ -104,33 +123,36 @@ export default {
   },
   methods: {
     async seeWorkingTimes(){
-      console.log(this.startingDate);
-      console.log(this.endingDate);
         await axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
-          start: new Date(this.startingDate).toISOString(),end: new Date(this.endingDate).toISOString(),
+          start: new Date("2010-01-01T01:01").toISOString(),
         }})
         .then((response) => {
           let arrayOfDates = response.data.data;
           this.labelStart = new Array();
-          this.labelEnd = new Array();
           this.workTime = new Array();
-          arrayOfDates.forEach(_ => 
-          {
-          this.arrayStart = _.start.split("T");
-          this.arrayEnd = _.end.split("T");
-          this.labelStart.push(this.arrayStart[0].toString());
-          this.labelEnd.push(this.arrayEnd[0].toString());
-          this.workTime.push((new Date(_.end).valueOf() - new Date(_.start).valueOf()) / 3600000);
-          })          
+          this.workingTimes = new Array();
+          arrayOfDates.forEach(_ => {
+            this.arrayStart = _.start.split("T");
+            this.arrayEnd = _.end.split("T");
+            this.labelStart.push(this.arrayStart[0].toString());
+            this.workTime.push((new Date(_.end).valueOf() - new Date(_.start).valueOf()) / 3600000);
+            this.workingTimes = [this.workTime, this.labelStart];
+          })   
         })
         .catch(console.error);
     },
+    filterDate(){
+      this.filteredDate = new Array;
+        this.workingTimes[1].forEach(_ => {
+          if(new Date(_) >= new Date(this.startingDate) && new Date(_) <= new Date(this.endingDate)){
+            this.filteredDate.push(_);
+        }
+      });
+    },
     SumFuction() {
-      console.log(this.workTime);
       this.workTime.forEach(element => {
         this.sumWorktime += element;
       });
-      console.log(this.sumWorktime)
     },
   },
   watch: {
