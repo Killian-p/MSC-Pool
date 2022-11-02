@@ -45,6 +45,9 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
     - uses: actions/checkout@v2
     - name: Configure AWS Credentials
