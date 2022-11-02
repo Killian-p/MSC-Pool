@@ -47,10 +47,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the docker_compose
-      run: docker-compose up -d --build
-    - name: Buid the application
-      run: docker-compose exec -T front-end npm run build
+    - name: Login to AWS
+      run: docker login -u AWS -p $(aws ecr get-login-password --region eu-west-3) ${{ secrets.AWS_REPO_URI }}
+    - name: Build back-end image
+      run: docker build -t gotham-back:latest gotham-back:${{ github.GITHUB_SHA }} ./gotham/
+    - name: Buid front-end image
+      run: docker build -t gotham-front:latest -t gotham-front:${{ github.GITHUB_SHA }} ./gotham-front/
+    - name: publish back-end image on Amazon ECR
+      run: |
+        docker push ${{ secrets.AWS_REPO_URI }}/gotham-back:latest
+        docker push ${{ secrets.AWS_REPO_URI }}/gotham-back:${{ github.GITHUB_SHA }}
+    - name: publish front-end image on Amazon ECR
+      run: |
+        docker push ${{ secrets.AWS_REPO_URI }}/gotham-front:latest
+        docker push ${{ secrets.AWS_REPO_URI }}/gotham-front:${{ github.GITHUB_SHA }}
 
   test:
     name: test
