@@ -41,7 +41,6 @@ export default {
             x.start = start[0] + " " + start[1];
             x.end = end[0] + " " + end[1];
           })
-          debugger;
         });
   },
   created () {
