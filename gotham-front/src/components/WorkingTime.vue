@@ -44,9 +44,6 @@ export default {
             end: new Date(this.endingDate).toISOString(),
         }
       })
-      .then(_ => {
-        debugger;
-      })
     }
   },
   watch: {
