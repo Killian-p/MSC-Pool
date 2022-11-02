@@ -57,14 +57,16 @@ jobs:
         aws-region: eu-west-3
     - name: Login to AWS
       run: aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ${{ secrets.AWS_REPO_URI }}
-    - name: Build back-end image and publish on Amazon ECR
+    - name: Build back-end image
+      run:  docker build -t ${{ secrets.AWS_REPO_URI }}/gotham-back:latest -t ${{ secrets.AWS_REPO_URI }}/gotham-back:$GITHUB_SHA ./gotham/
+    - name: Build front-end image
+      run: docker build -t ${{ secrets.AWS_REPO_URI }}/gotham-front:latest -t ${{ secrets.AWS_REPO_URI }}/bahgotham-front:$GITHUB_SHA ./gotham-front/
+    - name: Publish back-end image on Amazon ECR
       run: |
-        docker build -t gotham-back:latest -t gotham-back:$GITHUB_SHA ./gotham/
         docker push ${{ secrets.AWS_REPO_URI }}/gotham-back:latest
         docker push ${{ secrets.AWS_REPO_URI }}/gotham-back:$GITHUB_SHA
-    - name: Build front-end image and publish on Amazon ECR
+    - name: Publish front-end image on Amazon ECR
       run: |
-        docker build -t gotham-front:latest -t gotham-front:$GITHUB_SHA ./gotham-front/
         docker push ${{ secrets.AWS_REPO_URI }}/gotham-front:latest
         docker push ${{ secrets.AWS_REPO_URI }}/gotham-front:$GITHUB_SHA
 
