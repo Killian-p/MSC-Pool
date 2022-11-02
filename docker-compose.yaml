@@ -36,7 +36,7 @@ services:
     command: sh -c 'npm run dev'
     container_name: 'front-end'
     ports:
-      - '80:5173'
+      - '5173:5173'
     depends_on:
       - 'back-end'
     networks:
