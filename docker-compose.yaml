@@ -2,8 +2,9 @@ version: '3.9'
 
 services:
   back-end:
-    build:
-      context: './gotham'
+    image: '850194915763.dkr.ecr.eu-west-3.amazonaws.com/gotham-back:latest'
+    # build:
+    #   context: './gotham'
     command: sh -c 'mix local.rebar --force && mix ecto.setup && mix phx.server'
     container_name: 'back-end'
     restart: 'unless-stopped'
@@ -29,8 +30,9 @@ services:
       - backend
 
   front-end:
-    build:
-      context: './gotham-front'
+    image: '850194915763.dkr.ecr.eu-west-3.amazonaws.com/gotham-front:latest'
+    # build:
+      # context: './gotham-front'
     command: sh -c 'npm run dev'
     container_name: 'front-end'
     ports:

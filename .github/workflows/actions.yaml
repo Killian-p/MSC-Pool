@@ -58,7 +58,7 @@ jobs:
     - name: Login to AWS
       run: aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ${{ secrets.AWS_REPO_URI }}
     - name: Build back-end image
-      run:  docker build -t ${{ secrets.AWS_REPO_URI }}/gotham-back:latest -t ${{ secrets.AWS_REPO_URI }}/gotham-back:$GITHUB_SHA ./gotham/
+      run: docker build -t ${{ secrets.AWS_REPO_URI }}/gotham-back:latest -t ${{ secrets.AWS_REPO_URI }}/gotham-back:$GITHUB_SHA ./gotham/
     - name: Build front-end image
       run: docker build -t ${{ secrets.AWS_REPO_URI }}/gotham-front:latest -t ${{ secrets.AWS_REPO_URI }}/gotham-front:$GITHUB_SHA ./gotham-front/
     - name: Publish back-end image on Amazon ECR
@@ -125,5 +125,5 @@ jobs:
             git fetch --all &&
             git reset --hard main &&
             git pull origin main &&
-            docker-compose up -d --build 
+            docker-compose up --pull=always --force-recreate -d
           '
