@@ -50,7 +50,7 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{ secrets.AWS_REPO_ARN }}
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: eu-west-3
     - name: Login to AWS
       run: aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin ${{ secrets.AWS_REPO_URI }}
