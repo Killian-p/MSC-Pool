@@ -34,7 +34,7 @@ services:
     command: sh -c 'npm run dev'
     container_name: 'front-end'
     environment:
-      - 'VITE_BACKEND_URL=http://test'
+      - 'VITE_BACKEND_URL=http://localhost:4000'
     ports:
       - '5173:5173'
     depends_on:
