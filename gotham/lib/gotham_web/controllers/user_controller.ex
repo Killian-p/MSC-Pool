@@ -3,6 +3,9 @@ defmodule GothamWeb.UserController do
 
   alias Gotham.Users
   alias Gotham.Users.User
+  alias Bcrypt.Base
+  alias Gotham.Sessions
+  alias Gotham.Sessions.Session
 
   action_fallback GothamWeb.FallbackController
 
@@ -53,7 +56,45 @@ defmodule GothamWeb.UserController do
       !is_nil(email) ->
         render(conn, "index.json", users: Users.get_user_by_mail(email))
       true ->
-        put_status(conn, :bad_request) |> json(%{message: "At least username or email is required"})   
+        put_status(conn, :bad_request) |> json(%{message: "At least username or email is required"})
+    end
+  end
+
+  def signup(conn, %{"user" => user_params}) do
+    user = Users.get_user_by_mail(user_params["email"])
+    cond do
+      user != [] ->
+        put_status(conn, :forbidden) |> json(%{message: "An account already exist with this email"})
+      true ->
+        with {:ok, %User{} = user} <- Users.create_user(Map.replace!(user_params, "password", Bcrypt.Base.hash_password(user_params["password"], Bcrypt.Base.gen_salt(12, true)))) do
+          conn
+          |> put_status(:created)
+          |> render("create_user.json", user: user, token: GothamWeb.Token.create_jwt_token(user))
+        end
+    end
+  end
+
+  def signin(conn, %{"email" => email, "password" => password}) do
+    user = Users.get_user_by_mail_and_password(email, password)
+    cond do 
+      !is_nil(user) ->
+        render(conn, "create_user.json", user: user, token: GothamWeb.Token.create_jwt_token(user))
+      true ->
+        put_status(conn, :forbidden) |> json(%{message: "Invalid credentials"})
+    end
+  end
+
+  def logout(conn, %{"user_id" => user_id}) do
+    user_session = Sessions.get_sessions_by_user_id(user_id)
+
+    cond do
+      !is_nil(user_session) ->
+        session = Sessions.get_session!(user_session.id)
+        with {:ok, %Session{}} <- Sessions.delete_session(session) do
+          send_resp(conn, :no_content, "")
+        end
+      true ->
+        put_status(conn, :bad_request) |> json(%{message: "User is not connected"})
     end
   end
 end
