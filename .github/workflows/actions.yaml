@@ -125,5 +125,10 @@ jobs:
             git fetch --all &&
             git reset --hard main &&
             git pull origin main &&
+            docker pull ${{ secrets.AWS_REPO_URI }}/gotham-front:latest
+            docker pull ${{ secrets.AWS_REPO_URI }}/gotham-back:latest
             docker-compose up --pull=always --force-recreate -d
           '
+
+
+          
