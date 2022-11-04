@@ -33,6 +33,8 @@ services:
       context: './gotham-front'
     command: sh -c 'npm run dev'
     container_name: 'front-end'
+    environment:
+      - 'VITE_BACKEND_URL=http://localhost:4000'
     ports:
       - '5173:5173'
     depends_on:

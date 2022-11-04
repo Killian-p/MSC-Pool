@@ -12,7 +12,8 @@ defmodule Gotham.UsersFixtures do
       attrs
       |> Enum.into(%{
         email: "test@test.fr",
-        username: "some username"
+        username: "some username",
+        password: "password"
       })
       |> Gotham.Users.create_user()
 
