@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     createUser(){
-        axios.post('${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up', {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
             user:{
                 username: this.username,
                 email: this.email,
@@ -98,7 +98,7 @@ export default {
         this.connected=true;
     },
     getUser(){
-        axios.post('${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in', {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
             password: this.password,
             email: this.email,
          })
