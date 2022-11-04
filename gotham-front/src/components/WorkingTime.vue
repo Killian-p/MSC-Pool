@@ -9,20 +9,20 @@
       </label>
       <input type="datetime-local" id="endingDate" v-model="endingDate" required/>
       <button type="submit">
-      Create a new Working Time
+        Create a new Working Time
       </button>
     </form>
     <form v-on:submit.prevent="getWorkingTimesForAPerdiod" method="post">
       <label>
-          starting date :
+        starting date :
       </label>
       <input type="datetime-local" id="startingDate" v-model="startingDate" required/>
       <label>
-          ending date :
+        ending date :
       </label>
       <input type="datetime-local" id="endingDate" v-model="endingDate" required/>
       <button type="submit">
-      Search Working Times
+        Search Working Times
       </button>
     </form>
     <table>
@@ -42,19 +42,20 @@
       <tbody>
         <tr v-for="items in this.datas" :key="items.id" >
           <th>
-          <input type="datetime-local" id="updateStartingDate" :value="items.start" required/>
+            {{items.id}}
+            <input type="datetime-local" id="updateStartingDate" step="1" :value="items.start" :readonly="!(this.idSelectedWorkingTime===items.id)" required/>
           </th>
           <th>
-            <input type="datetime-local" id="updateEndingDate" :value="items.end" readonly required/>
+            <input type="datetime-local" id="updateEndingDate" step="1"  :value="items.end" :readonly="!(this.idSelectedWorkingTime===items.id)" required/>
           </th>
           <th>
             <button @click="deleteAWorkingTime(items.id)">
               DELETE
             </button>
-            <button v-if=this.updateMode @click="updateAWorkingTime(items.id, items.start, items.end), this.updateMode=!this.updateMode">
+            <button v-if="!(this.idSelectedWorkingTime===items.id)" @click="this.idSelectedWorkingTime=items.id">
               UPDATE
             </button>
-            <button v-if=!this.updateMode @click="updateAWorkingTime(items.id, items.start, items.end), this.updateMode=!this.updateMode">
+            <button v-if="(this.idSelectedWorkingTime===items.id)" @click="updateAWorkingTime(items.id, items.start, items.end), this.idSelectedWorkingTime=null">
               CONFIRM
             </button>
           </th>
@@ -96,10 +97,11 @@ export default {
         endingDate: null,
         datas: [],
         updateMode: false,
+        idSelectedWorkingTime: null,
     }
   },
   mounted () {
-    axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
           start: new Date("1900-07-08T06:00:00Z").toISOString(),
         }}).then(_ => {
           this.datas = _.data.data;
@@ -119,19 +121,24 @@ export default {
   },
   methods: {
     updateAWorkingTime(idWorkingTime, start, end){
-      axios.put(`http://localhost:4000/api/workingtimes/${idWorkingTime}`, {params : {
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
+      console.log(idWorkingTime);
+      console.log(start);
+      console.log(end);
+      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {params : {
+        workingtime:{
+          start: new Date(start).toISOString(),
+          end: new Date(end).toISOString(),
+        }
       }}).catch(console.error)
     },
     deleteAWorkingTime(idWorkingTime){
-      axios.delete(`http://localhost:4000/api/workingtimes/${idWorkingTime}`).catch(console.error)
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`).catch(console.error)
       .then(() => {
         this.datas= this.datas.filter((elem) => elem.id!==idWorkingTime)
       })
     },
     getWorkingTimesForAPerdiod(){
-      axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
         start: new Date(this.startingDate).toISOString(),
         end: new Date(this.endingDate).toISOString(),
       }}).then(res => {
@@ -147,7 +154,7 @@ export default {
       }).catch(console.error);
     },
     createWorkingTime(){
-      axios.post(`http://localhost:4000/api/workingtimes/${this.idUser}`,{
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
         workingtime: {
             start: new Date(this.startingDate).toISOString(),
             end: new Date(this.endingDate).toISOString(),
