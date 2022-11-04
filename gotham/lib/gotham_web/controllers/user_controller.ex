@@ -85,6 +85,9 @@ defmodule GothamWeb.UserController do
   end
 
   def logout(conn, %{"user_id" => user_id}) do
+    token = get_req_header(conn, "token")
+    IO.inspect GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"])
+
     user_session = Sessions.get_sessions_by_user_id(user_id)
 
     cond do
