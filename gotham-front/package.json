@@ -16,10 +16,11 @@
     "litepie-datepicker": "^1.0.14",
     "moment": "^2.29.4",
     "vue": "^3.2.41",
+    "vue-chartjs": "^4.1.2",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.2",
-    "vite": "^3.1.8"
+    "vite": "^3.2.2"
   }
 }
