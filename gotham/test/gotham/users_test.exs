@@ -8,7 +8,7 @@ defmodule Gotham.UsersTest do
 
     import Gotham.UsersFixtures
 
-    @invalid_attrs %{email: nil, username: nil}
+    @invalid_attrs %{email: nil, username: nil, password: nil}
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -21,11 +21,12 @@ defmodule Gotham.UsersTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{email: "test@test.fr", username: "some username"}
+      valid_attrs = %{email: "test@test.fr", username: "some username", password: "password"}
 
       assert {:ok, %User{} = user} = Users.create_user(valid_attrs)
       assert user.email == "test@test.fr"
       assert user.username == "some username"
+      assert user.password == "password"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -34,11 +35,12 @@ defmodule Gotham.UsersTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{email: "newtest@test.fr", username: "some updated username"}
+      update_attrs = %{email: "newtest@test.fr", username: "some updated username", password: "newpassword"}
 
       assert {:ok, %User{} = user} = Users.update_user(user, update_attrs)
       assert user.email == "newtest@test.fr"
       assert user.username == "some updated username"
+      assert user.password == "newpassword"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

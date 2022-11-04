@@ -59,7 +59,6 @@ defmodule GothamWeb.ClockController do
         end
       true ->
         with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user", userId)) do
-          IO.inspect clock
           render(conn, "show.json", clock: clock)
         end
     end

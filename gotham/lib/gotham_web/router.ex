@@ -9,11 +9,15 @@ defmodule GothamWeb.Router do
     pipe_through :api
 
     scope "/users" do
+      # get "/", UserController, :index
       get "/", UserController, :get_user_by_query_params
       get "/:userID", UserController, :show
-      post "/", UserController, :create
+      # post "/", UserController, :create
       put "/:userID", UserController, :update
       delete "/:userID", UserController, :delete
+      post "/sign_up", UserController, :signup
+      post "/sign_in", UserController, :signin
+      post "/sign_out", UserController, :logout
     end
 
     scope "/workingtimes" do

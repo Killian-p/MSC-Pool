@@ -4,9 +4,12 @@ services:
   back-end:
     build:
       context: './gotham'
-    command: sh -c 'mix local.rebar --force && mix ecto.setup && mix phx.server'
+    command: sh -c 'mix ecto.setup && mix phx.server'
+    working_dir: /app
     container_name: 'back-end'
     restart: 'unless-stopped'
+    volumes:
+      - "./gotham:/app"
     environment:
       - 'DATABASE_URL=ecto://postgres:postgres@postgres-db:5432/gotham_dev'
     depends_on:
@@ -31,8 +34,11 @@ services:
   front-end:
     build:
       context: './gotham-front'
-    command: sh -c 'npm run dev'
+    working_dir: /app
+    command: sh -c 'npm install && npm run dev'
     container_name: 'front-end'
+    volumes:
+      - "./gotham-front:/app"
     environment:
       - 'VITE_BACKEND_URL=http://localhost:4000'
     ports:

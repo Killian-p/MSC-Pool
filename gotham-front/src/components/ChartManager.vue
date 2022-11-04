@@ -5,7 +5,7 @@
       <input type="datetime-local" id="startingDate" v-model="startingDate" required/>
       <label>ending date :</label>
       <input type="datetime-local" id="endingDate" v-model="endingDate" required/>
-      <button onclick="seeWorkingTimes()">Search</button>
+      <button @click="seeWorkingTimes()">Search</button>
     </form>
     <div class ="barChart"><canvas id="bar-chart" width="450" height="100"></canvas></div>
     <div class ="pieChart"><canvas id="pie-chart" width="300" height="100"></canvas></div>
@@ -28,25 +28,28 @@ export default {
       startTime: null,
       endTime: null,
       labelStart: null,
+      labelEnd: null,
       arrayStart: null,
       arrayEnd: null,
       workTime: null,
-      filteredDate: null,
+      filteredData: null,
       sumWorktime: null,
       workingTimes: null,
-      startingDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("Z")[0],
-      endingDate: new Date().toISOString().split("Z")[0],
+      nightTimes: null,
+      nightTimesBis: null,
+      nightingTimes: null,
+      startingDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("Z")[0].slice(0,16),
+      endingDate: new Date().toISOString().split("Z")[0].slice(0,16),
     }
   },
   async mounted () {
     await this.seeWorkingTimes();
     this.SumFuction();
-    this.filterDate();
-    console.log(this.workingTimes[1]);
+    //this.filterDate();
     new Chart(document.getElementById("bar-chart"), {
       type: 'bar',
       data: {
-        labels: this.filteredDate,
+        labels: this.filteredData,
         color: "#3e95cd",
         datasets: [
           {
@@ -66,8 +69,7 @@ export default {
           label: "Night hours",
           backgroundColor: "#1e02ed",
           fill: false
-        },
-      ],
+        }]
       },
       options: {
         scales: {
@@ -123,29 +125,53 @@ export default {
   },
   methods: {
     async seeWorkingTimes(){
-        await axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
           start: new Date("2010-01-01T01:01").toISOString(),
         }})
         .then((response) => {
           let arrayOfDates = response.data.data;
           this.labelStart = new Array();
+          this.labelEnd = new Array();
           this.workTime = new Array();
           this.workingTimes = new Array();
+          this.nightTimes = new Array();
+          this.nightTimesBis = new Array();
+          this.nightingTimes = new Array();
           arrayOfDates.forEach(_ => {
             this.arrayStart = _.start.split("T");
             this.arrayEnd = _.end.split("T");
             this.labelStart.push(this.arrayStart[0].toString());
-            this.workTime.push((new Date(_.end).valueOf() - new Date(_.start).valueOf()) / 3600000);
-            this.workingTimes = [this.workTime, this.labelStart];
-          })   
+            this.labelEnd.push(this.arrayEnd[0].toString());
+
+            if(this.arrayEnd[0] != this.arrayStart[0]){
+
+              this.nightTimes.push((((new Date(this.arrayEnd[0]).getTime() - new Date(_.start).getTime())/3600000)));
+              
+              console.log(this.nightTimes);
+              console.log(_.start);
+              console.log(_.end);
+              console.log("===========")
+
+              this.nightTimesBis.push(((new Date(_.end).getTime() - new Date(_.start).getTime())/3600000)-this.nightTimes);
+              console.log(this.nightTimesBis);
+
+              this.nightingTimes = [this.nightTimes, this.arrayStart[0]];
+              this.nightingTimes = [this.nightTimesBis, this.arrayEnd[0]];
+                           
+            }else{
+              
+              this.workTime.push((new Date(_.end).getTime() - new Date(_.start).getTime())/3600000);
+              this.workingTimes = [this.workTime, this.arrayStart[0]];
+            }
+          })
         })
         .catch(console.error);
     },
     filterDate(){
-      this.filteredDate = new Array;
-        this.workingTimes[1].forEach(_ => {
-          if(new Date(_) >= new Date(this.startingDate) && new Date(_) <= new Date(this.endingDate)){
-            this.filteredDate.push(_);
+      this.filteredData = new Array;
+      this.workingTimes[1].forEach(_ => {
+        if(new Date(_) >= new Date(this.startingDate) && new Date(_) <= new Date(this.endingDate)){
+          this.filteredData.push(_);
         }
       });
     },
