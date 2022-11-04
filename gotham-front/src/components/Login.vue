@@ -7,6 +7,9 @@
                             <label>Email:</label>
                         </div>
                         <div class="box">
+                            <label>Username:</label>
+                        </div>
+                        <div class="box">
                             <label>Password:</label>
                         </div>
                     </div>
@@ -15,7 +18,10 @@
                             <input v-model="email"/>
                         </div>
                         <div class="box">
-                            <input v-model="username" type="password"/>
+                            <input v-model="username"/>
+                        </div>
+                        <div class="box">
+                            <input v-model="password" type="password"/>
                         </div>
                     </div>
                 </div>
@@ -51,6 +57,7 @@ export default {
         connected: false,
         username: '',
         email: '',
+        password: '',
         idCurrentUser: null,
         userExists: true,
     }
@@ -63,13 +70,16 @@ export default {
   },
   methods: {
     createUser(){
-        axios.post('http://localhost:4000/api/users', {
+        //api/users/sign_up
+        axios.post('http://localhost:4000/api/users/sign_up', {
             user:{
                 username: this.username,
-                email: this.email
+                email: this.email,
+                password: this.password,
             }
         })
         .then((res) => {
+            localStorage.setItem("token", res.data.token);
             console.log(res);
             this.$emit("logged", res.data.data.id)
             this.idCurrentUser = res.data.data.id;
@@ -80,17 +90,19 @@ export default {
         this.connected=true;
     },
     getUser(){
-        axios.get('http://localhost:4000/api/users', { params: { username: this.username, email: this.email } })
+        axios.post('http://localhost:4000/api/users/sign_in', {
+            password: this.password,
+            email: this.email,
+         })
         .then(_ => {
-            if(_.data.data.length == 0){
-                this.userExists = false;
-            }else {
+            localStorage.setItem("token", res.data.token);
+            debugger;
             this.idCurrentUser = _.data.data[0].id;
             this.$emit("logged", _.data.data[0].id)
             this.editEmail = this.email;
             this.editUsername = this.username;
             this.userExists = true;
-            }
+            
         })
         .catch(console.error);
     }

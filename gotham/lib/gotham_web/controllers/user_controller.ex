@@ -49,7 +49,7 @@ defmodule GothamWeb.UserController do
     email = Map.get(conn.query_params, "email")
 
     cond do
-      !is_nil(username) && !is_nil(email) -> 
+      !is_nil(username) && !is_nil(email) ->
         render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
       !is_nil(username) ->
         render(conn, "index.json", users: Users.get_user_by_username(username))
@@ -76,7 +76,7 @@ defmodule GothamWeb.UserController do
 
   def signin(conn, %{"email" => email, "password" => password}) do
     user = Users.get_user_by_mail_and_password(email, Bcrypt.Base.hash_password(password, "$2a$12$LKwz97FK3Xnnvlidn/Y9w."))
-    cond do 
+    cond do
       !is_nil(user) ->
         render(conn, "create_user.json", user: user, token: GothamWeb.Token.create_jwt_token(user))
       true ->
