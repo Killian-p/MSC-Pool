@@ -44,6 +44,12 @@ import Login from './components/Login.vue';
           >
             chartManager</button>
         </div>
+        <div class="box">
+          <button class="form-control nav-buttons" @click="logout"
+          style="background-color: #3C4048;color: #00ABB3"
+          >
+            Se déconncter</button>
+        </div>
       </div>
       
     </div>
@@ -75,6 +81,7 @@ import Login from './components/Login.vue';
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   components: {
     WorkingTimes
@@ -94,6 +101,17 @@ export default {
     },
     selectComponent(comp){
       this.currentComponent = comp;
+    },
+    logout(){
+      axios.post("${import.meta.env.VITE_BACKEND_URL}/api/users/sign_out", {user_id: this.idCurrentUser}, { headers:{
+        token: localStorage.getItem("token")
+      }})
+      .then(_ => {
+        localStorage.removeItem("token");
+        this.idCurrentUser = null;
+        this.$emit("logged", null);
+        this.connected = false;
+      })
     }
   }
 

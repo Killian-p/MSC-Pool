@@ -1,12 +1,20 @@
 <template>
     <div class="mainbox">
         <div class="loginbox">
+            <div class="tabbox">
+                <button class="tabnav" @click="changeTab('sign_in')">
+                    Connexion
+                </button>
+                <button class="tabnav" @click="changeTab('sign_up')">
+                    Enregistrement 
+                </button>
+            </div>
                 <div class="formbox">
                     <div class="label-column">
                         <div class="box">
                             <label>Email:</label>
                         </div>
-                        <div class="box">
+                        <div class="box" v-if="currentTab == 'sign_up'">
                             <label>Username:</label>
                         </div>
                         <div class="box">
@@ -17,7 +25,7 @@
                         <div class="box">
                             <input v-model="email"/>
                         </div>
-                        <div class="box">
+                        <div class="box" v-if="currentTab == 'sign_up'">
                             <input v-model="username"/>
                         </div>
                         <div class="box">
@@ -26,12 +34,12 @@
                     </div>
                 </div>
                 <div style="display: flex;">
-                    <div class="box" style="margin-right: 60px;">
+                    <div class="box" style="margin-right: 60px;" v-if="currentTab == 'sign_up'">
                         <button @click="createUser" class="buttons" type="button">
                             S'enregistrer
                         </button>
                     </div>
-                    <div class="box">
+                    <div class="box" v-if="currentTab == 'sign_in'">
                         <button @click="getUser" class="buttons" type="button">
                             Se connecter
                         </button>
@@ -60,6 +68,7 @@ export default {
         password: '',
         idCurrentUser: null,
         userExists: true,
+        currentTab: "sign_in"
     }
   },
   mounted () {
@@ -70,8 +79,7 @@ export default {
   },
   methods: {
     createUser(){
-        //api/users/sign_up
-        axios.post('http://localhost:4000/api/users/sign_up', {
+        axios.post('${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up', {
             user:{
                 username: this.username,
                 email: this.email,
@@ -90,21 +98,21 @@ export default {
         this.connected=true;
     },
     getUser(){
-        axios.post('http://localhost:4000/api/users/sign_in', {
+        axios.post('${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in', {
             password: this.password,
             email: this.email,
          })
         .then(_ => {
-            localStorage.setItem("token", res.data.token);
-            debugger;
-            this.idCurrentUser = _.data.data[0].id;
-            this.$emit("logged", _.data.data[0].id)
-            this.editEmail = this.email;
-            this.editUsername = this.username;
+            localStorage.setItem("token", _.data.token);
+            this.idCurrentUser = _.data.id;
+            this.$emit("logged", _.data.id);
             this.userExists = true;
             
         })
         .catch(console.error);
+    },
+    changeTab(tab){
+        this.currentTab = tab;
     }
   },
   watch: {
@@ -130,6 +138,7 @@ export default {
     align-items: center;
     border-radius: 45px;
     flex-direction: column;
+    border: black 3px solid;
 }
 
 .label-column{
@@ -157,5 +166,26 @@ export default {
   height: 150%;
   background-color: #3C4048;
   color: #00ABB3;
+}
+
+.buttons:hover{
+    background-color: #00ABB3;
+    color: #3C4048;
+}
+
+
+.tabbox{
+    display: flex;
+}
+
+.tabnav{
+    margin: 10px;
+    border: black 3px solid;
+    background-color: #3C4048;
+    color: #00ABB3;
+}
+.tabnav:hover{
+    background-color: #00ABB3;
+    color: #3C4048;
 }
 </style>
