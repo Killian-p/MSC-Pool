@@ -75,7 +75,7 @@ defmodule GothamWeb.UserController do
   end
 
   def signin(conn, %{"email" => email, "password" => password}) do
-    user = Users.get_user_by_mail_and_password(email, password)
+    user = Users.get_user_by_mail_and_password(email, Bcrypt.Base.hash_password(password, Bcrypt.Base.gen_salt(12, true)))
     cond do 
       !is_nil(user) ->
         render(conn, "create_user.json", user: user, token: GothamWeb.Token.create_jwt_token(user))
