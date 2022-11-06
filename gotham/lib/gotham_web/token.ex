@@ -33,30 +33,31 @@ defmodule GothamWeb.Token do
     jwt_token = GothamWeb.Token.generate_and_sign!(extra_claims)
   end
 
-  def is_token_valid(token, authaurized_roles) do
-   # extra_claims = %{
-      #   "user_id" => user.id,
-      #   "user_role" => user.roles,
-      #   "xrsf_token" => Bcrypt.Base.hash_password(user.password, Bcrypt.Base.gen_salt(12, true)),
-      #   "exp" => DateTime.utc_now |> DateTime.add(30 * 24 * 60 * 60, :second) |> DateTime.to_unix()
-      # }
-      # jwt_token = GothamWeb.Token.generate_and_sign!(extra_claims)
-      {:ok, claims} = GothamWeb.Token.verify_and_validate(token)
-      user = Users.get_user!(claims["user_id"])
-      user_session = Sessions.get_sessions_by_user_id(claims["user_id"])
+  def is_token_valid(token, authorized_roles) do
+    cond do 
+      token ->
+        {:ok, claims} = GothamWeb.Token.verify_and_validate(token)
+        user = Users.get_user!(claims["user_id"])
+        user_session = Sessions.get_sessions_by_user_id(claims["user_id"])
 
-      cond do
-        claims["user_role"] == user.roles && claims["xrsf_token"] == user_session.xrsf_token && Enum.member?(authaurized_roles, claims["user_role"]) ->
-          {:ok}
-        true ->
-          {:error}
-          # put_status(conn, :unauthorized) |> json(%{message: "You're not authaurized to perform this action"})
-      end
+        cond do
+          claims["user_role"] == user.roles && claims["xrsf_token"] == user_session.xrsf_token && Enum.member?(authorized_roles, claims["user_role"]) ->
+            true
+          true ->
+            false
+          end
+      true ->
+        false
+    end
+  end
 
-      # IO.inspect Enum.member?(isOK, claims["user_role"])
-
-      # IO.inspect claims["user_role"]
-      # cond do
-        
-  end 
+  def get_token_data(token) do
+  IO.inspect token
+    cond do 
+      token ->
+        {:ok, claims} = GothamWeb.Token.verify_and_validate(token)
+      true ->
+        {:error, :error}
+    end
+  end
 end

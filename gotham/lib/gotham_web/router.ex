@@ -32,6 +32,15 @@ defmodule GothamWeb.Router do
       get "/:userID", ClockController, :show
       post "/:userID", ClockController, :add_user_clock
     end
+
+    scope "/teams" do
+      post "/", TeamController, :create
+      get "/:teamID", TeamController, :show
+      delete "/:teamID", TeamController, :delete
+      put "/:teamID/users/:userID", TeamController, :add_user_to_team
+      put "/:teamID", TeamController, :update
+      get "/:teamID/users", TeamController, :list_users_of_team
+    end
   end
 
   # Enables LiveDashboard only for development

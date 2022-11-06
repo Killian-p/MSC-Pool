@@ -5,7 +5,7 @@ defmodule Gotham.Clocks.Clock do
   schema "clocks" do
     field :status, :boolean, default: true
     field :time, :naive_datetime
-    field :user, :id
+    field :user_id, :id
 
     timestamps()
   end
@@ -13,8 +13,8 @@ defmodule Gotham.Clocks.Clock do
   @doc false
   def createset(clock, attrs) do
     clock
-    |> cast(attrs, [:time, :status, :user])
-    |> validate_required([:time, :status, :user])
+    |> cast(attrs, [:time, :status, :user_id])
+    |> validate_required([:time, :status, :user_id])
   end
 
   def changeset(clock, attrs) do
