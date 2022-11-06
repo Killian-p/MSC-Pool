@@ -48,7 +48,7 @@ import Login from './components/Login.vue';
           <button class="form-control nav-buttons" @click="logout"
           style="background-color: #3C4048;color: #00ABB3"
           >
-            Se déconncter</button>
+            Se déconnecter</button>
         </div>
       </div>
       
@@ -98,6 +98,7 @@ export default {
   methods:{
     loggin(id){
       this.idCurrentUser = id;
+      this.userRole = roles
     },
     selectComponent(comp){
       this.currentComponent = comp;

@@ -43,10 +43,10 @@
         <tr v-for="items in this.datas" :key="items.id" >
           <th>
             {{items.id}}
-            <input type="datetime-local" id="updateStartingDate" step="1" :value="items.start" :readonly="!(this.idSelectedWorkingTime===items.id)" required/>
+            <input type="datetime-local" id="updateStartingDate" step="1" v-model="items.start" :readonly="!(this.idSelectedWorkingTime===items.id)" required/>
           </th>
           <th>
-            <input type="datetime-local" id="updateEndingDate" step="1"  :value="items.end" :readonly="!(this.idSelectedWorkingTime===items.id)" required/>
+            <input type="datetime-local" id="updateEndingDate" step="1"  v-model="items.end" :readonly="!(this.idSelectedWorkingTime===items.id)" required/>
           </th>
           <th>
             <button @click="deleteAWorkingTime(items.id)">
@@ -124,12 +124,12 @@ export default {
       console.log(idWorkingTime);
       console.log(start);
       console.log(end);
-      axios.put(`http://localhost:4000/api/workingtimes/${idWorkingTime}`, {params : {
+      axios.put(`http://localhost:4000/api/workingtimes/${idWorkingTime}`, {
         workingtime:{
           start: new Date(start).toISOString(),
           end: new Date(end).toISOString(),
         }
-      }}).catch(console.error)
+      }).catch(console.error)
     },
     deleteAWorkingTime(idWorkingTime){
       axios.delete(`http://localhost:4000/api/workingtimes/${idWorkingTime}`).catch(console.error)
