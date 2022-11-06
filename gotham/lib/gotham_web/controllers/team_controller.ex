@@ -102,4 +102,16 @@ defmodule GothamWeb.TeamController do
     team_users = Teams.get_team!(teamId, [:users])
     render(conn, "team_users.json", users: team_users.users)
   end
+
+  def get_team_of_manager(conn, %{"userID" => managerId}) do
+    token = get_req_header(conn, "token")
+
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER"]) ->
+        manager_teams = Teams.get_manager_team(managerId)
+        render(conn, "index.json", teams: manager_teams)
+      true ->
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+    end
+  end
 end

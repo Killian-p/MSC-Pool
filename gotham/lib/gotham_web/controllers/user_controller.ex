@@ -118,7 +118,6 @@ defmodule GothamWeb.UserController do
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
       user_session = Sessions.get_sessions_by_user_id(user_id)
-      IO.inspect user_session
       cond do
         !is_nil(user_session) ->
           session = Sessions.get_session!(user_session.id)
