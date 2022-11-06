@@ -105,28 +105,28 @@ defmodule Gotham.Workingtimes do
 
   def get_user_workingtime(userID, workingtimeID) do
     Repo.one(from worktime in "workingtimes",
-      where: worktime.user == ^String.to_integer(userID) and worktime.id == ^String.to_integer(workingtimeID),
+      where: worktime.user_id == ^String.to_integer(userID) and worktime.id == ^String.to_integer(workingtimeID),
       select: [:start, :id, :end]
     )
   end
 
   def get_user_workingtime_by_start_and_end(userId, startDate, endDate) do
     Repo.all(from worktime in "workingtimes",
-      where: worktime.start >= ^startDate and worktime.end <= ^endDate and worktime.user == ^String.to_integer(userId),
+      where: worktime.start >= ^startDate and worktime.end <= ^endDate and worktime.user_id == ^String.to_integer(userId),
       select: [:start, :id, :end]
     )
   end
 
   def get_user_workingtime_by_start(userId, startDate) do
     Repo.all(from worktime in "workingtimes",
-      where: worktime.start >= ^startDate and worktime.user == ^String.to_integer(userId),
+      where: worktime.start >= ^startDate and worktime.user_id == ^String.to_integer(userId),
       select: [:start, :id, :end]
     )
   end
 
   def get_user_workingtime_by_end(userId, endDate) do
     Repo.all(from worktime in "workingtimes",
-      where: worktime.end <= ^endDate and worktime.user == ^String.to_integer(userId),
+      where: worktime.end <= ^endDate and worktime.user_id == ^String.to_integer(userId),
       select: [:start, :id, :end]
     )
   end

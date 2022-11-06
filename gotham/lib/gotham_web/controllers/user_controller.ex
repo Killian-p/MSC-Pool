@@ -29,34 +29,62 @@ defmodule GothamWeb.UserController do
   end
 
   def update(conn, %{"userID" => id, "user" => user_params}) do
-    user = Users.get_user!(id)
+    token = get_req_header(conn, "token")
 
-    with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "EMPLOYEE"]) && Map.has_key?(user_params, "roles") ->
+        user = Users.get_user!(id)
+        cond do
+          user_params["roles"] == "EMPLOYEE" || user_params["roles"] == "MANAGER" ->
+            with {:ok, %User{} = user} <- Users.update_user_roles(user, user_params) do
+              render(conn, "show.json", user: user)
+            end
+          true ->
+            put_status(conn, :bad_request) |> json(%{message: "Only roles EMPLOYEE or MANAGER are authorized"})
+        end
+      GothamWeb.Token.is_token_valid(List.first(token), ["EMPLOYEE"]) ->
+        user = Users.get_user!(id)
+        with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
+          render(conn, "show.json", user: user)
+        end
+      true ->
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
 
   def delete(conn, %{"userID" => id}) do
+    token = get_req_header(conn, "token")
     user = Users.get_user!(id)
 
-    with {:ok, %User{}} <- Users.delete_user(user) do
-      send_resp(conn, :no_content, "")
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        with {:ok, %User{}} <- Users.delete_user(user) do
+          send_resp(conn, :no_content, "")
+        end
+      true -> 
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})    
     end
   end
 
   def get_user_by_query_params(conn, _params) do
+    token = get_req_header(conn, "token")
     username = Map.get(conn.query_params, "username")
     email = Map.get(conn.query_params, "email")
 
-    cond do
-      !is_nil(username) && !is_nil(email) ->
-        render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
-      !is_nil(username) ->
-        render(conn, "index.json", users: Users.get_user_by_username(username))
-      !is_nil(email) ->
-        render(conn, "index.json", users: Users.get_user_by_mail(email))
+    cond do 
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "EMPLOYEE"]) ->
+        cond do
+          !is_nil(username) && !is_nil(email) ->
+            render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
+          !is_nil(username) ->
+            render(conn, "index.json", users: Users.get_user_by_username(username))
+          !is_nil(email) ->
+            render(conn, "index.json", users: Users.get_user_by_mail(email))
+          true ->
+            put_status(conn, :bad_request) |> json(%{message: "At least username or email is required"})
+        end
       true ->
-        put_status(conn, :bad_request) |> json(%{message: "At least username or email is required"})
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
 
@@ -86,18 +114,22 @@ defmodule GothamWeb.UserController do
 
   def logout(conn, %{"user_id" => user_id}) do
     token = get_req_header(conn, "token")
-    IO.inspect GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"])
-
-    user_session = Sessions.get_sessions_by_user_id(user_id)
 
     cond do
-      !is_nil(user_session) ->
-        session = Sessions.get_session!(user_session.id)
-        with {:ok, %Session{}} <- Sessions.delete_session(session) do
-          send_resp(conn, :no_content, "")
-        end
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
+      user_session = Sessions.get_sessions_by_user_id(user_id)
+      IO.inspect user_session
+      cond do
+        !is_nil(user_session) ->
+          session = Sessions.get_session!(user_session.id)
+          with {:ok, %Session{}} <- Sessions.delete_session(session) do
+            send_resp(conn, :no_content, "")
+          end
+        true ->
+          put_status(conn, :bad_request) |> json(%{message: "User is not connected"})
+      end
       true ->
-        put_status(conn, :bad_request) |> json(%{message: "User is not connected"})
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
 end

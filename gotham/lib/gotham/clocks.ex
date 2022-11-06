@@ -104,7 +104,7 @@ defmodule Gotham.Clocks do
 
   def user_has_clock(userId) do
     Repo.exists?(from clock in "clocks",
-      where: clock.user == ^String.to_integer(userId),
+      where: clock.user_id == ^String.to_integer(userId),
       select: [:status]
     )
   end
