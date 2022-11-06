@@ -53,26 +53,38 @@ defmodule GothamWeb.UserController do
   end
 
   def delete(conn, %{"userID" => id}) do
+    token = get_req_header(conn, "token")
     user = Users.get_user!(id)
 
-    with {:ok, %User{}} <- Users.delete_user(user) do
-      send_resp(conn, :no_content, "")
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        with {:ok, %User{}} <- Users.delete_user(user) do
+          send_resp(conn, :no_content, "")
+        end
+      true -> 
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})    
     end
   end
 
   def get_user_by_query_params(conn, _params) do
+    token = get_req_header(conn, "token")
     username = Map.get(conn.query_params, "username")
     email = Map.get(conn.query_params, "email")
 
-    cond do
-      !is_nil(username) && !is_nil(email) ->
-        render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
-      !is_nil(username) ->
-        render(conn, "index.json", users: Users.get_user_by_username(username))
-      !is_nil(email) ->
-        render(conn, "index.json", users: Users.get_user_by_mail(email))
+    cond do 
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "EMPLOYEE"]) ->
+        cond do
+          !is_nil(username) && !is_nil(email) ->
+            render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
+          !is_nil(username) ->
+            render(conn, "index.json", users: Users.get_user_by_username(username))
+          !is_nil(email) ->
+            render(conn, "index.json", users: Users.get_user_by_mail(email))
+          true ->
+            put_status(conn, :bad_request) |> json(%{message: "At least username or email is required"})
+        end
       true ->
-        put_status(conn, :bad_request) |> json(%{message: "At least username or email is required"})
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
 
