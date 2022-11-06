@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     async seeWorkingTimes(){
-        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
+        await axios.get(`http:/localhost:4000/api/workingtimes/${this.idUser}`, {params :{
           start: new Date("2010-01-01T01:01").toISOString(),
         }})
         .then((response) => {

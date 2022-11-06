@@ -103,7 +103,7 @@ export default {
       this.currentComponent = comp;
     },
     logout(){
-      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_out`, {user_id: this.idCurrentUser}, { headers:{
+      axios.post(`http:/localhost:4000/api/users/sign_out`, {user_id: this.idCurrentUser}, { headers:{
         token: localStorage.getItem("token")
       }})
       .then(_ => {

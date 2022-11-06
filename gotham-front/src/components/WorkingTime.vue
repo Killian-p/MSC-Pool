@@ -101,7 +101,7 @@ export default {
     }
   },
   mounted () {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
+    axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
           start: new Date("1900-07-08T06:00:00Z").toISOString(),
         }}).then(_ => {
           this.datas = _.data.data;
@@ -124,7 +124,7 @@ export default {
       console.log(idWorkingTime);
       console.log(start);
       console.log(end);
-      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {params : {
+      axios.put(`http://localhost:4000/api/workingtimes/${idWorkingTime}`, {params : {
         workingtime:{
           start: new Date(start).toISOString(),
           end: new Date(end).toISOString(),
@@ -132,13 +132,13 @@ export default {
       }}).catch(console.error)
     },
     deleteAWorkingTime(idWorkingTime){
-      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`).catch(console.error)
+      axios.delete(`http://localhost:4000/api/workingtimes/${idWorkingTime}`).catch(console.error)
       .then(() => {
         this.datas= this.datas.filter((elem) => elem.id!==idWorkingTime)
       })
     },
     getWorkingTimesForAPerdiod(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
+      axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
         start: new Date(this.startingDate).toISOString(),
         end: new Date(this.endingDate).toISOString(),
       }}).then(res => {
@@ -154,7 +154,7 @@ export default {
       }).catch(console.error);
     },
     createWorkingTime(){
-      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
+      axios.post(`http://localhost:4000/api/workingtimes/${this.idUser}`,{
         workingtime: {
             start: new Date(this.startingDate).toISOString(),
             end: new Date(this.endingDate).toISOString(),
