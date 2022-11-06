@@ -74,6 +74,8 @@ defmodule GothamWeb.UserController do
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "EMPLOYEE"]) ->
         cond do
+          is_nil(username) && is_nil(email) && GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+            render(conn, "index.json", users: Users.list_users())
           !is_nil(username) && !is_nil(email) ->
             render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
           !is_nil(username) ->
@@ -118,7 +120,6 @@ defmodule GothamWeb.UserController do
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
       user_session = Sessions.get_sessions_by_user_id(user_id)
-      IO.inspect user_session
       cond do
         !is_nil(user_session) ->
           session = Sessions.get_session!(user_session.id)

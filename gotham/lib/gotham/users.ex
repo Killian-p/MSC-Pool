@@ -111,15 +111,15 @@ defmodule Gotham.Users do
   end
 
   def get_user_by_mail_and_username(username, email) do
-    Repo.all(from user in "users", where: user.username == ^username and user.email == ^email, select: [:email, :username, :id])
+    Repo.all(from user in "users", where: user.username == ^username and user.email == ^email, select: [:email, :username, :id, :roles])
   end
 
   def get_user_by_username(username) do
-    Repo.all(from user in "users", where: user.username == ^username, select: [:email, :username, :id])
+    Repo.all(from user in "users", where: user.username == ^username, select: [:email, :username, :id, :roles])
   end
 
   def get_user_by_mail(email) do
-    Repo.all(from user in "users", where: user.email == ^email, select: [:email, :username, :id])
+    Repo.all(from user in "users", where: user.email == ^email, select: [:email, :username, :id, :roles])
   end
 
   def get_user_by_mail_and_password(email, password) do

@@ -135,4 +135,8 @@ defmodule Gotham.Teams do
       select: [:email, :id, :username, :roles])
     Repo.all(query)
   end
+
+  def get_manager_team(managerId) do
+    Repo.all(from team in "teams", where: team.manager_id == ^String.to_integer(managerId), select: [:id, :name, :manager_id])
+  end
 end
