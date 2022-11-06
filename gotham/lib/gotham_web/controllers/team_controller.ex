@@ -11,8 +11,15 @@ defmodule GothamWeb.TeamController do
   action_fallback GothamWeb.FallbackController
 
   def index(conn, _params) do
-    teams = Teams.list_teams()
-    render(conn, "index.json", teams: teams)
+    token = get_req_header(conn, "token")
+
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        teams = Teams.list_teams()
+        render(conn, "index.json", teams: teams)
+      true ->
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+    end
   end
 
   def create(conn, %{"team" => team_params}) do

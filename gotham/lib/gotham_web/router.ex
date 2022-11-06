@@ -35,6 +35,7 @@ defmodule GothamWeb.Router do
 
     scope "/teams" do
       post "/", TeamController, :create
+      get "/", TeamController, :index
       get "/:teamID", TeamController, :show
       delete "/:teamID", TeamController, :delete
       put "/:teamID/users/:userID", TeamController, :add_user_to_team
