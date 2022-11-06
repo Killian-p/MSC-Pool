@@ -35,7 +35,9 @@ defmodule Gotham.Users do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+  end
 
   @doc """
   Creates a user.
@@ -70,6 +72,12 @@ defmodule Gotham.Users do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_user_roles(%User{} = user, attrs) do
+    user
+    |> User.changeset_user_roles(attrs)
     |> Repo.update()
   end
 

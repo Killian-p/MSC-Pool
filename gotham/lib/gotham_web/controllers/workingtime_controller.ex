@@ -42,7 +42,7 @@ defmodule GothamWeb.WorkingtimeController do
   end
 
   def add_user_working_time(conn, %{"workingtime" => workingtime_params, "userID" => id}) do
-    with {:ok, %Workingtime{} = workingtime} <- Workingtimes.create_workingtime(Map.put(workingtime_params, "user", id)) do
+    with {:ok, %Workingtime{} = workingtime} <- Workingtimes.create_workingtime(Map.put(workingtime_params, "user_id", id)) do
       conn
       |> put_status(:created)
       # |> put_resp_header("location", Routes.workingtime_path(conn, :show, workingtime))
