@@ -4,7 +4,7 @@ services:
   back-end:
     build:
       context: './gotham'
-    command: sh -c 'mix ecto.setup && mix phx.server'
+    command: sh -c 'mix deps.get && mix ecto.setup && mix phx.server'
     working_dir: /app
     container_name: 'back-end'
     restart: 'unless-stopped'
