@@ -74,6 +74,8 @@ defmodule GothamWeb.UserController do
     cond do 
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "EMPLOYEE"]) ->
         cond do
+          is_nil(username) && is_nil(email) && GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+            render(conn, "index.json", users: Users.list_users())
           !is_nil(username) && !is_nil(email) ->
             render(conn, "index.json", users: Users.get_user_by_mail_and_username(username, email))
           !is_nil(username) ->
