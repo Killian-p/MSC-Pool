@@ -66,7 +66,6 @@ export default {
         username: '',
         email: '',
         password: '',
-        idCurrentUser: null,
         userExists: true,
         currentTab: "sign_in"
     }
@@ -88,9 +87,7 @@ export default {
         })
         .then((res) => {
             localStorage.setItem("token", res.data.token);
-            console.log(res);
             this.$emit("logged", res.data.id)
-            this.idCurrentUser = res.data.id;
             this.username= "";
             this.email= "";
             this.userExists = true;
@@ -104,8 +101,7 @@ export default {
          })
         .then(_ => {
             localStorage.setItem("token", _.data.token);
-            this.idCurrentUser = _.data.id;
-            this.$emit("logged", _.data.id);
+            this.$emit("logged", [_.data.id, _.data.roles]);
             this.userExists = true;
             
         })

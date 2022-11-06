@@ -1,6 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import User from './components/User.vue';
+import TeamsManager from './components/TeamsManager.vue';
+import RolesManager from './components/RolesManager.vue';
 import WorkingTimes from './components/WorkingTimes.vue';
 import WorkingTime from './components/WorkingTime.vue';
 import ClockManager from './components/ClockManager.vue';
@@ -51,25 +53,41 @@ import Login from './components/Login.vue';
             Se déconnecter</button>
         </div>
       </div>
-      
+      <div v-if="this.currentUserRole === 'ADMIN'">
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('teamsManager')"
+          :style="currentComponent == 'teamsManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          >
+            Teams Manager</button>
+        </div>
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('rolesManager')"
+          :style="currentComponent == 'RolesManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          >
+            Roles Manager</button>
+        </div>
+      </div>
     </div>
     <div>
-      
-      <WorkingTimes v-if="currentComponent == 'workingTimes'" :id-user="idCurrentUser">
-
+<WorkingTimes v-if="currentComponent == 'workingTimes'" :id-user="idCurrentUser">
 </WorkingTimes>
+
 <WorkingTime v-if="currentComponent == 'workingTime'" :id-user="idCurrentUser">
-
 </WorkingTime>
+
 <ClockManager v-if="currentComponent == 'clock'" :id-user="idCurrentUser">
-
 </ClockManager>
-<ChartManager v-if="currentComponent == 'chartManager'" :id-user="idCurrentUser">
 
-</ChartManager>
+<ChartManager v-if="currentComponent == 'chartManager'" :id-user="idCurrentUser">
+</ChartManager >
+
+<TeamsManager v-if="currentComponent == 'teamsManager'" :id-user="idCurrentUser">
+</TeamsManager>
+
+<RolesManager v-if="currentComponent == 'rolesManager'" :id-user="idCurrentUser">
+</RolesManager>
 
 <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" :id-user="idCurrentUser">
-
 </Login>
   </div>
   
@@ -92,13 +110,15 @@ export default {
     return {
         connected: false,
         idCurrentUser: null,
-        currentComponent: null,
+        currentComponent: "Login",
+        currentUserRole: null,
     }
   },
   methods:{
-    loggin(id){
-      this.idCurrentUser = id;
-      this.userRole = roles
+    loggin(data){
+      console.log(data[0], [1])
+      this.idCurrentUser = data[0];
+      this.currentUserRole = data[1];
     },
     selectComponent(comp){
       this.currentComponent = comp;
@@ -109,7 +129,7 @@ export default {
       }})
       .then(_ => {
         localStorage.removeItem("token");
-        this.idCurrentUser = null;
+        this.selectComponent = "Login";
         this.$emit("logged", null);
         this.connected = false;
       })
