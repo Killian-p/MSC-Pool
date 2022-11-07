@@ -42,7 +42,7 @@
                         </button>
                     </div>
                     <div class="box" v-if="currentTab == 'sign_in'">
-                        <button @click="getUser" class="buttons" type="button">
+                        <button @click="login" class="buttons" type="button">
                             Se connecter
                         </button>
                     </div>
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     createUser(){
-        axios.post(`http://localhost:4000/api/users/sign_up`, {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
             user:{
                 username: this.username,
                 email: this.email,
@@ -97,8 +97,8 @@ export default {
         }).catch(console.error)
         this.connected=true;
     },
-    getUser(){
-        axios.post(`http://localhost:4000/api/users/sign_in`, {
+    login(){
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
             password: this.password,
             email: this.email,
          })

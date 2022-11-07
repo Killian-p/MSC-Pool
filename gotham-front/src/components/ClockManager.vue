@@ -59,7 +59,7 @@ export default {
     },
 
     clock(){
-      axios.post(`http://localhost:4000/api/clocks/${this.idUser}`, {
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/clocks/${this.idUser}`, {
         clock: {
           time: this.getLocalIsoString(),
         }
@@ -75,7 +75,7 @@ export default {
     },
     
     getClock(){
-      axios.get(`http://localhost:4000/api/clocks/${this.idUser}`, { headers:{
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clocks/${this.idUser}`, { headers:{
         token: localStorage.getItem("token")
       }})
       .then(_ => {
