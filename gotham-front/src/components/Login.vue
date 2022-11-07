@@ -32,7 +32,9 @@
                             <input v-model="password" type="password"/>
                         </div>
                     </div>
+                    
                 </div>
+                <span style="color: red;">{{errorMessage}}</span>  
                 <div style="display: flex;">
                     <div class="box" style="margin-right: 60px;" v-if="currentTab == 'sign_up'">
                         <button @click="createUser" class="buttons" type="button">
@@ -68,7 +70,8 @@ export default {
         password: '',
         idCurrentUser: null,
         userExists: true,
-        currentTab: "sign_in"
+        currentTab: "sign_in",
+        errorMessage: ''
     }
   },
   mounted () {
@@ -106,7 +109,9 @@ export default {
             this.userExists = true;
             
         })
-        .catch(console.error);
+        .catch(_ => {
+            this.errorMessage = _.response.data.message;
+        });
     },
     changeTab(tab){
         this.currentTab = tab;
