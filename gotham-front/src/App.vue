@@ -10,16 +10,8 @@ import Login from './components/Login.vue';
 
 <template>
   <div class="main">
-    <div class="nav">
-      <div v-if="idCurrentUser == null">
-        <div class="box">
-      <button class="form-control nav-buttons" @click="selectComponent('Login')" 
-      :style="currentComponent == 'Login' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
-      >  
-        Se connecter</button>
-        </div>
-      </div>
-      <div v-if="idCurrentUser != null">
+    <div class="nav" v-if="idCurrentUser != null">
+      <div>
         <div class="box">
       <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" 
       :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -33,12 +25,6 @@ import Login from './components/Login.vue';
             workingTime</button>
         </div>
         <div class="box">
-          <button class="form-control nav-buttons" @click="selectComponent('clock')"
-          :style="currentComponent == 'clock' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
-          >
-          clock</button>
-        </div>
-        <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('chartManager')"
           :style="currentComponent == 'chartManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
@@ -46,10 +32,13 @@ import Login from './components/Login.vue';
         </div>
         <div class="box">
           <button class="form-control nav-buttons" @click="logout"
-          style="background-color: #3C4048;color: #00ABB3"
+          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 300px;"
           >
             Se déconnecter</button>
         </div>
+        <ClockManager :id-user="idCurrentUser" :username="username">
+
+</ClockManager>
       </div>
       
     </div>
@@ -61,14 +50,11 @@ import Login from './components/Login.vue';
 <WorkingTime v-if="currentComponent == 'workingTime'" :id-user="idCurrentUser">
 
 </WorkingTime>
-<ClockManager v-if="currentComponent == 'clock'" :id-user="idCurrentUser">
-
-</ClockManager>
 <ChartManager v-if="currentComponent == 'chartManager'" :id-user="idCurrentUser">
 
 </ChartManager>
 
-<Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" :id-user="idCurrentUser">
+<Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" @username="setUsername" :id-user="idCurrentUser">
 
 </Login>
   </div>
@@ -92,18 +78,22 @@ export default {
     return {
         connected: false,
         idCurrentUser: null,
-        currentComponent: null,
+        currentComponent: 'Login',
+        username: null,
     }
   },
   methods:{
     loggin(id){
       this.idCurrentUser = id;
     },
+    setUsername(name){
+      this.username = name;
+    },
     selectComponent(comp){
       this.currentComponent = comp;
     },
     logout(){
-      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_out`, {user_id: this.idCurrentUser}, { headers:{
+      axios.post(`http://localhost:4000/api/users/sign_out`, {user_id: this.idCurrentUser}, { headers:{
         token: localStorage.getItem("token")
       }})
       .then(_ => {
@@ -111,6 +101,7 @@ export default {
         this.idCurrentUser = null;
         this.$emit("logged", null);
         this.connected = false;
+        this.currentComponent = 'Login'
       })
     }
   }
@@ -131,8 +122,13 @@ export default {
 
 .nav-buttons{
   border-radius: 45px;
-  width: 100%;
-  height: 150%;
+  width: 8vw;
+  height: 8vh;
+}
+
+.nav-buttons:hover{
+  background-color: #00ABB3;
+  color: #3C4048
 }
 
 .nav{
