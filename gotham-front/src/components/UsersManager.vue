@@ -2,6 +2,7 @@
 import User from './User.vue';
 </script>
 <template>
+  MANAGERS
     <table>
       <thead>
         <th>USERNAME</th>
@@ -26,6 +27,7 @@ import User from './User.vue';
             ⟸
         </button>
     </div>
+      EMPLOYEES
     <table>
       <thead>
         <th>USERNAME</th>
