@@ -32,7 +32,9 @@
                             <input v-model="password" type="password"/>
                         </div>
                     </div>
+                    
                 </div>
+                <span style="color: red;">{{errorMessage}}</span>  
                 <div style="display: flex;">
                     <div class="box" style="margin-right: 60px;" v-if="currentTab == 'sign_up'">
                         <button @click="createUser" class="buttons" type="button">
@@ -68,7 +70,8 @@ export default {
         password: '',
         idCurrentUser: null,
         userExists: true,
-        currentTab: "sign_in"
+        currentTab: "sign_in",
+        errorMessage: ''
     }
   },
   mounted () {
@@ -79,7 +82,7 @@ export default {
   },
   methods: {
     createUser(){
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
+        axios.post(`http://localhost:4000/api/users/sign_up`, {
             user:{
                 username: this.username,
                 email: this.email,
@@ -98,7 +101,7 @@ export default {
         this.connected=true;
     },
     getUser(){
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
+        axios.post(`http://localhost:4000/api/users/sign_in`, {
             password: this.password,
             email: this.email,
          })
@@ -106,10 +109,13 @@ export default {
             localStorage.setItem("token", _.data.token);
             this.idCurrentUser = _.data.id;
             this.$emit("logged", _.data.id);
+            this.$emit("username", _.data.username);
             this.userExists = true;
             
         })
-        .catch(console.error);
+        .catch(_ => {
+            this.errorMessage = _.response.data.message;
+        });
     },
     changeTab(tab){
         this.currentTab = tab;
