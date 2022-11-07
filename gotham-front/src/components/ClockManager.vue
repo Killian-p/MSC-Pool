@@ -1,13 +1,18 @@
 <template>
   <div class="clock">
     <div class="sub">
-      <div>
-        User: {{username}}
+      <div style="display: flex;">
+        <div>
+          User: {{username}}
+        </div>
+        <div style="margin-left: 55px;">
+          {{clocking ?  `${timer/3600<10 ? 0 : ''}${~~(timer/3600)}:${(timer%3600)/60<10 ? 0 : ''}${~~((timer%3600)/60)}:${(timer%3600)%60<10 ? 0 : ''}${(timer%3600)%60}` : '00:00:00'}}
+        </div>
       </div>
       <div>
         Status: {{clocking ? 'Clocking' : 'Not clocking'}}
       </div>
-      <div style="margin-left: 25px; margin-top: 10px;">
+      <div style="margin-left: 45px; margin-top: 10px;">
         <a href="#" @click="clock">{{clocking ? 'Clock out' : 'Clock in'}}</a>
       </div>
     </div>
@@ -30,10 +35,17 @@ export default {
   data () {
     return {
       clocking: false,
+      lastTime: null,
+      timer: null,
+      timerHour: null,
+      timerMinute: null,
+      timerSecond: null,
     }
   },
   mounted () {
     this.getClock();
+    this.setTimer();
+    setInterval(this.addTime, 1000);
   },
   created () {
 
@@ -56,6 +68,8 @@ export default {
         token: localStorage.getItem("token")
       }})
       .then(_ => {
+        this.lastTime = _.data.data.time;
+        this.setTimer();
         this.clocking = _.data.data.status;
       })
     },
@@ -65,8 +79,17 @@ export default {
         token: localStorage.getItem("token")
       }})
       .then(_ => {
+        this.lastTime = _.data.data.time;
         this.clocking = _.data.data.status;
       })
+    },
+
+    setTimer(){
+      this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf())/1000);
+    },
+
+    addTime(){
+      this.timer ++;
     }
 
   },
@@ -104,9 +127,9 @@ export default {
   bottom: 0;
   border-radius: 20px;
   margin-bottom: 10px;
-  margin-left: 10px;
-  width: 9vw;
-  height: 10vh;
+  margin-left: 0px;
+  width: 175px;
+  height: 80px;
   background-color: #B2B2B2;
 }
 
