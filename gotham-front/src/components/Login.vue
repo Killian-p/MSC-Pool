@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     createUser(){
-        axios.post(`http://localhost:4000/api/users/sign_up`, {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
             user:{
                 username: this.username,
                 email: this.email,
@@ -98,14 +98,14 @@ export default {
         this.connected=true;
     },
     getUser(){
-        axios.post(`http://localhost:4000/api/users/sign_in`, {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
             password: this.password,
             email: this.email,
          })
         .then(_ => {
             localStorage.setItem("token", _.data.token);
             this.idCurrentUser = _.data.id;
-            this.$emit("logged", _.data.id);
+            this.$emit("logged", [_.data.id, _.data.roles]);
             this.$emit("username", _.data.username);
             this.userExists = true;
             
