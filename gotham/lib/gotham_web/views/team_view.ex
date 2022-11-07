@@ -2,6 +2,7 @@ defmodule GothamWeb.TeamView do
   use GothamWeb, :view
   alias GothamWeb.TeamView
   alias GothamWeb.UserView
+  alias GothamWeb.WorkingtimeView
 
   def render("index.json", %{teams: teams}) do
     %{data: render_many(teams, TeamView, "team.json")}
@@ -21,5 +22,10 @@ defmodule GothamWeb.TeamView do
 
   def render("team_users.json", %{users: users}) do
     %{data: render_many(users, UserView, "user.json")}
+  end
+
+  def render("team_workingtimes.json", %{workingtimes: workingtimes}) do
+    IO.inspect workingtimes
+    %{data: render_many(workingtimes, WorkingtimeView, "workingtime.json")}
   end
 end

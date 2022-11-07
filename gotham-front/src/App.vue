@@ -61,10 +61,9 @@ import Login from './components/Login.vue';
             User Management
           </button>
         </div>
-        <ClockManager :id-user="idCurrentUser" :username="username">
-
-</ClockManager>
       </div>
+      <ClockManager :id-user="idCurrentUser" :username="username">
+      </ClockManager>
     </div>
     <div>
 <WorkingTimes v-if="currentComponent == 'workingTimes'" :id-user="idCurrentUser">
@@ -72,9 +71,6 @@ import Login from './components/Login.vue';
 
 <WorkingTime v-if="currentComponent == 'workingTime'" :id-user="idCurrentUser">
 </WorkingTime>
-
-<ClockManager v-if="currentComponent == 'clock'" :id-user="idCurrentUser">
-</ClockManager>
 
 <ChartManager v-if="currentComponent == 'chartManager'" :id-user="idCurrentUser">
 </ChartManager >
@@ -160,8 +156,8 @@ export default {
 
 .nav-buttons{
   border-radius: 45px;
-  width: 8vw;
-  height: 8vh;
+  width: 175px;
+  height: 60px;
 }
 
 .nav-buttons:hover{
@@ -173,7 +169,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #D9D9D9;
-  width: 10vw;
+  width: 200px;
   align-items: center;
 }
 </style>

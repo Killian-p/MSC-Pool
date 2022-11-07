@@ -138,7 +138,7 @@ export default {
       })
     },
     getWorkingTimesForAPerdiod(){
-      axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
         start: new Date(this.startingDate).toISOString(),
         end: new Date(this.endingDate).toISOString(),
       }}).then(res => {
@@ -154,7 +154,7 @@ export default {
       }).catch(console.error);
     },
     createWorkingTime(){
-      axios.post(`http://localhost:4000/api/workingtimes/${this.idUser}`,{
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
         workingtime: {
             start: new Date(this.startingDate).toISOString(),
             end: new Date(this.endingDate).toISOString(),

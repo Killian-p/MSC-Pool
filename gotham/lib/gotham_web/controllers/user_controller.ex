@@ -32,7 +32,7 @@ defmodule GothamWeb.UserController do
     token = get_req_header(conn, "token")
 
     cond do
-      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "EMPLOYEE"]) && Map.has_key?(user_params, "roles") ->
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) && Map.has_key?(user_params, "roles") ->
         user = Users.get_user!(id)
         cond do
           user_params["roles"] == "EMPLOYEE" || user_params["roles"] == "MANAGER" ->
@@ -42,10 +42,17 @@ defmodule GothamWeb.UserController do
           true ->
             put_status(conn, :bad_request) |> json(%{message: "Only roles EMPLOYEE or MANAGER are authorized"})
         end
-      GothamWeb.Token.is_token_valid(List.first(token), ["EMPLOYEE"]) ->
+      GothamWeb.Token.is_token_valid(List.first(token), ["EMPLOYEE", "MANAGER", "ADMIN"]) ->
         user = Users.get_user!(id)
-        with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-          render(conn, "show.json", user: user)
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            user.id == claims["user_id"] ->
+              with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
+                render(conn, "show.json", user: user)
+              end
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
         end
       true ->
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})

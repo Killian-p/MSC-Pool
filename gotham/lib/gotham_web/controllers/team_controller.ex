@@ -114,4 +114,27 @@ defmodule GothamWeb.TeamController do
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
+
+  defp get_nested_list(list) do
+    cond do
+      List.first(list) ->
+        user = List.first(list)
+        user.workingtimes ++ get_nested_list(List.delete_at(list, 0))
+      true ->
+        []
+    end
+  end
+
+  def get_workingtimes_of_team(conn, %{"teamID" => teamId}) do
+    token = get_req_header(conn, "token")
+
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER"]) ->
+        team = Teams.get_team!(teamId, [:users, users: :workingtimes])
+        list = get_nested_list(team.users)
+        render(conn, "team_workingtimes.json", workingtimes: list)
+      true ->
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+    end
+  end
 end
