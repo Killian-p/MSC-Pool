@@ -9,12 +9,12 @@ defmodule GothamWeb.Router do
     pipe_through :api
 
     scope "/users" do
-      # get "/", UserController, :index
       get "/", UserController, :get_user_by_query_params
       get "/:userID", UserController, :show
       # post "/", UserController, :create
       put "/:userID", UserController, :update
       delete "/:userID", UserController, :delete
+      # get "/:userID/teams", UserController, :get_team_of_manager
       post "/sign_up", UserController, :signup
       post "/sign_in", UserController, :signin
       post "/sign_out", UserController, :logout
@@ -31,6 +31,17 @@ defmodule GothamWeb.Router do
     scope "/clocks" do
       get "/:userID", ClockController, :show
       post "/:userID", ClockController, :add_user_clock
+    end
+
+    scope "/teams" do
+      post "/", TeamController, :create
+      get "/", TeamController, :index
+      get "/:teamID", TeamController, :show
+      delete "/:teamID", TeamController, :delete
+      put "/:teamID/users/:userID", TeamController, :add_user_to_team
+      put "/:teamID", TeamController, :update
+      get "/:teamID/users", TeamController, :list_users_of_team
+      get "/users/:userID", TeamController, :get_team_of_manager
     end
   end
 

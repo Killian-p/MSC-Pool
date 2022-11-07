@@ -91,8 +91,11 @@ export default {
         })
         .then((res) => {
             localStorage.setItem("token", res.data.token);
-            this.idCurrentUser = _.data.id;
-            this.$emit("logged", _.data.id);
+            console.log(res);
+            this.$emit("logged", res.data.id)
+            this.idCurrentUser = res.data.id;
+            this.username= "";
+            this.email= "";
             this.userExists = true;
         }).catch(console.error)
         this.connected=true;
