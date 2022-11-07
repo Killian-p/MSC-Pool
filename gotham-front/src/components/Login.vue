@@ -32,7 +32,9 @@
                             <input v-model="password" type="password"/>
                         </div>
                     </div>
+                    
                 </div>
+                <span style="color: red;">{{errorMessage}}</span>  
                 <div style="display: flex;">
                     <div class="box" style="margin-right: 60px;" v-if="currentTab == 'sign_up'">
                         <button @click="createUser" class="buttons" type="button">
@@ -40,7 +42,7 @@
                         </button>
                     </div>
                     <div class="box" v-if="currentTab == 'sign_in'">
-                        <button @click="getUser" class="buttons" type="button">
+                        <button @click="login" class="buttons" type="button">
                             Se connecter
                         </button>
                     </div>
@@ -66,9 +68,9 @@ export default {
         username: '',
         email: '',
         password: '',
-        idCurrentUser: null,
         userExists: true,
-        currentTab: "sign_in"
+        currentTab: "sign_in",
+        errorMessage: ''
     }
   },
   mounted () {
@@ -88,16 +90,14 @@ export default {
         })
         .then((res) => {
             localStorage.setItem("token", res.data.token);
-            console.log(res);
             this.$emit("logged", res.data.id)
-            this.idCurrentUser = res.data.id;
             this.username= "";
             this.email= "";
             this.userExists = true;
         }).catch(console.error)
         this.connected=true;
     },
-    getUser(){
+    login(){
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
             password: this.password,
             email: this.email,
@@ -105,11 +105,14 @@ export default {
         .then(_ => {
             localStorage.setItem("token", _.data.token);
             this.idCurrentUser = _.data.id;
-            this.$emit("logged", _.data.id);
+            this.$emit("logged", [_.data.id, _.data.roles]);
+            this.$emit("username", _.data.username);
             this.userExists = true;
             
         })
-        .catch(console.error);
+        .catch(_ => {
+            this.errorMessage = _.message ?? _.response.data.message;
+        });
     },
     changeTab(tab){
         this.currentTab = tab;
