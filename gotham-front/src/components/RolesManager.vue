@@ -75,13 +75,14 @@
         },
         setManager(id){
             axios.put(`http://localhost:4000/api/users/${id}`, {
-                user:{
+              user:{
                     roles: "MANAGER"
                 },
-                headers:{
+              }, {
+              headers:{
                     token: localStorage.getItem("token")
                 },
-            }).then((res) => {
+            } ).then((res) => {
             }).catch(console.error)
         },
         setEmployee(id){
