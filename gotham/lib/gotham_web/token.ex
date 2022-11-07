@@ -34,7 +34,7 @@ defmodule GothamWeb.Token do
   end
 
   def is_token_valid(token, authorized_roles) do
-    cond do 
+    cond do
       token ->
         {:ok, claims} = GothamWeb.Token.verify_and_validate(token)
         user = Users.get_user!(claims["user_id"])
@@ -53,7 +53,7 @@ defmodule GothamWeb.Token do
 
   def get_token_data(token) do
   IO.inspect token
-    cond do 
+    cond do
       token ->
         {:ok, claims} = GothamWeb.Token.verify_and_validate(token)
       true ->
