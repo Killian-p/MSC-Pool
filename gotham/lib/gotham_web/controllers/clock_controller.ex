@@ -4,6 +4,7 @@ defmodule GothamWeb.ClockController do
   alias Gotham.Workingtimes
   alias Gotham.Clocks
   alias Gotham.Clocks.Clock
+  alias Gotham.Users
 
   action_fallback GothamWeb.FallbackController
 
@@ -21,9 +22,16 @@ defmodule GothamWeb.ClockController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    clock = Clocks.get_clock!(id)
-    render(conn, "show.json", clock: clock)
+  def show(conn, %{"userID" => userId}) do
+    token = get_req_header(conn, "token")
+
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
+        user = Users.get_user!(userId, [:clocks])
+        render(conn, "show.json", clock: user.clocks)
+      true ->
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+    end
   end
 
   def update(conn, %{"id" => id, "clock" => clock_params}) do
@@ -43,24 +51,31 @@ defmodule GothamWeb.ClockController do
   end
 
   def add_user_clock(conn, %{"clock" => clock_params, "userID" => userId}) do
+    token = get_req_header(conn, "token")
+
     cond do
-      Clocks.user_has_clock(userId) ->
-        clock = Clocks.get_clock!(userId)
-        data = %{start: clock.time, end: Map.get(clock_params, "time"), user_id: userId}
-        with {:ok, %Clock{} = clock} <- Clocks.update_clock(clock, Map.put(clock_params, "status", !clock.status)) do
-          cond do
-            !clock.status ->
-              IO.inspect "set to false"
-              Workingtimes.create_workingtime(data)
-            true ->
-              IO.inspect "set to true"
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
+        cond do
+          Clocks.user_has_clock(userId) ->
+            clock = Clocks.get_clock!(userId)
+            data = %{start: clock.time, end: Map.get(clock_params, "time"), user_id: userId}
+            with {:ok, %Clock{} = clock} <- Clocks.update_clock(clock, Map.put(clock_params, "status", !clock.status)) do
+              cond do
+                !clock.status ->
+                  IO.inspect "set to false"
+                  Workingtimes.create_workingtime(data)
+                true ->
+                  IO.inspect "set to true"
+              end
+              render(conn, "show.json", clock: clock)
             end
-          render(conn, "show.json", clock: clock)
+          true ->
+            with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user_id", userId)) do
+              render(conn, "show.json", clock: clock)
+            end
         end
       true ->
-        with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user_id", userId)) do
-          render(conn, "show.json", clock: clock)
-        end
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
 end

@@ -4,6 +4,7 @@ defmodule Gotham.Users.User do
 
   alias Gotham.Teams.Team
   alias Gotham.Workingtimes.Workingtime
+  alias Gotham.Clocks.Clock
 
   schema "users" do
     field :email, :string
@@ -12,6 +13,7 @@ defmodule Gotham.Users.User do
     field :password, :string
     many_to_many(:teams, Team, join_through: "user_team", on_replace: :delete)
     has_many(:workingtimes, Workingtime)
+    has_one(:clocks, Clock)
 
     timestamps()
   end
