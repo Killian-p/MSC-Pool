@@ -107,13 +107,13 @@ export default {
         this.connected=true;
     },
     deleteUser(){
-        axios.delete(`http://localhost:4000/api/users/${this.idCurrentUser}`)
+        axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idCurrentUser}`)
         .then(_ => {
             this.idCurrentUser = null;
         });
     },
     getUser(){
-        axios.get('http://localhost:4000/api/users', { params: { username: this.connectionUsername, email: this.connectionEmail } })
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { params: { username: this.connectionUsername, email: this.connectionEmail } })
         .then(_ => {
             if(_.data.data.length == 0){
                 this.userExists = false;

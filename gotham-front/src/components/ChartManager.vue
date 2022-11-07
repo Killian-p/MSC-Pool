@@ -7,11 +7,13 @@
       <input type="date" id="endingDate" v-model="endingDate" required/>
       <button @click="searchDate()">Search</button>
     </form>
-    <div class ="barChart"><canvas id="bar-chart" width="450" height="100"></canvas></div>
-    <div class ="lineChart"><canvas id="line-chart1" width="450" height="100"></canvas></div>
-    <div class ="lineChart"><canvas id="line-chart2" width="450" height="100"></canvas></div>
-    <div class ="lineChart"><canvas id="line-chart3" width="450" height="100"></canvas></div>
-    <div class ="doughnutChart"><canvas id="doughnut-chart" width="100" height="100"></canvas></div>
+    <div class="containerGraph">
+      <div class ="barChart"><canvas id="bar-chart"></canvas></div>
+      <div class ="lineChart"><canvas id="line-chart1" width="450" height="100"></canvas></div>
+      <div class ="lineChart"><canvas id="line-chart2" width="450" height="100"></canvas></div>
+      <div class ="lineChart"><canvas id="line-chart3" width="450" height="100"></canvas></div>
+      <div class ="doughnutChart"><canvas id="doughnut-chart" width="100" height="100"></canvas></div>
+    </div>
   </body>
 </template>
 
@@ -36,8 +38,6 @@ export default {
       workHours: null,
       arrayStart: null,
       arrayEnd: null,
-      
-      filteredData: null,//?
 
       workTime: null,
       nightTimes: null,
@@ -52,9 +52,7 @@ export default {
 
       searchEnd: null,
       searchStart: null,
-      
-      // startingDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("Z")[0].slice(0,16),
-      // endingDate: new Date().toISOString().split("Z")[0].slice(0,16),
+    
     }
   },
   async mounted () {
@@ -388,6 +386,9 @@ export default {
       }
       var chartExist = Chart.getChart("bar-chart"); 
       var char2Exist = Chart.getChart("doughnut-chart");
+      var char3Exist = Chart.getChart("line-chart1");
+      var char4Exist = Chart.getChart("line-chart2");
+      var char5Exist = Chart.getChart("line-chart3");
       if (chartExist != undefined){
         chartExist.destroy();
         char2Exist.destroy();
@@ -401,5 +402,14 @@ export default {
 }
 </script>
 <style scoped>
+.containerGraph{
+  width: 100%;
+  height: 100%;
+}
+.barChart{
+  margin-left: auto;
+  margin-right: auto;
+  height: 350px;
+}
 
 </style>
