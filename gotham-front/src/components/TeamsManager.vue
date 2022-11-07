@@ -29,7 +29,7 @@
       }
     },
     mounted () {
-      axios.get(`http://localhost:4000/api/teams/${this.teamId}/users`)
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.teamId}/users`)
         .then(_ => {
             console.log(_)
             this.datas = _.data.data;

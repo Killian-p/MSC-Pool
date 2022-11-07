@@ -1,79 +1,33 @@
 <template>
-    <div class="navUser">
-    <div class="nav">
-            <div id="app">
-                <div v-if="idCurrentUser == null">
-                    <form v-on:submit.prevent="createUser" method="post">
-                    <div>
-                        <label>
-                    Email :
-                </label>
-                <input type="email" id="email" v-model="email" required/>
-                    </div>
-                <label>
-                    Username :
-                </label>
-                <input type="text" id="username" v-model="username" required/>
-                <div>
-                    <button type="submit">
-                        créer un utilisateur
-                    </button>
-                </div>
-                </form>
-                </div>
-                
-            </div>
-            <div class="box" v-if="idCurrentUser == null">
-                <form v-on:submit.prevent="getUser" method="get">
-                    <div>
-                        <label>
-                    Email :
-                </label>
-                <input type="email" id="email" v-model="connectionEmail" required/>
-                    </div>
-                <label>
-                    Username :
-                </label>
-                <input type="text" id="username" v-model="connectionUsername" required/>
-                <div>
-                    <button type="submit">
-                        Se connecter
-                    </button>
-                </div>
-                <span v-if="!userExists" style="color: red;">Identifiants incorrects</span>
-                </form>
-            </div>
-            <div class="box" v-if="idCurrentUser != null">
-                <form v-on:submit.prevent="updateUser" method="put">
-                    <div>
-                        <label>
-                    Email :
-                </label>
-                <input type="email" id="email" v-model="editEmail" required :disabled="idCurrentUser == null"/>
-                    </div>
-                <label>
-                    Username :
-                </label>
-                <input type="text" id="username" v-model="editUsername" required :disabled="idCurrentUser == null"/>
-                <div>
-                    <button type="submit" :disabled="idCurrentUser == null">
-                        modifier un utilisateur
-                    </button>
-                </div>
-                
+    USER MANAGEMENT
+    <table>
+      <thead>
+        <th>USERNAME</th>
+        <th>ROLE</th>
+        <th>EMAIL ADDRESS</th>
+      </thead>
+      <tbody>
+        <tr v-for="employee in users">
+            <td 
+                :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
+                @click="this.selectedUserId = employee.id"
+            >
+                <input type="text" :value="employee.username" readonly/>
+            </td>
 
-                </form>
-            </div>
-            
-            <div class="box" v-if="idCurrentUser != null">
-                <button @click="deleteUser" :disabled="idCurrentUser == null">
-                    Supprimer l'utilisateur
-                </button>
-            </div>
-        
-    </div>
-    
-  </div>
+            <td 
+                :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
+                @click="this.selectedUserId = employee.id"
+            >
+                <input type="text" :value="employee.roles" readonly/>
+            </td>
+            <td 
+                :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
+                @click="this.selectedUserId = employee.id"
+            >{{employee.email}}</td>
+        </tr>
+      </tbody>
+    </table>
 </template>
 
 <script>
@@ -88,6 +42,7 @@ export default {
   },
   data () {
     return {
+        users: [],
         connected: false,
         username: '',
         email: '',
@@ -102,21 +57,24 @@ export default {
   mounted () {
   },
   created () {
+    this.getAllUsers();
   },
   computed: {
   },
   methods: {
-    seeUsers(){
+    getAllUsers(){
         let a;
-        axios.get("http://localhost:4000/api/users?email=Williams@quelquechose")
-        .then((response) => {
-            a = response.data;
-            console.log(a);
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
+                token: localStorage.getItem("token")
+            }})
+        .then((res) => {
+            console.log(res)
+            this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
         })
         .catch(console.error);
     },
     createUser(){
-        axios.post('http://localhost:4000/api/users', {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users`, {
             user:{
                 username: this.username,
                 email: this.email
@@ -133,7 +91,7 @@ export default {
         this.connected=true;
     },
     updateUser(){
-        axios.put(`http://localhost:4000/api/users/${this.idCurrentUser}`, {
+        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idCurrentUser}`, {
             user:{
                 username: this.editUsername,
                 email: this.editEmail

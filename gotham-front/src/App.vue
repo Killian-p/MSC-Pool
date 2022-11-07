@@ -1,8 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import User from './components/User.vue';
 import TeamsManager from './components/TeamsManager.vue';
-import RolesManager from './components/RolesManager.vue';
+import UsersManager from './components/UsersManager.vue';
 import WorkingTimes from './components/WorkingTimes.vue';
 import WorkingTime from './components/WorkingTime.vue';
 import ClockManager from './components/ClockManager.vue';
@@ -58,13 +57,15 @@ import Login from './components/Login.vue';
           <button class="form-control nav-buttons" @click="selectComponent('teamsManager')"
           :style="currentComponent == 'teamsManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
-            Teams Manager</button>
+            Teams Manager
+          </button>
         </div>
         <div class="box">
-          <button class="form-control nav-buttons" @click="selectComponent('rolesManager')"
-          :style="currentComponent == 'RolesManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          <button class="form-control nav-buttons" @click="selectComponent('usersManager')"
+          :style="currentComponent == 'usersManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
-            Roles Manager</button>
+            User Management
+          </button>
         </div>
       </div>
     </div>
@@ -84,8 +85,8 @@ import Login from './components/Login.vue';
 <TeamsManager v-if="currentComponent == 'teamsManager'" :id-user="idCurrentUser">
 </TeamsManager>
 
-<RolesManager v-if="currentComponent == 'rolesManager'" :id-user="idCurrentUser">
-</RolesManager>
+<UsersManager v-if="currentComponent == 'usersManager'" :id-user="idCurrentUser">
+</UsersManager>
 
 <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" :id-user="idCurrentUser">
 </Login>
@@ -124,7 +125,7 @@ export default {
       this.currentComponent = comp;
     },
     logout(){
-      axios.post(`http:/localhost:4000/api/users/sign_out`, {user_id: this.idCurrentUser}, { headers:{
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_out`, {user_id: this.idCurrentUser}, { headers:{
         token: localStorage.getItem("token")
       }})
       .then(_ => {
