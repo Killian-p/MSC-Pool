@@ -42,6 +42,7 @@ defmodule GothamWeb.Router do
       put "/:teamID", TeamController, :update
       get "/:teamID/users", TeamController, :list_users_of_team
       get "/users/:userID", TeamController, :get_team_of_manager
+      get "/:teamID/workingtimes", TeamController, :get_workingtimes_of_team
     end
   end
 
