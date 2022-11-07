@@ -35,8 +35,9 @@ defmodule Gotham.Users do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id) do
+  def get_user!(id, preloads \\ []) do
     Repo.get!(User, id)
+    |> Repo.preload(preloads)
   end
 
   @doc """
