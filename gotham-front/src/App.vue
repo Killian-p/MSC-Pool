@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import TeamsManager from './components/TeamsManager.vue';
+import Profile from './components/Profile.vue'
 import UsersManager from './components/UsersManager.vue';
 import WorkingTimes from './components/WorkingTimes.vue';
 import WorkingTime from './components/WorkingTime.vue';
@@ -36,6 +37,13 @@ import Login from './components/Login.vue';
           style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 300px;"
           >
             Se déconnecter</button>
+        </div>
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('profile')"
+          :style="currentComponent == 'profile' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          >
+            My Profile
+          </button>
         </div>
       </div>
       <div v-if="this.currentUserRole === 'ADMIN'">
@@ -76,6 +84,10 @@ import Login from './components/Login.vue';
 
 <UsersManager v-if="currentComponent == 'usersManager'" :id-user="idCurrentUser">
 </UsersManager>
+
+<Profile v-if="currentComponent == 'profile'" :id-user="idCurrentUser">
+  
+</Profile>
 
 <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" @username="setUsername" :id-user="idCurrentUser">
 
