@@ -116,7 +116,6 @@ export default {
   },
   methods:{
     loggin(data){
-      console.log(data[0], [1])
       this.idCurrentUser = data[0];
       this.currentUserRole = data[1];
     },
@@ -133,7 +132,8 @@ export default {
       .then(_ => {
         localStorage.removeItem("token");
         this.selectComponent = "Login";
-        this.$emit("logged", null);
+        this.currentUserRole = null,
+        this.idCurrentUser = null,
         this.connected = false;
         this.currentComponent = 'Login'
       })
