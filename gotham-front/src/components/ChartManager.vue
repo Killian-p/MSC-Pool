@@ -7,11 +7,25 @@
       <input type="date" id="endingDate" v-model="endingDate" required/>
       <button @click="searchDate()">Search</button>
     </form>
-    <div class ="barChart"><canvas id="bar-chart" width="450" height="100"></canvas></div>
-    <div class ="lineChart"><canvas id="line-chart1" width="450" height="100"></canvas></div>
-    <div class ="lineChart"><canvas id="line-chart2" width="450" height="100"></canvas></div>
-    <div class ="lineChart"><canvas id="line-chart3" width="450" height="100"></canvas></div>
-    <div class ="doughnutChart"><canvas id="doughnut-chart" width="100" height="100"></canvas></div>
+    <div>
+      <div style="width: 100%;">
+        <div class ="barChart" style="margin-bottom: 10px; margin-right: 10px;margin-left: 25px;"><canvas id="bar-chart" width="800" height="150"></canvas></div>
+      </div>
+      <div style="display: flex; width: 100%;justify-content: space-between;flex: 1;align-items: center;">
+        <div class ="doughnutChart" style="margin-bottom: 10px; margin-right: 10px;margin-left: 40px;"><canvas id="doughnut-chart" width="300" height="150"></canvas></div>
+        <div class ="lineChart" style="margin-bottom: 10px; margin-right: 10px;"><canvas id="line-chart1" width="400" height="150"></canvas></div>
+      </div>
+      <div style="display: flex; width: 100%;justify-content: space-between;flex: 1;">
+        <div class ="lineChart" style="margin-bottom: 10px; margin-right: 40px;margin-left: 25px;"><canvas id="line-chart2" width="500" height="150"></canvas></div>
+        <div class ="lineChart" style="margin-bottom: 10px; margin-right: 10px;"><canvas id="line-chart3" width="500" height="150"></canvas></div>
+      </div>
+    </div>
+
+    
+
+        
+
+        
   </body>
 </template>
 
