@@ -2,6 +2,7 @@
 import User from './User.vue';
 </script>
 <template>
+  MANAGERS
     <table>
       <thead>
         <th>USERNAME</th>
@@ -9,7 +10,7 @@ import User from './User.vue';
         <th>EMAIL ADDRESS</th>
       </thead>
       <tbody>
-        <tr v-for="employee in employees">
+        <tr v-for="employee in employees.sort((a,b) => {return a.email > b.email})">
           <td :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = employee.id">{{employee.username}}</td>
           <td :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = employee.id">{{employee.roles}}</td>
           <td :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = employee.id">{{employee.email}}</td>
@@ -17,15 +18,16 @@ import User from './User.vue';
       </tbody>
     </table>
     <div>
-        <button @click="setManager(selectedUserId)" id="Role1Button">
+        <button @click="setManager(selectedUserId), this.selectedUserId = null" id="Role1Button">
             ⟹
         </button>
     </div>
     <div>
-        <button @click="setEmployee(selectedUserId)" id="Role2Button">
+        <button @click="setEmployee(selectedUserId), this.selectedUserId = null" id="Role2Button">
             ⟸
         </button>
     </div>
+      EMPLOYEES
     <table>
       <thead>
         <th>USERNAME</th>
@@ -33,7 +35,7 @@ import User from './User.vue';
         <th>EMAIL ADDRESS</th>
       </thead>
       <tbody>
-        <tr v-for="manager in managers">
+        <tr v-for="manager in managers.sort((a,b) => {return a.email > b.email})">
           <td :style="this.selectedUserId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = manager.id">{{manager.username}}</td>
           <td :style="this.selectedUserId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = manager.id">{{manager.roles}}</td>
           <td :style="this.selectedUserId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = manager.id">{{manager.email}}</td>
