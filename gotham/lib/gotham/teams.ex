@@ -138,6 +138,7 @@ defmodule Gotham.Teams do
   end
 
   def get_manager_team(managerId) do
-    Repo.all(from team in "teams", where: team.manager_id == ^String.to_integer(managerId), select: [:id, :name, :manager_id])
+    Repo.all(from team in Team, where: team.manager_id == ^String.to_integer(managerId))
+    |> Repo.preload([:users, users: :workingtimes]) 
   end
 end
