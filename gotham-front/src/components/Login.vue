@@ -94,7 +94,9 @@ export default {
             this.username= "";
             this.email= "";
             this.userExists = true;
-        }).catch(console.error)
+        }).catch(_ => {
+            this.errorMessage = this.errorMessage = _.message ?? _.response.data.message;
+        })
         this.connected=true;
     },
     login(){
