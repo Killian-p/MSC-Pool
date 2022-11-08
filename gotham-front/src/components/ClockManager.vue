@@ -44,7 +44,6 @@ export default {
   },
   mounted () {
     this.getClock();
-    this.setTimer();
     setInterval(this.addTime, 1000);
   },
   created () {
@@ -81,10 +80,12 @@ export default {
       .then(_ => {
         this.lastTime = _.data.data.time;
         this.clocking = _.data.data.status;
+        this.setTimer();
       })
     },
 
     setTimer(){
+      debugger;
       this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf())/1000);
     },
 

@@ -12,6 +12,20 @@ defmodule GothamWeb.TeamView do
     %{data: render_one(team, TeamView, "team.json")}
   end
 
+  def render("list.json", %{teams: teams}) do
+    %{data: render_many(teams, TeamView, "team_and_user.json")}
+  end
+
+  def render("team_and_user.json", %{team: team}) do
+    IO.inspect team
+    %{
+      id: team.id,
+      manager_id: team.manager_id,
+      name: team.name,
+      users: render_many(team.users, UserView, "user_with_workingtime.json" )
+    }
+  end
+
   def render("team.json", %{team: team}) do
     %{
       id: team.id,

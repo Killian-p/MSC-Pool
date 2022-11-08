@@ -20,8 +20,9 @@ defmodule Gotham.Teams do
       [%Team{}, ...]
 
   """
-  def list_teams do
+  def list_teams(preloads \\ []) do
     Repo.all(Team)
+    |> Repo.preload(preloads)
   end
 
   @doc """

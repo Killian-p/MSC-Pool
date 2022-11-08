@@ -121,9 +121,6 @@ export default {
   },
   methods: {
     updateAWorkingTime(idWorkingTime, start, end){
-      console.log(idWorkingTime);
-      console.log(start);
-      console.log(end);
       axios.put(`http://localhost:4000/api/workingtimes/${idWorkingTime}`, {
         workingtime:{
           start: new Date(start).toISOString(),
