@@ -87,7 +87,6 @@ import User from './User.vue';
                   token: localStorage.getItem("token")
                 },
               } ).then((res) => {
-                console.log(res.data.data.roles)
                 this.employees = this.employees.filter((elem) => elem.id !== res.data.data.id)
                 this.managers.push(res.data.data)
               }).catch(console.error)
