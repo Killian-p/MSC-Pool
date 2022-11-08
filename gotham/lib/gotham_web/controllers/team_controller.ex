@@ -98,6 +98,15 @@ defmodule GothamWeb.TeamController do
     end
   end
 
+  def delete_user_team(conn, %{"teamID" => teamId, "userID" => userId}) do
+    team = Teams.get_team!(teamId, [:users])
+    user = Users.get_user!(userId)
+
+    with {:ok, %Team{}} <- Teams.delete_team_user(team, user) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
   def list_users_of_team(conn, %{"teamID" => teamId}) do
     team_users = Teams.get_team!(teamId, [:users])
     render(conn, "team_users.json", users: team_users.users)

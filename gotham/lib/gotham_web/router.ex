@@ -39,6 +39,7 @@ defmodule GothamWeb.Router do
       get "/:teamID", TeamController, :show
       delete "/:teamID", TeamController, :delete
       put "/:teamID/users/:userID", TeamController, :add_user_to_team
+      delete "/:teamID/users/:userID", TeamController, :delete_user_team
       put "/:teamID", TeamController, :update
       get "/:teamID/users", TeamController, :list_users_of_team
       get "/users/:userID", TeamController, :get_team_of_manager
