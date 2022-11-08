@@ -68,7 +68,6 @@ export default {
                 token: localStorage.getItem("token")
             }})
         .then((res) => {
-            console.log(res)
             this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
         })
         .catch(console.error);
@@ -81,7 +80,6 @@ export default {
             }
         })
         .then((res) => {
-            console.log(res);
             this.$emit("logged", res.data.data.id)
             this.idCurrentUser = res.data.data.id;
             this.username= "";
@@ -98,7 +96,6 @@ export default {
             }
         })
         .then((res) => {
-            console.log(res);
             this.$emit("logged", res.data.data.id)
             this.idCurrentUser = res.data.data.id;
             this.editUsername= "";
