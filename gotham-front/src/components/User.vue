@@ -1,33 +1,36 @@
 <template>
-    USER MANAGEMENT
-    <table>
-      <thead>
-        <th>USERNAME</th>
-        <th>ROLE</th>
-        <th>EMAIL ADDRESS</th>
-      </thead>
-      <tbody>
-        <tr v-for="employee in users.sort((a,b) => {return a.email > b.email})">
-            <td 
-                :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
-                @click="this.selectedUserId = employee.id"
-            >
-                {{employee.username}}
-            </td>
-
-            <td 
-                :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
-                @click="this.selectedUserId = employee.id"
-            >
-                {{employee.roles}}
-            </td>
-            <td 
-                :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
-                @click="this.selectedUserId = employee.id"
-            >{{employee.email}}</td>
-        </tr>
-      </tbody>
-    </table>
+  DELETE USER(S)
+  <table>
+    <thead>
+      <th>USERNAME</th>
+      <th>ROLE</th>
+      <th>EMAIL ADDRESS</th>
+    </thead>
+    <tbody>
+      <tr v-for="employee in users.sort((a,b) => {return a.email > b.email})">
+        <td
+          :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
+          @click="this.selectedUserId = employee.id"
+        >
+          {{employee.username}}
+        </td>
+        <td
+          :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
+          @click="this.selectedUserId = employee.id"
+        >
+          {{employee.roles}}
+        </td>
+        <td
+          :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" 
+          @click="this.selectedUserId = employee.id"
+        >{{employee.email}}
+        </td>
+        <button @click="deleteUser((employee.id))">
+          DELETE USER
+        </button>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
@@ -43,6 +46,7 @@ export default {
   data () {
     return {
         users: [],
+        selectedUserId: null,
     }
   },
   mounted () {
@@ -53,17 +57,27 @@ export default {
   computed: {
   },
   methods: {
+    deleteUser(id){
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${id}`, { headers: {
+        token: localStorage.getItem("token")
+        }})
+      .then((res) => {
+        console.log(res)
+        this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
+        this.users = this.users
+      })
+      .catch(console.error);
+    },
     getAllUsers(){
-        let a;
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
-                token: localStorage.getItem("token")
-            }})
-        .then((res) => {
-            console.log(res)
-            this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
-            this.users = this.users
-        })
-        .catch(console.error);
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
+        token: localStorage.getItem("token")
+        }})
+      .then((res) => {
+        console.log(res)
+        this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
+        this.users = this.users
+      })
+      .catch(console.error);
     }
   },
   watch: {
