@@ -15,8 +15,8 @@ defmodule GothamWeb.TeamController do
 
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
-        teams = Teams.list_teams()
-        render(conn, "index.json", teams: teams)
+        teams = Teams.list_teams([:users, users: :workingtimes])
+        render(conn, "list.json", teams: teams)
       true ->
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
@@ -109,6 +109,7 @@ defmodule GothamWeb.TeamController do
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER"]) ->
         manager_teams = Teams.get_manager_team(managerId)
+        IO.inspect(manager_teams)
         render(conn, "index.json", teams: manager_teams)
       true ->
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
