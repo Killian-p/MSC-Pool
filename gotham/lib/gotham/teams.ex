@@ -119,6 +119,24 @@ defmodule Gotham.Teams do
     with {:ok, _struct} <-
       team
       |> Repo.preload(:users)
+      |> Team.changeset_add_user_team(team.users ++ users)
+      |> Repo.update() do
+      {:ok, Teams.get_team!(team.id)}
+    else
+      error ->
+        error
+    end
+  end
+
+  def delete_team_user(team, user) do
+    IO.inspect team.users
+    IO.inspect user
+    users = List.delete(team.users, user)
+    IO.inspect users
+
+    with {:ok, _struct} <-
+      team
+      |> Repo.preload(:users)
       |> Team.changeset_add_user_team(users)
       |> Repo.update() do
       {:ok, Teams.get_team!(team.id)}
@@ -139,6 +157,6 @@ defmodule Gotham.Teams do
 
   def get_manager_team(managerId) do
     Repo.all(from team in Team, where: team.manager_id == ^String.to_integer(managerId))
-    |> Repo.preload([:users, users: :workingtimes]) 
+    |> Repo.preload([:users, users: :workingtimes])
   end
 end

@@ -91,9 +91,18 @@ defmodule GothamWeb.TeamController do
   end
 
   def add_user_to_team(conn, %{"teamID" => teamId, "userID" => userId}) do
-    team = Teams.get_team!(teamId)
+    team = Teams.get_team!(teamId, [:users])
 
     with {:ok, %Team{}} <- Teams.upsert_team_user(team, userId) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  def delete_user_team(conn, %{"teamID" => teamId, "userID" => userId}) do
+    team = Teams.get_team!(teamId, [:users])
+    user = Users.get_user!(userId)
+
+    with {:ok, %Team{}} <- Teams.delete_team_user(team, user) do
       send_resp(conn, :no_content, "")
     end
   end
