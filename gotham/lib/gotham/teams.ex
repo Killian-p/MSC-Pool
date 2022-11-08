@@ -115,11 +115,17 @@ defmodule Gotham.Teams do
       |> where([user], user.id == ^userId)
       |> Repo.all()
       |> Repo.preload(:teams)
+    
+    # IO.inspect users
+
+    # IO.inspect team.users
+
+    IO.inspect team.users ++ users
 
     with {:ok, _struct} <-
       team
       |> Repo.preload(:users)
-      |> Team.changeset_add_user_team(users)
+      |> Team.changeset_add_user_team(team.users ++ users)
       |> Repo.update() do
       {:ok, Teams.get_team!(team.id)}
     else
