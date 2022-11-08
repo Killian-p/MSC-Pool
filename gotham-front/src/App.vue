@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import TeamsManager from './components/TeamsManager.vue';
-import Profile from './components/Profile.vue'
+import Profil from './components/Profil.vue'
 import UsersManager from './components/UsersManager.vue';
 import WorkingTimes from './components/WorkingTimes.vue';
 import WorkingTime from './components/WorkingTime.vue';
@@ -13,6 +13,7 @@ import Login from './components/Login.vue';
 <template>
   <div class="main">
     <div class="nav" v-if="idCurrentUser != null">
+      TimeManager (logo ptet)
       <div>
         <div class="box">
       <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" 
@@ -39,14 +40,15 @@ import Login from './components/Login.vue';
             Se déconnecter</button>
         </div>
         <div class="box">
-          <button class="form-control nav-buttons" @click="selectComponent('profile')"
-          :style="currentComponent == 'profile' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          <button class="form-control nav-buttons" @click="selectComponent('profil')"
+          :style="currentComponent == 'profil' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
-            My Profile
+            My Profil
           </button>
         </div>
       </div>
-      <div v-if="this.currentUserRole === 'ADMIN'">
+      <div v-if="this.currentUserRole === 'ADMIN' || this.currentUserRole === 'MANAGER' ">
+        admin & manager
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('teamsManager')"
           :style="currentComponent == 'teamsManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -54,6 +56,9 @@ import Login from './components/Login.vue';
             Teams Manager
           </button>
         </div>
+      </div>
+      <div v-if="this.currentUserRole === 'ADMIN'">
+        admin only :
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('usersManager')"
           :style="currentComponent == 'usersManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -75,15 +80,15 @@ import Login from './components/Login.vue';
 <ChartManager v-if="currentComponent == 'chartManager'" :id-user="idCurrentUser">
 </ChartManager >
 
-<TeamsManager v-if="currentComponent == 'teamsManager'" :id-user="idCurrentUser">
+<TeamsManager v-if="currentComponent == 'teamsManager'" :id-user="idCurrentUser" :user-role="currentUserRole">
 </TeamsManager>
 
 <UsersManager v-if="currentComponent == 'usersManager'" :id-user="idCurrentUser">
 </UsersManager>
 
-<Profile v-if="currentComponent == 'profile'" :id-user="idCurrentUser">
+<Profil v-if="currentComponent == 'profil'" :id-user="idCurrentUser">
   
-</Profile>
+</Profil>
 
 <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" @username="setUsername" :id-user="idCurrentUser">
 
@@ -131,11 +136,10 @@ export default {
       }})
       .then(_ => {
         localStorage.removeItem("token");
-        this.selectComponent = "Login";
+        this.selectComponent("Login");
         this.currentUserRole = null,
         this.idCurrentUser = null,
         this.connected = false;
-        this.currentComponent = 'Login'
       })
     }
   }
