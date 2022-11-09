@@ -29,7 +29,7 @@ export default {
     }
   },
   mounted () {
-    axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
           start: new Date("1900-07-08T06:00:00Z").toISOString(),
         }}).then(_ => {
           this.datas = _.data.data;
