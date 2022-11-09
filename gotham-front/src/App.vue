@@ -13,7 +13,6 @@ import Login from './components/Login.vue';
 <template>
   <div class="main">
     <div class="nav" v-if="idCurrentUser != null">
-      TimeManager (logo ptet)
       <div style="max-height:90vh;overflow: auto;">
         <div>
         <div class="box">
@@ -43,7 +42,6 @@ import Login from './components/Login.vue';
         </div>
       </div>
       <div v-if="this.currentUserRole === 'ADMIN' || this.currentUserRole === 'MANAGER' ">
-        admin & manager
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('teamsManager')"
           :style="currentComponent == 'teamsManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -53,7 +51,6 @@ import Login from './components/Login.vue';
         </div>
       </div>
       <div v-if="this.currentUserRole === 'ADMIN'">
-        admin only :
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('usersManager')"
           :style="currentComponent == 'usersManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -72,7 +69,7 @@ import Login from './components/Login.vue';
       <ClockManager :id-user="idCurrentUser" :username="username">
       </ClockManager>
     </div>
-    <div>
+    <div style="display: flex; justify-content: center; width: 100%;">
 <WorkingTimes v-if="currentComponent == 'workingTimes'" :id-user="idCurrentUser">
 </WorkingTimes>
 
