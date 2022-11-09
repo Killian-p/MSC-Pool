@@ -101,21 +101,6 @@ export default {
     }
   },
   mounted () {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
-          start: new Date("1900-07-08T06:00:00Z").toISOString(),
-        }}, {headers: {
-          token: localStorage.getItem("token")
-        }}).then(_ => {
-          this.datas = _.data.data;
-          let start;
-          let end;
-          this.datas.forEach(x => {
-            start = x.start.split("T");
-            end = x.end.split("T");
-            x.start = start[0].split(".")[0] + " " + start[1].split(".")[0];
-            x.end = end[0].split(".")[0] + " " + end[1].split(".")[0];
-          })
-        });
   },
   created () {
   },
@@ -123,7 +108,7 @@ export default {
   },
   methods: {
     updateAWorkingTime(idWorkingTime, start, end){
-      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {
+      axios.put(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {
         workingtime:{
           start: new Date(start).toISOString(),
           end: new Date(end).toISOString(),
@@ -133,7 +118,7 @@ export default {
         }}).catch(console.error)
     },
     deleteAWorkingTime(idWorkingTime){
-      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {headers: {
+      axios.delete(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {headers: {
           token: localStorage.getItem("token")
         }}).catch(console.error)
       .then(() => {
@@ -141,12 +126,13 @@ export default {
       })
     },
     getWorkingTimesForAPerdiod(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
+      axios.get(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, { 
+          headers:{
+        token: localStorage.getItem("token")
+      }}, {params :{
         start: new Date(this.startingDate).toISOString(),
         end: new Date(this.endingDate).toISOString(),
-      }}, {headers: {
-          token: localStorage.getItem("token")
-        }}).then(res => {
+      }}).then(res => {
         this.datas = res.data.data;
         let start;
         let end;
@@ -159,7 +145,7 @@ export default {
       }).catch(console.error);
     },
     createWorkingTime(){
-      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
+      axios.post(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
         workingtime: {
             start: new Date(this.startingDate).toISOString(),
             end: new Date(this.endingDate).toISOString(),
