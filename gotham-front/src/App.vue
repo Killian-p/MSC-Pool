@@ -99,9 +99,6 @@ import Login from './components/Login.vue';
   
   </div>
 
-  <!-- <User @logged="loggin" :id-user="idCurrentUser"/> -->
-
-
 </template>
 
 <script>
