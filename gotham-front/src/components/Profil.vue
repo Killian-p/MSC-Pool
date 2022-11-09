@@ -52,13 +52,13 @@ export default {
   },
   methods: {
     getUser(){
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`)
+        axios.get(${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`)
         .then(res => {
             this.currentUser = res.data.data
         });
     },
     updateUser(){
-        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, {
+        axios.put(${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, {
             user: {
                 username: this.currentUser.username,
                 email: this.currentUser.email,

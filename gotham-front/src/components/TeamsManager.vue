@@ -100,7 +100,7 @@
     },
     methods: {
     getUsers(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
+      axios.get(${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
         this.users = res.data.data.sort((a,b) => {return a.email > b.email})
@@ -110,7 +110,7 @@
     },
 
     getAllTeams(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { headers: {
+      axios.get(${import.meta.env.VITE_BACKEND_URL}/api/teams`, { headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
         console.log(res.data.data)
@@ -118,7 +118,7 @@
       }
       )},
     createATeam(){
-      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { team:{
+      axios.post(${import.meta.env.VITE_BACKEND_URL}/api/teams`, { team:{
         name: this.teamName,
         manager_id: this.selectedManagerId}}, {
       headers: {
