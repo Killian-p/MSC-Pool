@@ -1,23 +1,37 @@
 <template>
   <body>
-    <form v-on:submit.prevent="createWorkingTime" method="post">
-      <label>starting date :</label>
-      <input type="date" id="startingDate" v-model="startingDate" required />
-      <label>ending date :</label>
-      <input type="date" id="endingDate" v-model="endingDate" required />
-      <button @click="searchDate()">Search</button>
-    </form>
-    <div>
-      <div style="width: 100%">
-        <div class="barChart" style="margin-bottom: 10px; margin-right: 10px; margin-left: 25px"><canvas id="bar-chart" width="800" height="150"></canvas></div>
+    <div class="container">
+      <div class="cardContainer">
+        <form v-on:submit.prevent="createWorkingTime" method="post" class="whiteCard formDate">
+          <div class="labelInput">
+            <label>starting date :</label>
+            <input type="date" id="startingDate" v-model="startingDate" required />
+          </div>
+          <div class="labelInput">
+            <label>ending date :</label>
+            <input type="date" id="endingDate" v-model="endingDate" required />
+          </div>
+          <button @click="searchDate()">Search</button>
+        </form>
+        <div class="barChart whiteCard">
+          <canvas id="bar-chart" width="879" height="150"></canvas>
+        </div>
       </div>
-      <div style="display: flex; width: 100%; justify-content: space-between; flex: 1; align-items: center">
-        <div class="doughnutChart" style="margin-bottom: 10px; margin-right: 10px; margin-left: 40px"><canvas id="doughnut-chart" width="300" height="150"></canvas></div>
-        <div class="lineChart" style="margin-bottom: 10px; margin-right: 10px"><canvas id="line-chart1" width="400" height="150"></canvas></div>
+      <div class="cardContainer">
+        <div class="lineChart whiteCard">
+          <canvas id="line-chart1" width="500" height="300"></canvas>
+        </div>
+        <div class="lineChart whiteCard">
+          <canvas id="line-chart2" width="500" height="300"></canvas>
+        </div>
       </div>
-      <div style="display: flex; width: 100%; justify-content: space-between; flex: 1">
-        <div class="lineChart" style="margin-bottom: 10px; margin-right: 40px; margin-left: 25px"><canvas id="line-chart2" width="500" height="150"></canvas></div>
-        <div class="lineChart" style="margin-bottom: 10px; margin-right: 10px"><canvas id="line-chart3" width="500" height="150"></canvas></div>
+      <div class="cardContainer">
+        <div class="lineChart whiteCard">
+          <canvas id="line-chart3" width="500" height="300"></canvas>
+        </div>
+        <div class="doughnutChart whiteCard">
+          <canvas id="doughnut-chart" width="300" height="300"></canvas>
+        </div>
       </div>
     </div>
   </body>
@@ -102,18 +116,18 @@ export default {
         options: {
           scales: {
             y: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
             x: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
           },
           plugins: {
             legend: {
               display: true,
-              labels: { color: "rgb(255, 255, 255)" },
+              labels: { color: "#000000" },
             },
           },
         },
@@ -138,7 +152,7 @@ export default {
             legend: {
               display: true,
               position: "right",
-              labels: { color: "rgb(255, 255, 255)" },
+              labels: { color: "#000000" },
             },
           },
         },
@@ -152,12 +166,12 @@ export default {
             {
               data: this.workHours,
               label: "Normal Hours",
-              backgroundColor: "#FFF",
-              borderColor: "#FFF",
+              backgroundColor: "#000000",
+              borderColor: "#000000",
               fill: {
                 target: "origin",
                 above: "#8BBCCC",
-                below: "#FFF",
+                below: "#000000",
               },
               pointRadius: 0,
               tension: 0.3,
@@ -167,18 +181,18 @@ export default {
         options: {
           scales: {
             y: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
             x: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
           },
           plugins: {
             legend: {
               display: false,
-              labels: { color: "rgb(255, 255, 255)" },
+              labels: { color: "#000000" },
             },
           },
         },
@@ -192,12 +206,12 @@ export default {
             {
               data: this.supHours,
               label: "Sup Hours",
-              backgroundColor: "#FFF",
-              borderColor: "#FFF",
+              backgroundColor: "#000000",
+              borderColor: "#000000",
               fill: {
                 target: "origin",
                 above: "#4C6793",
-                below: "#FFF",
+                below: "#000000",
               },
               pointRadius: 0,
               tension: 0.3,
@@ -207,18 +221,18 @@ export default {
         options: {
           scales: {
             y: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
             x: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
           },
           plugins: {
             legend: {
               display: false,
-              labels: { color: "rgb(255, 255, 255)" },
+              labels: { color: "#000000" },
             },
           },
         },
@@ -232,12 +246,12 @@ export default {
             {
               data: this.nightHours,
               label: "Night Shifts",
-              backgroundColor: "#FFF",
-              borderColor: "#FFF",
+              backgroundColor: "#000000",
+              borderColor: "#000000",
               fill: {
                 target: "origin",
                 above: "#5C2E7E",
-                below: "#FFF",
+                below: "#000000",
               },
               pointRadius: 0,
               tension: 0.3,
@@ -247,18 +261,18 @@ export default {
         options: {
           scales: {
             y: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
             x: {
-              ticks: { color: "white", beginAtZero: true },
+              ticks: { color: "#000000", beginAtZero: true },
               stacked: true,
             },
           },
           plugins: {
             legend: {
               display: false,
-              labels: { color: "rgb(255, 255, 255)" },
+              labels: { color: "#000000" },
             },
           },
         },
@@ -267,17 +281,14 @@ export default {
 
     async getWorkingTimes() {
       await axios
-        .get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,
-          {
-            headers: {
-              token: localStorage.getItem("token"),
-            },
-            params: {
-              start: new Date("2010-01-01T01:01").toISOString(),
-            },
-          }
-        )
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+          params: {
+            start: new Date("2010-01-01T01:01").toISOString(),
+          },
+        })
         .then((response) => {
           let arrayOfDates = response.data.data;
           this.workTime = new Array();
@@ -409,4 +420,37 @@ export default {
   watch: {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.pageContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 20px;
+}
+.cardContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.whiteCard {
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+}
+.formDate {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.labelInput {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+</style>

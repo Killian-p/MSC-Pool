@@ -99,7 +99,6 @@ defmodule GothamWeb.WorkingtimeController do
     startDate = Map.get(conn.query_params, "start")
     endDate = Map.get(conn.query_params, "end")
 
-
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
         with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
@@ -139,6 +138,8 @@ defmodule GothamWeb.WorkingtimeController do
               put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
           end
         end
+      true ->
+        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end
   end
 end
