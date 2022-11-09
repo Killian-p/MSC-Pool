@@ -100,6 +100,7 @@ import User from './User.vue';
                 this.managers = res.data.data.filter((elem) => elem.roles === "MANAGER")
             }).catch(console.error);
         },
+    
         setManager(id){
             axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${id}`, {
               user:{
@@ -133,6 +134,10 @@ import User from './User.vue';
           this.selectedUserId = id;
           this.selectedUserIs = role;
         },
+        removeUserFromTables(idUser){
+          this.employees = this.employees.filter((elem) => elem.id !== idUser)
+          this.managers = this.managers.filter((elem) => elem.id !== idUser)
+        }
     },
     watch: {
     }

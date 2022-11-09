@@ -64,43 +64,141 @@ defmodule GothamWeb.TeamController do
 
   def update(conn, %{"teamID" => id, "team" => team_params}) do
     token = get_req_header(conn, "token")
+    team = Teams.get_team!(id)
 
     cond do
-      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER"]) ->
-        team = Teams.get_team!(id)
-        with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
-          render(conn, "show.json", team: team)
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        cond do
+          Map.has_key?(team_params, "manager_id") ->
+            manager = Users.get_user!(team_params["manager_id"])
+            cond do
+              manager.roles != "EMPLOYEE" ->
+                with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
+                  render(conn, "show.json", team: team)
+                end
+              true ->
+                put_status(conn, :bad_request) |> json(%{message: "Employee cannot manage teams"})
+            end
+          true ->
+            with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
+              render(conn, "show.json", team: team)
+            end
         end
       true ->
-        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            GothamWeb.Token.is_token_valid(List.first(token), ["MANAGER"]) && claims["user_id"] == team.manager_id ->
+              cond do
+                Map.has_key?(team_params, "manager_id") ->
+                  manager = Users.get_user!(team_params["manager_id"])
+                  cond do
+                    manager.roles != "EMPLOYEE" ->
+                      with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
+                        render(conn, "show.json", team: team)
+                      end
+                    true ->
+                      put_status(conn, :bad_request) |> json(%{message: "Employee cannot manage teams"})
+                  end
+                true ->
+                  with {:ok, %Team{} = team} <- Teams.update_team(team, team_params) do
+                    render(conn, "show.json", team: team)
+                  end
+              end
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
+        end
     end
   end
 
   def delete(conn, %{"teamID" => id}) do
     token = get_req_header(conn, "token")
+    team = Teams.get_team!(id)
 
     cond do
-      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER"]) ->
-        team = Teams.get_team!(id)
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
         with {:ok, %Team{}} <- Teams.delete_team(team) do
           send_resp(conn, :no_content, "")
         end
       true ->
-        put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            GothamWeb.Token.is_token_valid(List.first(token), ["MANAGER"]) && claims["user_id"] == team.manager_id ->
+              with {:ok, %Team{}} <- Teams.delete_team(team) do
+                send_resp(conn, :no_content, "")
+              end
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
+        end
     end
   end
 
   def add_user_to_team(conn, %{"teamID" => teamId, "userID" => userId}) do
-    team = Teams.get_team!(teamId)
+    token = get_req_header(conn, "token")
+    team = Teams.get_team!(teamId, [:users])
 
-    with {:ok, %Team{}} <- Teams.upsert_team_user(team, userId) do
-      send_resp(conn, :no_content, "")
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        with {:ok, %Team{}} <- Teams.upsert_team_user(team, userId) do
+          send_resp(conn, :no_content, "")
+        end
+      true ->
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            GothamWeb.Token.is_token_valid(List.first(token), ["MANAGER"]) && claims["user_id"] == team.manager_id ->
+              with {:ok, %Team{}} <- Teams.upsert_team_user(team, userId) do
+                send_resp(conn, :no_content, "")
+              end
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
+        end
+    end
+  end
+
+  def delete_user_team(conn, %{"teamID" => teamId, "userID" => userId}) do
+    token = get_req_header(conn, "token")
+    team = Teams.get_team!(teamId, [:users])
+    user = Users.get_user!(userId)
+
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        with {:ok, %Team{}} <- Teams.delete_team_user(team, user) do
+          send_resp(conn, :no_content, "")
+        end
+      true ->
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            GothamWeb.Token.is_token_valid(List.first(token), ["MANAGER"]) && claims["user_id"] == team.manager_id ->
+              with {:ok, %Team{}} <- Teams.delete_team_user(team, user) do
+                send_resp(conn, :no_content, "")
+              end
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
+        end
     end
   end
 
   def list_users_of_team(conn, %{"teamID" => teamId}) do
-    team_users = Teams.get_team!(teamId, [:users])
-    render(conn, "team_users.json", users: team_users.users)
+    token = get_req_header(conn, "token")
+    team = Teams.get_team!(teamId, [:users])
+    # render(conn, "team_users.json", users: team.users)
+
+    cond do
+      GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN"]) ->
+        render(conn, "team_users.json", users: team.users)
+      true ->
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            GothamWeb.Token.is_token_valid(List.first(token), ["MANAGER"]) && claims["user_id"] == team.manager_id ->
+              render(conn, "team_users.json", users: team.users)
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
+        end
+    end
   end
 
   def get_team_of_manager(conn, %{"userID" => managerId}) do
@@ -109,8 +207,7 @@ defmodule GothamWeb.TeamController do
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER"]) ->
         manager_teams = Teams.get_manager_team(managerId)
-        IO.inspect(manager_teams)
-        render(conn, "index.json", teams: manager_teams)
+        render(conn, "list.json", teams: manager_teams)
       true ->
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end

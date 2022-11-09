@@ -13,6 +13,7 @@ defmodule GothamWeb.TeamView do
   end
 
   def render("list.json", %{teams: teams}) do
+    IO.inspect teams
     %{data: render_many(teams, TeamView, "team_and_user.json")}
   end
 

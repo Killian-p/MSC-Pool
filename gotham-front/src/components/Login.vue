@@ -1,85 +1,71 @@
 <template>
-    <div class="mainbox">
-        <div class="loginbox">
-            <div class="tabbox">
-                <button class="tabnav" @click="changeTab('sign_in')">
-                    Connexion
-                </button>
-                <button class="tabnav" @click="changeTab('sign_up')">
-                    Enregistrement 
-                </button>
-            </div>
-                <div class="formbox">
-                    <div class="label-column">
-                        <div class="box">
-                            <label>Email:</label>
-                        </div>
-                        <div class="box" v-if="currentTab == 'sign_up'">
-                            <label>Username:</label>
-                        </div>
-                        <div class="box">
-                            <label>Password:</label>
-                        </div>
-                    </div>
-                    <div class="input-column">
-                        <div class="box">
-                            <input v-model="email"/>
-                        </div>
-                        <div class="box" v-if="currentTab == 'sign_up'">
-                            <input v-model="username"/>
-                        </div>
-                        <div class="box">
-                            <input v-model="password" type="password"/>
-                        </div>
-                    </div>
-                    
-                </div>
-                <span style="color: red;">{{errorMessage}}</span>  
-                <div style="display: flex;">
-                    <div class="box" style="margin-right: 60px;" v-if="currentTab == 'sign_up'">
-                        <button @click="createUser" class="buttons" type="button">
-                            S'enregistrer
-                        </button>
-                    </div>
-                    <div class="box" v-if="currentTab == 'sign_in'">
-                        <button @click="login" class="buttons" type="button">
-                            Se connecter
-                        </button>
-                    </div>
-                </div>
-                
+  <div class="mainbox">
+    <div class="loginbox">
+      <div class="tabbox">
+        <button class="tabnav" @click="changeTab('sign_in')">Connexion</button>
+        <button class="tabnav" @click="changeTab('sign_up')">Enregistrement</button>
+      </div>
+      <div class="formbox">
+        <div class="label-column">
+          <div class="box">
+            <label>Email:</label>
+          </div>
+          <div class="box" v-if="currentTab == 'sign_up'">
+            <label>Username:</label>
+          </div>
+          <div class="box">
+            <label>Password:</label>
+          </div>
         </div>
+        <div class="input-column">
+          <div class="box">
+            <input v-model="email" />
+          </div>
+          <div class="box" v-if="currentTab == 'sign_up'">
+            <input v-model="username" />
+          </div>
+          <div class="box">
+            <input v-model="password" type="password" />
+          </div>
+        </div>
+      </div>
+      <span style="color: red">{{ errorMessage }}</span>
+      <div style="display: flex">
+        <div class="box" style="margin-right: 60px" v-if="currentTab == 'sign_up'">
+          <button @click="createUser" class="buttons" type="button">S'enregistrer</button>
+        </div>
+        <div class="box" v-if="currentTab == 'sign_in'">
+          <button @click="login" class="buttons" type="button">Se connecter</button>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
 import sha256 from 'crypto-js/sha256';
 export default {
-  components: {
-  },
+  components: {},
   props: {
     idUser: {
       type: Number,
-    }
+    },
   },
-  data () {
+  data() {
     return {
-        connected: false,
-        username: '',
-        email: '',
-        password: '',
-        userExists: true,
-        currentTab: "sign_in",
-        errorMessage: ''
-    }
+      connected: false,
+      username: "",
+      email: "",
+      password: "",
+      userExists: true,
+      currentTab: "sign_in",
+      errorMessage: "",
+    };
   },
-  mounted () {
-  },
-  created () {
-  },
-  computed: {
-  },
+  mounted() {},
+  created() {},
+  computed: {},
   methods: {
     createUser(){
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
@@ -112,85 +98,83 @@ export default {
             this.userExists = true;
             
         })
-        .catch(_ => {
-            this.errorMessage = _.message ?? _.response.data.message;
+        .catch((_) => {
+          this.errorMessage = _.message ?? _.response.data.message;
         });
     },
-    changeTab(tab){
-        this.currentTab = tab;
-    }
+    changeTab(tab) {
+      this.currentTab = tab;
+    },
   },
-  watch: {
-  }
-}
+  watch: {},
+};
 </script>
 
 <style>
-.mainbox{
-    width: 90vw;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    display: flex;
+.mainbox {
+  width: 90vw;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
-.loginbox{
-    background-color: #00ABB3;
-    height: 50%;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 45px;
-    flex-direction: column;
-    border: black 3px solid;
+.loginbox {
+  background-color: #00abb3;
+  height: 50%;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 45px;
+  flex-direction: column;
+  border: black 3px solid;
 }
 
-.label-column{
-    display: flex;
-    flex-direction: column;
-    margin-right: 15px;
+.label-column {
+  display: flex;
+  flex-direction: column;
+  margin-right: 15px;
 }
 
-.input-column{
-    display: flex;
-    flex-direction: column;
+.input-column {
+  display: flex;
+  flex-direction: column;
 }
 
-.formbox{
-    display: flex;
+.formbox {
+  display: flex;
 }
 
-.box{
-    margin-top: 4px;
+.box {
+  margin-top: 4px;
 }
 
-.buttons{
+.buttons {
   border-radius: 45px;
   width: 100%;
   height: 150%;
-  background-color: #3C4048;
-  color: #00ABB3;
+  background-color: #3c4048;
+  color: #00abb3;
 }
 
-.buttons:hover{
-    background-color: #00ABB3;
-    color: #3C4048;
+.buttons:hover {
+  background-color: #00abb3;
+  color: #3c4048;
 }
 
-
-.tabbox{
-    display: flex;
+.tabbox {
+  display: flex;
 }
 
-.tabnav{
-    margin: 10px;
-    border: black 3px solid;
-    background-color: #3C4048;
-    color: #00ABB3;
+.tabnav {
+  margin: 10px;
+  border: black 3px solid;
+  background-color: #3c4048;
+  color: #00abb3;
 }
-.tabnav:hover{
-    background-color: #00ABB3;
-    color: #3C4048;
+.tabnav:hover {
+  background-color: #00abb3;
+  color: #3c4048;
 }
 </style>

@@ -62,9 +62,9 @@ export default {
         token: localStorage.getItem("token")
         }})
       .then((res) => {
-        console.log(res)
-        this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
-        this.users = this.users
+        this.users = this.users.filter((elem) => elem.id !== id);
+        this.users = this.users;
+        this.$emit("deleteuser", id);
       })
       .catch(console.error);
     },
@@ -73,9 +73,7 @@ export default {
         token: localStorage.getItem("token")
         }})
       .then((res) => {
-        console.log(res)
         this.users = res.data.data.filter((elem) => elem.roles !=="ADMIN")
-        this.users = this.users
       })
       .catch(console.error);
     }

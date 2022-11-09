@@ -101,19 +101,6 @@ export default {
     }
   },
   mounted () {
-    axios.get(`http://localhost:4000/api/workingtimes/${this.idUser}`, {params :{
-          start: new Date("1900-07-08T06:00:00Z").toISOString(),
-        }}).then(_ => {
-          this.datas = _.data.data;
-          let start;
-          let end;
-          this.datas.forEach(x => {
-            start = x.start.split("T");
-            end = x.end.split("T");
-            x.start = start[0].split(".")[0] + " " + start[1].split(".")[0];
-            x.end = end[0].split(".")[0] + " " + end[1].split(".")[0];
-          })
-        });
   },
   created () {
   },
@@ -121,24 +108,33 @@ export default {
   },
   methods: {
     updateAWorkingTime(idWorkingTime, start, end){
-      axios.put(`http://localhost:4000/api/workingtimes/${idWorkingTime}`, {
+      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {
         workingtime:{
           start: new Date(start).toISOString(),
           end: new Date(end).toISOString(),
         }
-      }).catch(console.error)
+      }, {headers: {
+          token: localStorage.getItem("token")
+        }}).catch(console.error)
     },
     deleteAWorkingTime(idWorkingTime){
-      axios.delete(`http://localhost:4000/api/workingtimes/${idWorkingTime}`).catch(console.error)
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {headers: {
+          token: localStorage.getItem("token")
+        }}).catch(console.error)
       .then(() => {
         this.datas= this.datas.filter((elem) => elem.id!==idWorkingTime)
       })
     },
     getWorkingTimesForAPerdiod(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {params :{
-        start: new Date(this.startingDate).toISOString(),
-        end: new Date(this.endingDate).toISOString(),
-      }}).then(res => {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, { 
+        headers:{
+          token: localStorage.getItem("token"),
+        }, 
+          params :{
+          start: new Date(this.startingDate).toISOString(),
+          end: new Date(this.endingDate).toISOString(),
+        }
+      }).then(res => {
         this.datas = res.data.data;
         let start;
         let end;
@@ -156,7 +152,9 @@ export default {
             start: new Date(this.startingDate).toISOString(),
             end: new Date(this.endingDate).toISOString(),
         }
-      }).then((res) => {
+      }, {headers: {
+          token: localStorage.getItem("token")
+        }}).then((res) => {
         let start = res.data.data.start.split("T");
         let end = res.data.data.end.split("T");
         res.data.data.start = start[0] + " " + start[1];

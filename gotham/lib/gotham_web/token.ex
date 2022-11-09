@@ -52,7 +52,6 @@ defmodule GothamWeb.Token do
   end
 
   def get_token_data(token) do
-  IO.inspect token
     cond do
       token ->
         {:ok, claims} = GothamWeb.Token.verify_and_validate(token)
