@@ -273,8 +273,6 @@ export default {
             headers: {
               token: localStorage.getItem("token"),
             },
-          },
-          {
             params: {
               start: new Date("2010-01-01T01:01").toISOString(),
             },

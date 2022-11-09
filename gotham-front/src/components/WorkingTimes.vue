@@ -29,21 +29,14 @@ export default {
     };
   },
   mounted() {
-    axios
-      .get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        },
-        {
-          params: {
-            start: new Date("1900-07-08T06:00:00Z").toISOString(),
-          },
-        }
-      )
-      .then((_) => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {
+      headers: {
+        token: localStorage.getItem("token"),
+      },
+      params: {
+        start: new Date("1900-07-08T06:00:00Z").toISOString(),
+      },
+    }).then((_) => {
         this.datas = _.data.data;
         let start;
         let end;
