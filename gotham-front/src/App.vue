@@ -35,12 +35,6 @@ import Login from './components/Login.vue';
             chartManager</button>
         </div>
         <div class="box">
-          <button class="form-control nav-buttons" @click="logout"
-          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 300px;"
-          >
-            Se déconnecter</button>
-        </div>
-        <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('profil')"
           :style="currentComponent == 'profil' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
@@ -68,6 +62,12 @@ import Login from './components/Login.vue';
           </button>
         </div>
       </div>
+      <div class="box">
+          <button class="form-control nav-buttons" @click="logout"
+          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 175px;"
+          >
+            Se déconnecter</button>
+        </div>
       </div>
       <ClockManager :id-user="idCurrentUser" :username="username">
       </ClockManager>
