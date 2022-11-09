@@ -55,24 +55,32 @@ defmodule GothamWeb.ClockController do
 
     cond do
       GothamWeb.Token.is_token_valid(List.first(token), ["ADMIN", "MANAGER", "EMPLOYEE"]) ->
-        cond do
-          Clocks.user_has_clock(userId) ->
-            clock = Clocks.get_clock!(userId)
-            data = %{start: clock.time, end: Map.get(clock_params, "time"), user_id: userId}
-            with {:ok, %Clock{} = clock} <- Clocks.update_clock(clock, Map.put(clock_params, "status", !clock.status)) do
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            claims["user_id"] == String.to_integer(userId) ->
               cond do
-                !clock.status ->
-                  IO.inspect "set to false"
-                  Workingtimes.create_workingtime(data)
+                Clocks.user_has_clock(userId) ->
+                  clock = Clocks.get_clock!(userId)
+                  data = %{start: clock.time, end: Map.get(clock_params, "time"), user_id: userId}
+                  with {:ok, %Clock{} = clock} <- Clocks.update_clock(clock, Map.put(clock_params, "status", !clock.status)) do
+                    cond do
+                      !clock.status ->
+                        IO.inspect "set to false"
+                        Workingtimes.create_workingtime(data)
+                      true ->
+                        IO.inspect "set to true"
+                    end
+                    render(conn, "show.json", clock: clock)
+                  end
                 true ->
-                  IO.inspect "set to true"
+                  with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user_id", userId)) do
+                    render(conn, "show.json", clock: clock)
+                  end
               end
-              render(conn, "show.json", clock: clock)
-            end
-          true ->
-            with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user_id", userId)) do
-              render(conn, "show.json", clock: clock)
-            end
+           true ->
+            IO.inspect "test"
+            put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
         end
       true ->
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
