@@ -26,16 +26,16 @@ import User from './User.vue';
       </div>
     </div>
     <div style="margin-right: 30px;margin-left: 30px;">
-      <div>
+      <div style="margin-bottom: 50px;">
         <button @click="setManager(selectedUserId), this.selectedUserId = null" id="Role1Button" :disabled="selectedUserIs != 'employee'" class="transferButtons"
         >
-            <img src="../../public/icons8-chevron-right-100.png"/>
+            <img src="../../public/arrow-right-svgrepo-com.svg"/>
         </button>
       </div>
       <div>
         <button @click="setEmployee(selectedUserId), this.selectedUserId = null" id="Role2Button" :disabled="selectedUserIs != 'manager'" class="transferButtons"
         >
-        <img src="../../public/icons8-chevron-left-100.png"/>
+        <img src="../../public/arrow-left-svgrepo-com.svg"/>
         </button>
       </div>
     </div>
@@ -141,17 +141,19 @@ import User from './User.vue';
   <style scoped>
   .transferButtons{
     border-radius: 20px;
-    background-color: #3C4048;
+    background-color: white;
     color: #00ABB3;
+    cursor: pointer;
   }
 
   .transferButtons:hover{
-    background-color: #00ABB3;
+    background-color: #D9D9D9;
     color: #3C4048;
   }
 
   .transferButtons:disabled{
-    background-color: #3C4048;
+    background-color: white;
+    cursor: default;
   }
   </style>
   

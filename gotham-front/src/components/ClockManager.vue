@@ -78,8 +78,8 @@ export default {
         token: localStorage.getItem("token")
       }})
       .then(_ => {
-        this.lastTime = _.data.data.time;
-        this.clocking = _.data.data.status;
+        this.lastTime = _.data.data?.time ?? null;
+        this.clocking = _.data.data?.status ?? false;
         this.setTimer();
       })
     },

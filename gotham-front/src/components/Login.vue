@@ -91,9 +91,8 @@ export default {
         })
         .then((res) => {
             localStorage.setItem("token", res.data.token);
-            this.$emit("logged", res.data.id)
-            this.username= "";
-            this.email= "";
+            this.$emit("logged", [res.data.id, res.data.roles]);
+            this.$emit("username", res.data.username);
             this.userExists = true;
         }).catch(_ => {
             this.errorMessage = this.errorMessage = _.message ?? _.response.data.message;
