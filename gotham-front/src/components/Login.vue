@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
+import sha256 from 'crypto-js/sha256';
 export default {
   components: {},
   props: {
@@ -66,37 +67,36 @@ export default {
   created() {},
   computed: {},
   methods: {
-    createUser() {
-      axios
-        .post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
-          user: {
-            username: this.username,
-            email: this.email,
-            password: this.password,
-          },
+    createUser(){
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
+            user:{
+                username: this.username,
+                email: this.email,
+                password: (sha256(this.password).toString()),
+            }
         })
         .then((res) => {
-          localStorage.setItem("token", res.data.token);
-          this.$emit("logged", res.data.id);
-          this.username = "";
-          this.email = "";
-          this.userExists = true;
+            localStorage.setItem("token", res.data.token);
+            this.$emit("logged", [res.data.id, res.data.roles]);
+            this.$emit("username", res.data.username);
+            this.userExists = true;
+        }).catch(_ => {
+            this.errorMessage = this.errorMessage = _.message ?? _.response.data.message;
         })
-        .catch(console.error);
-      this.connected = true;
+        this.connected=true;
     },
-    login() {
-      axios
-        .post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
-          password: this.password,
-          email: this.email,
-        })
-        .then((_) => {
-          localStorage.setItem("token", _.data.token);
-          this.idCurrentUser = _.data.id;
-          this.$emit("logged", [_.data.id, _.data.roles]);
-          this.$emit("username", _.data.username);
-          this.userExists = true;
+    login(){
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
+            password: (sha256(this.password).toString()),
+            email: this.email,
+         })
+        .then(_ => {
+            localStorage.setItem("token", _.data.token);
+            this.idCurrentUser = _.data.id;
+            this.$emit("logged", [_.data.id, _.data.roles]);
+            this.$emit("username", _.data.username);
+            this.userExists = true;
+            
         })
         .catch((_) => {
           this.errorMessage = _.message ?? _.response.data.message;

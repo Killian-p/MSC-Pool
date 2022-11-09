@@ -13,13 +13,13 @@ import Login from './components/Login.vue';
 <template>
   <div class="main">
     <div class="nav" v-if="idCurrentUser != null">
-      TimeManager (logo ptet)
-      <div>
+      <div style="max-height:90vh;overflow: auto;">
+        <div>
         <div class="box">
-      <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" 
-      :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
-      >  
-        workingTimes</button>
+          <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" 
+          :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          >  
+            workingTimes</button>
         </div>
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('workingTime')"
@@ -34,12 +34,6 @@ import Login from './components/Login.vue';
             chartManager</button>
         </div>
         <div class="box">
-          <button class="form-control nav-buttons" @click="logout"
-          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 300px;"
-          >
-            Se déconnecter</button>
-        </div>
-        <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('profil')"
           :style="currentComponent == 'profil' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
@@ -48,7 +42,6 @@ import Login from './components/Login.vue';
         </div>
       </div>
       <div v-if="this.currentUserRole === 'ADMIN' || this.currentUserRole === 'MANAGER' ">
-        admin & manager
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('teamsManager')"
           :style="currentComponent == 'teamsManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -58,7 +51,6 @@ import Login from './components/Login.vue';
         </div>
       </div>
       <div v-if="this.currentUserRole === 'ADMIN'">
-        admin only :
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('usersManager')"
           :style="currentComponent == 'usersManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
@@ -67,10 +59,17 @@ import Login from './components/Login.vue';
           </button>
         </div>
       </div>
+      <div class="box">
+          <button class="form-control nav-buttons" @click="logout"
+          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 175px;"
+          >
+            Se déconnecter</button>
+        </div>
+      </div>
       <ClockManager :id-user="idCurrentUser" :username="username">
       </ClockManager>
     </div>
-    <div>
+    <div style="display: flex; justify-content: center; width: 100%;">
 <WorkingTimes v-if="currentComponent == 'workingTimes'" :id-user="idCurrentUser">
 </WorkingTimes>
 
@@ -96,9 +95,6 @@ import Login from './components/Login.vue';
   </div>
   
   </div>
-
-  <!-- <User @logged="loggin" :id-user="idCurrentUser"/> -->
-
 
 </template>
 
@@ -136,7 +132,7 @@ export default {
       }})
       .then(_ => {
         localStorage.removeItem("token");
-        this.selectComponent("Login");
+        this.currentComponent = "Login";
         this.currentUserRole = null,
         this.idCurrentUser = null,
         this.connected = false;
@@ -162,6 +158,7 @@ export default {
   border-radius: 45px;
   width: 175px;
   height: 60px;
+  cursor: pointer;
 }
 
 .nav-buttons:hover{

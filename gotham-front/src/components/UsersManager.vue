@@ -2,49 +2,72 @@
 import User from './User.vue';
 </script>
 <template>
-  MANAGERS
-    <table>
-      <thead>
-        <th>USERNAME</th>
-        <th>ROLE</th>
-        <th>EMAIL ADDRESS</th>
-      </thead>
-      <tbody>
-        <tr v-for="employee in employees.sort((a,b) => {return a.email > b.email})">
-          <td :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = employee.id">{{employee.username}}</td>
-          <td :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = employee.id">{{employee.roles}}</td>
-          <td :style="this.selectedUserId == employee.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = employee.id">{{employee.email}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div>
-        <button @click="setManager(selectedUserId), this.selectedUserId = null" id="Role1Button">
-            ⟹
-        </button>
+  <div style="display: flex;align-items: center;justify-content: space-between;">
+    <div style="margin: 50px;width: 475px;align-items: center;justify-content: space-between;background-color: white;border-radius: 16px;height: 500px;padding: 15px;">
+      <div style="display: flex;align-items: center;align-self: center;margin: 10px;justify-content: center;">
+        <p>EMPLOYEES</p>
+      </div>
+      <div>
+        <div style="display: flex;margin: 10px;">
+          <p style="display:flex;flex:1;justify-content:center;">USERNAME</p>
+          <p style="display:flex;flex:1;justify-content:center;">ROLE</p>
+          <p style="display:flex;flex:1;justify-content:center;">EMAIL ADDRESS</p>
+        </div>
+        <div style="max-height: 350px;overflow: auto">
+          <div v-for="employee in employees.sort((a,b) => {return a.email > b.email})">
+            <div :style="employee.id == selectedUserId ? 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;background-color: #00ABB3;' 
+            : 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;'" @click="selectUser(employee.id, 'employee')">
+              <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.username}}</p>
+              <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.roles}}</p>
+              <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.email}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-        <button @click="setEmployee(selectedUserId), this.selectedUserId = null" id="Role2Button">
-            ⟸
+    <div style="margin-right: 30px;margin-left: 30px;">
+      <div style="margin-bottom: 50px;">
+        <button @click="setManager(selectedUserId), this.selectedUserId = null" id="Role1Button" :disabled="selectedUserIs != 'employee'" class="transferButtons"
+        >
+            <img src="../../public/arrow-right-svgrepo-com.svg"/>
         </button>
+      </div>
+      <div>
+        <button @click="setEmployee(selectedUserId), this.selectedUserId = null" id="Role2Button" :disabled="selectedUserIs != 'manager'" class="transferButtons"
+        >
+        <img src="../../public/arrow-left-svgrepo-com.svg"/>
+        </button>
+      </div>
+      <div style="margin-top: 50px">
+    <button @click="deleteUser(selectedUserId)" :disabled="selectedUserId == null" style="width: 80px;height: 73px;" class="transferButtons">
+      <img src="../../public/trash-svgrepo-com.svg"/>
+    </button>
+  </div>     
     </div>
-      EMPLOYEES
-    <table>
-      <thead>
-        <th>USERNAME</th>
-        <th>ROLE</th>
-        <th>EMAIL ADDRESS</th>
-      </thead>
-      <tbody>
-        <tr v-for="manager in managers.sort((a,b) => {return a.email > b.email})">
-          <td :style="this.selectedUserId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = manager.id">{{manager.username}}</td>
-          <td :style="this.selectedUserId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = manager.id">{{manager.roles}}</td>
-          <td :style="this.selectedUserId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedUserId = manager.id">{{manager.email}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <User @deleteuser="removeUserFromTables">
+    <div style="margin: 50px;width: 475px;align-items: center;justify-content: space-between;background-color: white;border-radius: 16px;height: 500px;padding: 15px;">
+      <div style="display: flex;align-items: center;align-self: center;margin: 10px;justify-content: center;">
+        <p>MANAGERS</p>
+      </div>
+      <div>
+        <div style="display: flex;margin: 10px;">
+          <p style="display:flex;flex:1;justify-content:center;">USERNAME</p>
+          <p style="display:flex;flex:1;justify-content:center;">ROLE</p>
+          <p style="display:flex;flex:1;justify-content:center;">EMAIL ADDRESS</p>
+        </div>
+        <div style="max-height: 350px;overflow: auto">
+          <div v-for="employee in managers.sort((a,b) => {return a.email > b.email})">
+            <div :style="employee.id == selectedUserId ? 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;background-color: #00ABB3;' 
+            : 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;'" @click="selectUser(employee.id, 'manager')">
+              <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.username}}</p>
+              <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.roles}}</p>
+              <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.email}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
 
-    </User>
   </template>
   
   <script>
@@ -58,6 +81,7 @@ import User from './User.vue';
         selectedUserId: null,
         employees: [],
         managers: [],
+        selectedUserIs: null,
       }
     },
     mounted () {
@@ -91,6 +115,7 @@ import User from './User.vue';
                 this.employees = this.employees.filter((elem) => elem.id !== res.data.data.id)
                 this.managers.push(res.data.data)
               }).catch(console.error)
+              this.selectedUserIs = null;
             },
         setEmployee(id){
             axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${id}`, {
@@ -104,17 +129,51 @@ import User from './User.vue';
                   this.managers = this.managers.filter((elem) => elem.id !== res.data.data.id)
                   this.employees.push(res.data.data)
             }).catch(console.error)
+            this.selectedUserIs = null;
         },
-        removeUserFromTables(idUser){
-          this.employees = this.employees.filter((elem) => elem.id !== idUser)
-          this.managers = this.managers.filter((elem) => elem.id !== idUser)
-        }
+        selectUser(id, role){
+          this.selectedUserId = id;
+          this.selectedUserIs = role;
+        },
+        removeUserFromTables(idUser, role){
+          if(role == 'employee'){
+            this.employees = this.employees.filter((elem) => elem.id !== idUser);
+          }
+          if(role == '')
+          this.managers = this.managers.filter((elem) => elem.id !== idUser);
+        },
+        deleteUser(id){
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${id}`, { headers: {
+        token: localStorage.getItem("token")
+        }})
+      .then((res) => {
+        this.removeUserFromTables(id, this.selectedUserIs);
+        this.selectedUserId = null;
+        this.selectedUserIs = null;
+      })
+      .catch(console.error);
+    },
     },
     watch: {
     }
   }
   </script>
   <style scoped>
-  
+  .transferButtons{
+    border-radius: 16px;
+    background-color: white;
+    color: #00ABB3;
+    cursor: pointer;
+  }
+
+  .transferButtons:hover{
+    background-color: #D9D9D9;
+    color: #3C4048;
+  }
+
+  .transferButtons:disabled{
+    background-color: white;
+    cursor: default;
+  }
   </style>
   
