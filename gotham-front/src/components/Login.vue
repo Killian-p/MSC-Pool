@@ -54,6 +54,7 @@
 
 <script>
 import axios from 'axios'
+import sha256 from 'crypto-js/sha256';
 export default {
   components: {
   },
@@ -85,7 +86,7 @@ export default {
             user:{
                 username: this.username,
                 email: this.email,
-                password: this.password,
+                password: (sha256(this.password).toString()),
             }
         })
         .then((res) => {
@@ -101,7 +102,7 @@ export default {
     },
     login(){
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
-            password: this.password,
+            password: (sha256(this.password).toString()),
             email: this.email,
          })
         .then(_ => {

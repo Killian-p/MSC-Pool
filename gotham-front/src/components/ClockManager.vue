@@ -85,7 +85,6 @@ export default {
     },
 
     setTimer(){
-      debugger;
       this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf())/1000);
     },
 
