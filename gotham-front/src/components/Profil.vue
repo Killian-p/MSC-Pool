@@ -1,9 +1,10 @@
 <template>
-    <div>
+    <div v-if="currentUser">
+        <div>
         ~My Profile~
     </div>
     <div>
-        <button @click="updateUser(currentUser.username, currentUser.email)">
+        <button @click="updateUser()">
             UPDATE USER
         </button>
     </div>
@@ -21,6 +22,8 @@
             {{currentUser.roles}}
         </a>
     </div>
+    </div>
+    
 </template>
 
 <script>
@@ -49,17 +52,16 @@ export default {
   },
   methods: {
     getUser(){
-        axios.get(`http://localhost:4000/api/users/${this.idUser}`)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`)
         .then(res => {
-            console.log(res)
             this.currentUser = res.data.data
         });
     },
-    updateUser(name, mail){
-        axios.put(`http://localhost:4000/api/users/${this.idUser}`, {
+    updateUser(){
+        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, {
             user: {
-                username: name,
-                email: mail,
+                username: this.currentUser.username,
+                email: this.currentUser.email,
             }
         },{
             headers: {
