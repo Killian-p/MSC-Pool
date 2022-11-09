@@ -158,6 +158,7 @@ export default {
   border-radius: 45px;
   width: 175px;
   height: 60px;
+  cursor: pointer;
 }
 
 .nav-buttons:hover{

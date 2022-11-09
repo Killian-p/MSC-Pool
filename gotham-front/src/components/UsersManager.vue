@@ -3,7 +3,7 @@ import User from './User.vue';
 </script>
 <template>
   <div style="display: flex;align-items: center;justify-content: space-between;">
-    <div style="margin: 50px;width: 475px;align-items: center;justify-content: space-between;background-color: white;border-radius: 45px;height: 500px;padding: 15px;">
+    <div style="margin: 50px;width: 475px;align-items: center;justify-content: space-between;background-color: white;border-radius: 16px;height: 500px;padding: 15px;">
       <div style="display: flex;align-items: center;align-self: center;margin: 10px;justify-content: center;">
         <p>EMPLOYEES</p>
       </div>
@@ -15,8 +15,8 @@ import User from './User.vue';
         </div>
         <div style="max-height: 350px;overflow: auto">
           <div v-for="employee in employees.sort((a,b) => {return a.email > b.email})">
-            <div :style="employee.id == selectedUserId ? 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 10px;background-color: #00ABB3;' 
-            : 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 10px;'" @click="selectUser(employee.id, 'employee')">
+            <div :style="employee.id == selectedUserId ? 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;background-color: #00ABB3;' 
+            : 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;'" @click="selectUser(employee.id, 'employee')">
               <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.username}}</p>
               <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.roles}}</p>
               <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.email}}</p>
@@ -44,7 +44,7 @@ import User from './User.vue';
     </button>
   </div>     
     </div>
-    <div style="margin: 50px;width: 475px;align-items: center;justify-content: space-between;background-color: white;border-radius: 45px;height: 500px;padding: 15px;">
+    <div style="margin: 50px;width: 475px;align-items: center;justify-content: space-between;background-color: white;border-radius: 16px;height: 500px;padding: 15px;">
       <div style="display: flex;align-items: center;align-self: center;margin: 10px;justify-content: center;">
         <p>MANAGERS</p>
       </div>
@@ -56,8 +56,8 @@ import User from './User.vue';
         </div>
         <div style="max-height: 350px;overflow: auto">
           <div v-for="employee in managers.sort((a,b) => {return a.email > b.email})">
-            <div :style="employee.id == selectedUserId ? 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 10px;background-color: #00ABB3;' 
-            : 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 10px;'" @click="selectUser(employee.id, 'manager')">
+            <div :style="employee.id == selectedUserId ? 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;background-color: #00ABB3;' 
+            : 'display: flex;flex:3;justify-content: space-between;border: solid black 1px;padding: 5px 10px; border-radius: 16px;'" @click="selectUser(employee.id, 'manager')">
               <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.username}}</p>
               <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.roles}}</p>
               <p style="display:flex;flex:1;justify-content:center;margin: 0;">{{employee.email}}</p>
@@ -160,7 +160,7 @@ import User from './User.vue';
   </script>
   <style scoped>
   .transferButtons{
-    border-radius: 20px;
+    border-radius: 16px;
     background-color: white;
     color: #00ABB3;
     cursor: pointer;
