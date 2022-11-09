@@ -13,6 +13,7 @@
     "chart": "^0.1.2",
     "chart.js": "^3.9.1",
     "chartjs": "^0.3.24",
+    "crypto-js": "^4.1.1",
     "litepie-datepicker": "^1.0.14",
     "moment": "^2.29.4",
     "vue": "^3.2.41",

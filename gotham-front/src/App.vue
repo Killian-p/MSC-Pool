@@ -14,12 +14,13 @@ import Login from './components/Login.vue';
   <div class="main">
     <div class="nav" v-if="idCurrentUser != null">
       TimeManager (logo ptet)
-      <div>
+      <div style="max-height:90vh;overflow: auto;">
+        <div>
         <div class="box">
-      <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" 
-      :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
-      >  
-        workingTimes</button>
+          <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" 
+          :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
+          >  
+            workingTimes</button>
         </div>
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('workingTime')"
@@ -32,12 +33,6 @@ import Login from './components/Login.vue';
           :style="currentComponent == 'chartManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'"
           >
             chartManager</button>
-        </div>
-        <div class="box">
-          <button class="form-control nav-buttons" @click="logout"
-          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 300px;"
-          >
-            Se déconnecter</button>
         </div>
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('profil')"
@@ -65,6 +60,13 @@ import Login from './components/Login.vue';
           >
             User Management
           </button>
+        </div>
+      </div>
+      <div class="box">
+          <button class="form-control nav-buttons" @click="logout"
+          style="background-color: #3C4048;color: #00ABB3;position: fixed;margin-top: 175px;"
+          >
+            Se déconnecter</button>
         </div>
       </div>
       <ClockManager :id-user="idCurrentUser" :username="username">
@@ -136,7 +138,7 @@ export default {
       }})
       .then(_ => {
         localStorage.removeItem("token");
-        this.selectComponent("Login");
+        this.currentComponent = "Login";
         this.currentUserRole = null,
         this.idCurrentUser = null,
         this.connected = false;
