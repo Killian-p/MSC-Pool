@@ -70,23 +70,20 @@ export default {
           this.clocking = _.data.data.status;
         });
     },
-
-    getClock() {
-      axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/clocks/${this.idUser}`, {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        })
-        .then((_) => {
-          this.lastTime = _.data.data.time;
-          this.clocking = _.data.data.status;
-          this.setTimer();
-        });
+    
+    getClock(){
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clocks/${this.idUser}`, { headers:{
+        token: localStorage.getItem("token")
+      }})
+      .then(_ => {
+        this.lastTime = _.data.data?.time ?? null;
+        this.clocking = _.data.data?.status ?? false;
+        this.setTimer();
+      })
     },
 
-    setTimer() {
-      this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf()) / 1000);
+    setTimer(){
+      this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf())/1000);
     },
 
     addTime() {
