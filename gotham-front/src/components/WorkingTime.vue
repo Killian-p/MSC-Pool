@@ -108,7 +108,7 @@ export default {
   },
   methods: {
     updateAWorkingTime(idWorkingTime, start, end){
-      axios.put(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {
+      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {
         workingtime:{
           start: new Date(start).toISOString(),
           end: new Date(end).toISOString(),
@@ -118,7 +118,7 @@ export default {
         }}).catch(console.error)
     },
     deleteAWorkingTime(idWorkingTime){
-      axios.delete(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {headers: {
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${idWorkingTime}`, {headers: {
           token: localStorage.getItem("token")
         }}).catch(console.error)
       .then(() => {
@@ -126,7 +126,7 @@ export default {
       })
     },
     getWorkingTimesForAPerdiod(){
-      axios.get(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, { 
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, { 
           headers:{
         token: localStorage.getItem("token")
       }}, {params :{
@@ -145,7 +145,7 @@ export default {
       }).catch(console.error);
     },
     createWorkingTime(){
-      axios.post(${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,{
         workingtime: {
             start: new Date(this.startingDate).toISOString(),
             end: new Date(this.endingDate).toISOString(),

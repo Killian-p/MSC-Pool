@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     deleteUser(id){
-      axios.delete(${import.meta.env.VITE_BACKEND_URL}/api/users/${id}`, { headers: {
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${id}`, { headers: {
         token: localStorage.getItem("token")
         }})
       .then((res) => {
@@ -69,7 +69,7 @@ export default {
       .catch(console.error);
     },
     getAllUsers(){
-      axios.get(${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
         token: localStorage.getItem("token")
         }})
       .then((res) => {
