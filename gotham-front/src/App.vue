@@ -96,9 +96,6 @@ import Login from './components/Login.vue';
   
   </div>
 
-  <!-- <User @logged="loggin" :id-user="idCurrentUser"/> -->
-
-
 </template>
 
 <script>
@@ -161,6 +158,7 @@ export default {
   border-radius: 45px;
   width: 175px;
   height: 60px;
+  cursor: pointer;
 }
 
 .nav-buttons:hover{
