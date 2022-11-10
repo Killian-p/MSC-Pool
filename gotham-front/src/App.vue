@@ -61,7 +61,6 @@ import Login from "./components/Login.vue";
     </div>
   </div>
 
-  <!-- <User @logged="loggin" :id-user="idCurrentUser"/> -->
 </template>
 
 <script>
@@ -129,6 +128,7 @@ export default {
   justify-content: center;
   padding: 10px;
   width: 175px;
+  cursor: pointer;
 }
 
 .nav-buttons:hover {

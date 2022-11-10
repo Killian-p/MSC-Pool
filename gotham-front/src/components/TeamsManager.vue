@@ -43,7 +43,11 @@
   <div>
     
   </div>
-  <table>
+  <div>
+    <h1>
+    TEAMS LIST
+    </h1>
+    <table>
       <thead>
         <tr>
           <th>
@@ -59,12 +63,51 @@
       </thead>
       <tbody>
         <tr v-for="team in teams">
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id">{{team.id}}</td>
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id">{{team.manager_id}}</td>
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id">{{team.name}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.id}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.manager_id}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.name}}</td>
         </tr>
       </tbody>
     </table>
+    <div>
+      <h1>
+    TEAM'S USERS LIST
+    </h1>
+      <table>
+      <thead>
+        <th> UserName </th>
+        <th> Email </th>
+      </thead>
+      <tbody>
+        <tr v-for="user in teamsUsers">
+          <td>{{user.username}}</td>
+          <td>{{user.email}}</td>
+          <button @click="this.removeUserFromSelectedTeam(user)">
+            REMOVE
+          </button>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div>
+      <h1>
+    ALL USERS LIST
+    </h1>
+      <table>
+      <thead>
+        <th> UserName </th>
+        <th> Email </th>
+      </thead>
+      <tbody>
+        <tr v-for="user in this.users">
+          <td >{{user.username}}</td>
+          <td >{{user.email}}</td>
+          <button @click="this.addUserToSelectedTeam(user)"> ADD </button>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
   </template>
   <script>
   import axios from 'axios'
@@ -84,6 +127,7 @@
         selectedManagerId: null,
         teamName: null,
         teams: null,
+        teamsUsers: null,
         selectedTeamId: null,
       }
     },
@@ -117,10 +161,11 @@
         this.teams = res.data.data.sort((a,b) => {return a.name > b.name})
       }
       )},
+
     createATeam(){
       axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { team:{
         name: this.teamName,
-        manager_id: this.selectedManagerId}}, {
+        manager_id: this?.selectedManagerId ?? this.idUser}}, {
       headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
@@ -128,6 +173,24 @@
         this.teams.push(res.data.data)
       }).catch(console.error)
     },
+    addUserToSelectedTeam(user){
+      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {}, {
+      headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+          console.log(res)
+          this.teamsUsers.push(user)
+      }).catch(console.error)
+    },
+    removeUserFromSelectedTeam(user){
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
+        headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+          console.log(res)
+          this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id)
+      }).catch(console.error)
+    }, 
   },
     watch: {
     }
