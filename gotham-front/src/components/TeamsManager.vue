@@ -65,7 +65,7 @@
         <tr v-for="team in teams">
           <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.id}}</td>
           <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.manager_id}}</td>
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.name}} {{team.users}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users">{{team.name}}</td>
         </tr>
       </tbody>
     </table>
@@ -82,6 +82,9 @@
         <tr v-for="user in teamsUsers">
           <td>{{user.username}}</td>
           <td>{{user.email}}</td>
+          <button @click="this.removeUserFromSelectedTeam(user)">
+            REMOVE
+          </button>
         </tr>
       </tbody>
     </table>
@@ -124,6 +127,7 @@
         selectedManagerId: null,
         teamName: null,
         teams: null,
+        teamsUsers: null,
         selectedTeamId: null,
       }
     },
@@ -177,7 +181,16 @@
           console.log(res)
           this.teamsUsers.push(user)
       }).catch(console.error)
-    }
+    },
+    removeUserFromSelectedTeam(user){
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
+        headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+          console.log(res)
+          this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id)
+      }).catch(console.error)
+    }, 
   },
     watch: {
     }
