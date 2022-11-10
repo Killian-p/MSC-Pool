@@ -2,14 +2,20 @@
   <div class="container">
     <div class="whiteCard">
       <div class="dataline">
-        <p class="data">Id</p>
-        <p class="data">Starts</p>
-        <p class="data">End</p>
+        <p class="data little">Id</p>
+        <p class="data little">User</p>
+        <p class="data medium">Starts</p>
+        <p class="data medium">End</p>
+        <p class="data medium">Temps écoulé</p>
       </div>
-      <div class="dataline" v-for="worktime in datas">
-        <p class="data">{{ worktime.id }}</p>
-        <p class="data">{{ worktime.start }}</p>
-        <p class="data">{{ worktime.end }}</p>
+      <div class="dataContainer vertScroll">
+        <div class="dataline" v-for="worktime in datas">
+          <p class="data little">{{ worktime.id }}</p>
+          <p class="data little">{{ worktime.user_id }}</p>
+          <p class="data medium">{{ new Date(worktime.start).toLocaleString() }}</p>
+          <p class="data medium">{{ new Date(worktime.end).toLocaleString() }}</p>
+          <p class="data medium">{{ new Date(new Date(worktime.end) - new Date(worktime.start)).toLocaleTimeString() }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -60,24 +66,43 @@ export default {
 .dataline {
   display: flex;
   flex-direction: columns;
-  
 }
 .whiteCard {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 .data {
   display: flex;
-  flex: 1;
   justify-content: center;
+  margin: 0;
+}
+.little {
+  flex: 1;
+}
+.medium {
+  flex: 2;
+}
+.data {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+.dataContainer {
+    display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .container {
- border-radius: 20px;
- display: flex;
- flex-direction: column;
- background-color: white;
- width: 700px;
- height: 600px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px;
+  width: 800px;
+}
+.vertScroll {
+  overflow-y: scroll;
+  max-height: 600px;
 }
 </style>

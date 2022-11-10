@@ -113,21 +113,21 @@ defmodule Gotham.Workingtimes do
   def get_user_workingtime_by_start_and_end(userId, startDate, endDate) do
     Repo.all(from worktime in "workingtimes",
       where: worktime.start >= ^startDate and worktime.end <= ^endDate and worktime.user_id == ^String.to_integer(userId),
-      select: [:start, :id, :end]
+      select: [:start, :id, :end, :user_id]
     )
   end
 
   def get_user_workingtime_by_start(userId, startDate) do
     Repo.all(from worktime in "workingtimes",
       where: worktime.start >= ^startDate and worktime.user_id == ^String.to_integer(userId),
-      select: [:start, :id, :end]
+      select: [:start, :id, :end, :user_id]
     )
   end
 
   def get_user_workingtime_by_end(userId, endDate) do
     Repo.all(from worktime in "workingtimes",
       where: worktime.end <= ^endDate and worktime.user_id == ^String.to_integer(userId),
-      select: [:start, :id, :end]
+      select: [:start, :id, :end, :user_id]
     )
   end
 end
