@@ -410,9 +410,15 @@ export default {
       }
       var chartExist = Chart.getChart("bar-chart");
       var char2Exist = Chart.getChart("doughnut-chart");
+      var char3Exist = Chart.getChart("line-chart1");
+      var char4Exist = Chart.getChart("line-chart2");
+      var char5Exist = Chart.getChart("line-chart3");
       if (chartExist != undefined) {
         chartExist.destroy();
         char2Exist.destroy();
+        char3Exist.destroy();
+        char4Exist.destroy();
+        char5Exist.destroy();
         this.seeWorkingTimes();
       }
     },
