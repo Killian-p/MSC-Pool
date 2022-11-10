@@ -2,11 +2,11 @@
   <div class="container">
     <div class="whiteCard">
       <div class="dataline">
-        <p class="data little">Id</p>
-        <p class="data little">User</p>
-        <p class="data medium">Starts</p>
-        <p class="data medium">End</p>
-        <p class="data medium">Temps écoulé</p>
+        <p class="data little bold">Id</p>
+        <p class="data little bold">User</p>
+        <p class="data medium bold">Starts</p>
+        <p class="data medium bold">End</p>
+        <p class="data medium bold">Temps écoulé</p>
       </div>
       <div class="dataContainer vertScroll">
         <div class="dataline" v-for="worktime in datas">
@@ -72,11 +72,6 @@ export default {
   flex-direction: column;
   gap: 10px;
 }
-.data {
-  display: flex;
-  justify-content: center;
-  margin: 0;
-}
 .little {
   flex: 1;
 }
@@ -89,7 +84,7 @@ export default {
   margin: 0;
 }
 .dataContainer {
-    display: flex;
+  display: flex;
   flex-direction: column;
   gap: 10px;
 }
@@ -104,5 +99,8 @@ export default {
 .vertScroll {
   overflow-y: scroll;
   max-height: 600px;
+}
+.bold {
+  font-weight: bold;
 }
 </style>

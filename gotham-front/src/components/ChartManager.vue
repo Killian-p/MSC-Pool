@@ -422,11 +422,6 @@ export default {
 };
 </script>
 <style scoped>
-.pageContainer {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
 .container {
   display: flex;
   flex-direction: column;
