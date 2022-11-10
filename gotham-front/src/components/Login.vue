@@ -2,36 +2,29 @@
   <div class="mainbox">
     <div class="loginbox">
       <div class="tabbox">
-        <button class="tabnav" @click="changeTab('sign_in')" style="cursor:pointer">Connexion</button>
-        <button class="tabnav" @click="changeTab('sign_up')" style="cursor:pointer">Enregistrement</button>
+        <button class="buttons" @click="changeTab('sign_in')" style="cursor:pointer">Connexion</button>
+        <button class="buttons" @click="changeTab('sign_up')" style="cursor:pointer">Enregistrement</button>
       </div>
       <div class="formbox">
-        <div class="label-column">
-          <div class="box">
-            <label>Email:</label>
-          </div>
-          <div class="box" v-if="currentTab == 'sign_up'">
-            <label>Username:</label>
-          </div>
-          <div class="box">
-            <label>Password:</label>
-          </div>
+        <div class="labelInput">
+          <label>Email:</label>
+          <input v-model="email" />
         </div>
-        <div class="input-column">
-          <div class="box">
-            <input v-model="email" />
-          </div>
-          <div class="box" v-if="currentTab == 'sign_up'">
+        <div v-if="currentTab == 'sign_up'">
+          <div class="labelInput">
+            <label>Username:</label>
             <input v-model="username" />
           </div>
-          <div class="box">
-            <input v-model="password" type="password" />
-          </div>
+        </div>
+        <div class="labelInput">
+          <label>Password:</label>
+          <input v-model="password" type="password" />
         </div>
       </div>
-      <span style="color: red">{{ errorMessage }}</span>
+      
+      <span v-if="errorMessage" style="color: red">{{ errorMessage }}</span>
       <div style="display: flex">
-        <div class="box" style="margin-right: 60px" v-if="currentTab == 'sign_up'">
+        <div class="box" v-if="currentTab == 'sign_up'">
           <button @click="createUser" class="buttons" type="button" style="cursor:pointer">S'enregistrer</button>
         </div>
         <div class="box" v-if="currentTab == 'sign_in'">
@@ -43,8 +36,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import sha256 from 'crypto-js/sha256';
+import axios from "axios";
+import sha256 from "crypto-js/sha256";
 export default {
   components: {},
   props: {
@@ -67,36 +60,38 @@ export default {
   created() {},
   computed: {},
   methods: {
-    createUser(){
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
-            user:{
-                username: this.username,
-                email: this.email,
-                password: (sha256(this.password).toString()),
-            }
+    createUser() {
+      axios
+        .post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_up`, {
+          user: {
+            username: this.username,
+            email: this.email,
+            password: sha256(this.password).toString(),
+          },
         })
         .then((res) => {
-            localStorage.setItem("token", res.data.token);
-            this.$emit("logged", [res.data.id, res.data.roles]);
-            this.$emit("username", res.data.username);
-            this.userExists = true;
-        }).catch(_ => {
-            this.errorMessage = this.errorMessage = _.message ?? _.response.data.message;
+          localStorage.setItem("token", res.data.token);
+          this.$emit("logged", [res.data.id, res.data.roles]);
+          this.$emit("username", res.data.username);
+          this.userExists = true;
         })
-        this.connected=true;
+        .catch((_) => {
+          this.errorMessage = this.errorMessage = _.message ?? _.response.data.message;
+        });
+      this.connected = true;
     },
-    login(){
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
-            password: (sha256(this.password).toString()),
-            email: this.email,
-         })
-        .then(_ => {
-            localStorage.setItem("token", _.data.token);
-            this.idCurrentUser = _.data.id;
-            this.$emit("logged", [_.data.id, _.data.roles]);
-            this.$emit("username", _.data.username);
-            this.userExists = true;
-            
+    login() {
+      axios
+        .post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign_in`, {
+          password: sha256(this.password).toString(),
+          email: this.email,
+        })
+        .then((_) => {
+          localStorage.setItem("token", _.data.token);
+          this.idCurrentUser = _.data.id;
+          this.$emit("logged", [_.data.id, _.data.roles]);
+          this.$emit("username", _.data.username);
+          this.userExists = true;
         })
         .catch((_) => {
           this.errorMessage = _.message ?? _.response.data.message;
@@ -129,6 +124,7 @@ export default {
   border-radius: 45px;
   flex-direction: column;
   border: black 3px solid;
+  gap: 30px;
 }
 
 .label-column {
@@ -144,6 +140,8 @@ export default {
 
 .formbox {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .box {
@@ -151,9 +149,10 @@ export default {
 }
 
 .buttons {
-  border-radius: 45px;
-  width: 100%;
-  height: 150%;
+  border-radius: 20px;
+  padding: 10px;
+  /* width: 100%; */
+  /* height: 150%; */
   background-color: #3c4048;
   color: #00abb3;
 }
@@ -165,6 +164,8 @@ export default {
 
 .tabbox {
   display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .tabnav {
@@ -176,5 +177,11 @@ export default {
 .tabnav:hover {
   background-color: #00abb3;
   color: #3c4048;
+}
+
+.labelInput {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
 }
 </style>

@@ -1,17 +1,8 @@
 <template>
   <div class="clock">
-    <div class="sub">
-      <div style="display: flex">
-        <div>User: {{ username }}</div>
-        <div style="margin-left: 55px">
-          {{ clocking ? `${timer / 3600 < 10 ? 0 : ""}${~~(timer / 3600)}:${(timer % 3600) / 60 < 10 ? 0 : ""}${~~((timer % 3600) / 60)}:${(timer % 3600) % 60 < 10 ? 0 : ""}${(timer % 3600) % 60}` : "00:00:00" }}
-        </div>
-      </div>
-      <div>Status: {{ clocking ? "Clocking" : "Not clocking" }}</div>
-      <div style="margin-left: 45px; margin-top: 10px">
-        <a href="#" @click="clock">{{ clocking ? "Clock out" : "Clock in" }}</a>
-      </div>
-    </div>
+    {{ clocking ? `${timer / 3600 < 10 ? 0 : ""}${~~(timer / 3600)}:${(timer % 3600) / 60 < 10 ? 0 : ""}${~~((timer % 3600) / 60)}:${(timer % 3600) % 60 < 10 ? 0 : ""}${(timer % 3600) % 60}` : "00:00:00" }}
+    <div>Status: {{ clocking ? "Clocking" : "Not clocking" }}</div>
+    <a href="#" @click="clock">{{ clocking ? "Clock out" : "Clock in" }}</a>
   </div>
 </template>
 
@@ -70,20 +61,23 @@ export default {
           this.clocking = _.data.data.status;
         });
     },
-    
-    getClock(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clocks/${this.idUser}`, { headers:{
-        token: localStorage.getItem("token")
-      }})
-      .then(_ => {
-        this.lastTime = _.data.data?.time ?? null;
-        this.clocking = _.data.data?.status ?? false;
-        this.setTimer();
-      })
+
+    getClock() {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/clocks/${this.idUser}`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        })
+        .then((_) => {
+          this.lastTime = _.data.data?.time ?? null;
+          this.clocking = _.data.data?.status ?? false;
+          this.setTimer();
+        });
     },
 
-    setTimer(){
-      this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf())/1000);
+    setTimer() {
+      this.timer = Math.floor((Date.now() - new Date(this.lastTime).valueOf()) / 1000);
     },
 
     addTime() {
@@ -96,11 +90,11 @@ export default {
 
 <style scoped>
 .button-clock {
-  border-radius: 45px;
-  width: 10vw;
-  height: 5vh;
-  margin-top: 30px;
-  margin-left: 60px;
+  /* border-radius: 45px; */
+  /* width: 10vw; */
+  /* height: 5vh; */
+  /* margin-top: 30px; */
+  /* margin-left: 60px; */
 }
 .button-in {
   background-color: #3c4048;
@@ -117,19 +111,19 @@ export default {
 }
 
 .clock {
-  position: fixed;
-  bottom: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   border-radius: 20px;
-  margin-bottom: 10px;
-  margin-left: 0px;
-  width: 175px;
-  height: 80px;
+  flex-direction: column;
+  width: 155px;
   background-color: #b2b2b2;
+  font-size: small;
 }
 
 .sub {
   margin-top: 10px;
   margin-left: 20px;
-  font-size: small;
 }
 </style>

@@ -90,6 +90,7 @@ export default {
       new Chart(document.getElementById("bar-chart"), {
         type: "bar",
         data: {
+          position: 'relative',
           labels: this.labelDate,
           color: "#3e95cd",
           datasets: [
