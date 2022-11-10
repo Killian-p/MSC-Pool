@@ -2,8 +2,8 @@
   <div class="mainbox">
     <div class="loginbox">
       <div class="tabbox">
-        <button class="tabnav" @click="changeTab('sign_in')">Connexion</button>
-        <button class="tabnav" @click="changeTab('sign_up')">Enregistrement</button>
+        <button class="tabnav" @click="changeTab('sign_in')" style="cursor:pointer">Connexion</button>
+        <button class="tabnav" @click="changeTab('sign_up')" style="cursor:pointer">Enregistrement</button>
       </div>
       <div class="formbox">
         <div class="label-column">
@@ -32,10 +32,10 @@
       <span style="color: red">{{ errorMessage }}</span>
       <div style="display: flex">
         <div class="box" style="margin-right: 60px" v-if="currentTab == 'sign_up'">
-          <button @click="createUser" class="buttons" type="button">S'enregistrer</button>
+          <button @click="createUser" class="buttons" type="button" style="cursor:pointer">S'enregistrer</button>
         </div>
         <div class="box" v-if="currentTab == 'sign_in'">
-          <button @click="login" class="buttons" type="button">Se connecter</button>
+          <button @click="login" class="buttons" type="button" style="cursor:pointer">Se connecter</button>
         </div>
       </div>
     </div>
