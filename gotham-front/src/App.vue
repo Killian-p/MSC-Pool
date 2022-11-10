@@ -13,21 +13,19 @@ import Login from "./components/Login.vue";
 <template>
   <div class="main">
     <div class="nav" v-if="idCurrentUser != null">
-      <div style="max-height: 90vh; overflow: auto">
-        <!-- <div> -->
-          <div class="box">
-            <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">workingTimes</button>
-          </div>
-          <div class="box">
-            <button class="form-control nav-buttons" @click="selectComponent('workingTime')" :style="currentComponent == 'workingTime' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">workingTime</button>
-          </div>
-          <div class="box">
-            <button class="form-control nav-buttons" @click="selectComponent('chartManager')" :style="currentComponent == 'chartManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">chartManager</button>
-          </div>
-          <div class="box">
-            <button class="form-control nav-buttons" @click="selectComponent('profil')" :style="currentComponent == 'profil' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">My Profil</button>
-          </div>
-        <!-- </div> -->
+      <div class="navButton">
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">workingTimes</button>
+        </div>
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('workingTime')" :style="currentComponent == 'workingTime' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">workingTime</button>
+        </div>
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('chartManager')" :style="currentComponent == 'chartManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">chartManager</button>
+        </div>
+        <div class="box">
+          <button class="form-control nav-buttons" @click="selectComponent('profil')" :style="currentComponent == 'profil' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">My Profil</button>
+        </div>
         <div v-if="this.currentUserRole === 'ADMIN' || this.currentUserRole === 'MANAGER'">
           <div class="box">
             <button class="form-control nav-buttons" @click="selectComponent('teamsManager')" :style="currentComponent == 'teamsManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">Teams Manager</button>
@@ -42,9 +40,9 @@ import Login from "./components/Login.vue";
           <button class="form-control nav-buttons" @click="logout" style="background-color: #3c4048; color: #00abb3; position: fixed; margin-top: 175px">Se déconnecter</button>
         </div>
       </div>
-      <ClockManager :id-user="idCurrentUser" :username="username"> </ClockManager>
+      <ClockManager :id-user="idCurrentUser"> </ClockManager>
     </div>
-    <div style="display: flex; justify-content: center; width: 100%">
+    <div style="display: flex; justify-content: center; align-items: center; width: 100%">
       <WorkingTimes v-if="currentComponent == 'workingTimes'" :id-user="idCurrentUser"> </WorkingTimes>
 
       <WorkingTime v-if="currentComponent == 'workingTime'" :id-user="idCurrentUser"> </WorkingTime>
@@ -60,7 +58,6 @@ import Login from "./components/Login.vue";
       <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" @username="setUsername" :id-user="idCurrentUser"> </Login>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -118,7 +115,7 @@ export default {
   display: flex;
 }
 .box {
-  margin: 20px;
+  /* margin: 20px; */
   width: 80%;
 }
 
@@ -142,5 +139,15 @@ export default {
   background-color: #d9d9d9;
   width: 200px;
   align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.navButton {
+  max-height: 90vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 </style>
