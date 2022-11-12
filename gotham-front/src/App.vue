@@ -14,6 +14,11 @@ import Login from "./components/Login.vue";
   <div class="main">
     <div class="nav" v-if="idCurrentUser != null">
       <div class="navButton">
+        <div>
+          <button class="form-control nav-buttons" @click="triggerProfil" :style="  '' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">
+            <img src="../public/profile-svgrepo-com.svg"/>
+          </button>
+        </div>
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('workingTimes')" :style="currentComponent == 'workingTimes' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">workingTimes</button>
         </div>
@@ -22,9 +27,6 @@ import Login from "./components/Login.vue";
         </div>
         <div class="box">
           <button class="form-control nav-buttons" @click="selectComponent('chartManager')" :style="currentComponent == 'chartManager' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">chartManager</button>
-        </div>
-        <div class="box">
-          <button class="form-control nav-buttons" @click="selectComponent('profil')" :style="currentComponent == 'profil' ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'">My Profil</button>
         </div>
         <div v-if="this.currentUserRole === 'ADMIN' || this.currentUserRole === 'MANAGER'">
           <div class="box">
@@ -53,7 +55,7 @@ import Login from "./components/Login.vue";
 
       <UsersManager v-if="currentComponent == 'usersManager'" :id-user="idCurrentUser"> </UsersManager>
 
-      <Profil v-if="currentComponent == 'profil'" :id-user="idCurrentUser"> </Profil>
+      <Profil v-if="showProfile" :id-user="idCurrentUser"> </Profil>
 
       <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" @username="setUsername" :id-user="idCurrentUser"> </Login>
     </div>
@@ -74,6 +76,7 @@ export default {
       currentUserRole: null,
       currentComponent: "Login",
       username: null,
+      showProfile: false,
     };
   },
   methods: {
@@ -104,6 +107,9 @@ export default {
           (this.currentUserRole = null), (this.idCurrentUser = null), (this.connected = false);
         });
     },
+    triggerProfil(){
+      this.showProfile = this.showProfile ? false : true;
+    }
   },
 };
 </script>
