@@ -17,13 +17,13 @@
             </thead>
             <tbody>
               <tr v-for="manager in managers">
-                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id">{{ manager.username }}</td>
-                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id">{{ manager.email }}</td>
-                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id">{{ manager.roles }}</td>
+                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id, setUsersThatAreNotInSelectedTeam()">{{ manager.username }}</td>
+                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id, setUsersThatAreNotInSelectedTeam()">{{ manager.email }}</td>
+                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id, setUsersThatAreNotInSelectedTeam()">{{ manager.roles }}</td>
               </tr>
             </tbody>
           </table>
-          <button @click="createATeam">CREATE A TEAM</button>
+          <button @click="createATeam(), setUsersThatAreNotInSelectedTeam()">CREATE A TEAM</button>
         </div>
       </div>
 
@@ -35,7 +35,7 @@
           <p class="data little">Team's Name</p>
         </div>
         <div v-for="team in teams">
-          <div class="dataLine" @click="(this.selectedTeamId = team.id), (this.teamsUsers = team.users), getDataTeam(team), createChart()">
+          <div class="dataLine" @click="(this.selectedTeamId = team.id), (this.teamsUsers = team.users), getDataTeam(team), createChart(), setUsersThatAreNotInSelectedTeam()">
             <p class="data little">{{ team.id }}</p>
             <p class="data little">{{ team.manager_id }}</p>
             <p class="data little">{{ team.name }}</p>
@@ -55,7 +55,7 @@
             <tr v-for="user in teamsUsers">
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
-              <button @click="this.removeUserFromSelectedTeam(user)">REMOVE</button>
+              <button @click="this.removeUserFromSelectedTeam(user, setUsersThatAreNotInSelectedTeam())">REMOVE</button>
               <button @click="this.getDataUser(user), createChart()">DisplayChart</button>
             </tr>
           </tbody>
@@ -69,10 +69,10 @@
             <th>Email</th>
           </thead>
           <tbody>
-            <tr v-for="user in this.users">
+            <tr v-for="user in this.usersNotInTeam">
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
-              <button @click="this.addUserToSelectedTeam(user)">ADD</button>
+              <button @click="this.addUserToSelectedTeam(user), setUsersThatAreNotInSelectedTeam()">ADD</button>
             </tr>
           </tbody>
         </table>
@@ -107,6 +107,9 @@ export default {
       teams: null,
       teamsUsers: null,
       selectedTeamId: null,
+      usersNotInTeam: [],
+      usersOfTeam: [],
+
       arrayStart: [],
       arrayEnd: [],
       nightTimes: [],
@@ -129,94 +132,149 @@ export default {
   },
   computed: {},
   methods: {
-    getUsers() {
-      axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          this.users = res.data.data.sort((a, b) => {
-            return a.email > b.email;
-          });
-          this.employees = res.data.data
-            .filter((elem) => elem.roles === "EMPLOYEE")
-            .sort((a, b) => {
-              return a.email > b.email;
-            });
-          this.managers = res.data.data
-            .filter((elem) => elem.roles === "MANAGER")
-            .sort((a, b) => {
-              return a.email > b.email;
-            });
-        })
-        .catch(console.error);
+    getUsers(){
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+        this.users = res.data.data.sort((a,b) => {return a.email > b.email})
+        this.employees = res.data.data.filter((elem) => elem.roles === "EMPLOYEE").sort((a,b) => {return a.email > b.email})
+        this.managers = res.data.data.filter((elem) => elem.roles === "MANAGER").sort((a,b) => {return a.email > b.email})
+      }).catch(console.error);
     },
-
-    getAllTeams() {
-      axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          this.teams = res.data.data.sort((a, b) => {
-            return a.name > b.name;
-          });
-        });
+    // getUsers() {
+    //   axios
+    //     .get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, {
+    //       headers: {
+    //         token: localStorage.getItem("token"),
+    //       },
+    //     })
+    //     .then((res) => {
+    //       this.users = res.data.data.sort((a, b) => {
+    //         return a.email > b.email;
+    //       });
+    //       this.employees = res.data.data
+    //         .filter((elem) => elem.roles === "EMPLOYEE")
+    //         .sort((a, b) => {
+    //           return a.email > b.email;
+    //         });
+    //       this.managers = res.data.data
+    //         .filter((elem) => elem.roles === "MANAGER")
+    //         .sort((a, b) => {
+    //           return a.email > b.email;
+    //         });
+    //     })
+    //     .catch(console.error);
+    // },
+    getAllTeams(){
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+        console.log(res.data.data)
+        this.teams = res.data.data.sort((a,b) => {return a.name > b.name})
+      }
+      )
     },
-
-    createATeam() {
-      axios
-        .post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/teams`,
-          {
-            team: {
-              name: this.teamName,
-              manager_id: this?.selectedManagerId ?? this.idUser,
-            },
-          },
-          {
-            headers: {
-              token: localStorage.getItem("token"),
-            },
-          }
-        )
-        .then((res) => {
-          this.teams.push(res.data.data);
-        })
-        .catch(console.error);
+    // getAllTeams() {
+    //   axios
+    //     .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, {
+    //       headers: {
+    //         token: localStorage.getItem("token"),
+    //       },
+    //     })
+    //     .then((res) => {
+    //       this.teams = res.data.data.sort((a, b) => {
+    //         return a.name > b.name;
+    //       });
+    //     });
+    // },
+    createATeam(){
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { team:{
+        name: this.teamName,
+        manager_id: this?.selectedManagerId ?? this.idUser}}, {
+      headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+        console.log(res)
+        this.teams.push(res.data.data)
+      }).catch(console.error)
     },
-    addUserToSelectedTeam(user) {
-      axios
-        .put(
-          `${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`,
-          {},
-          {
-            headers: {
-              token: localStorage.getItem("token"),
-            },
-          }
-        )
-        .then((res) => {
-          this.teamsUsers.push(user);
-        })
-        .catch(console.error);
+    // createATeam() {
+    //   axios
+    //     .post(
+    //       `${import.meta.env.VITE_BACKEND_URL}/api/teams`,
+    //       {
+    //         team: {
+    //           name: this.teamName,
+    //           manager_id: this?.selectedManagerId ?? this.idUser,
+    //         },
+    //       },
+    //       {
+    //         headers: {
+    //           token: localStorage.getItem("token"),
+    //         },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       this.teams.push(res.data.data);
+    //     })
+    //     .catch(console.error);
+    // },
+    addUserToSelectedTeam(user){
+      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {}, {
+      headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+          console.log(res)
+          this.teamsUsers.push(user)
+          this.setUsersThatAreNotInSelectedTeam()
+          // this.usersNotInTeam.filter((user) => user.id !== user.id)
+      }).catch(console.error)
     },
-    removeUserFromSelectedTeam(user) {
-      axios
-        .delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id);
-        })
-        .catch(console.error);
+    // addUserToSelectedTeam(user) {
+    //   axios
+    //     .put(
+    //       `${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`,
+    //       {},
+    //       {
+    //         headers: {
+    //           token: localStorage.getItem("token"),
+    //         },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       this.teamsUsers.push(user);
+    //     })
+    //     .catch(console.error);
+    // },
+    removeUserFromSelectedTeam(user){
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
+        headers: {
+        token: localStorage.getItem("token")
+      }}).then(res => {
+          console.log(res)
+          this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id)
+          this.setUsersThatAreNotInSelectedTeam()
+        }).catch(console.error)
+      },
+      setUsersThatAreNotInSelectedTeam(){
+        this.usersIds = this.users.map(elem => elem.id)
+        this.selectedTeamsUsersIds = this.teamsUsers.map(elem => elem.id)
+        // this.usersNotInSelectedTeam = this.usersIds.filter(x => !this.selectedTeamsUsersIds.includes(x))
+        this.usersNotInTeam = this.users.filter(user => !this.selectedTeamsUsersIds.includes(user.id))
+        console.log(this.usersNotInTeam);
     },
+    // removeUserFromSelectedTeam(user) {
+    //   axios
+    //     .delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
+    //       headers: {
+    //         token: localStorage.getItem("token"),
+    //       },
+    //     })
+    //     .then((res) => {
+    //       this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id);
+    //     })
+    //     .catch(console.error);
+    // },
     getDataUser(user) {
       this.nightHours = [];
       this.supHours = [];
@@ -317,7 +375,6 @@ export default {
       }
       this.deleteBlankDate();
       this.getHourSup();
-      this.SumFuction();
       this.workTimeGroup();
     },
     deleteBlankDate() {
