@@ -1,5 +1,5 @@
 <template>
-    <div class="background">
+    <div class="background" @click="closeProfil">
     </div>
     <div class="profilModal">
         <div v-if="currentUser">
@@ -17,8 +17,11 @@
                 {{currentUser.roles}}
             </div>
             </div>
-            <button @click="updateUser()">
+                <button @click="updateUser()">
                     UPDATE USER
+                </button>
+                <button @click="deleteUser">
+                    DELETE USER
                 </button>
         </div>
 </template>
@@ -69,6 +72,18 @@ export default {
             alert("Update successful")
             this.currentUser = res.data.data
         }).catch(console.error);
+    },
+    closeProfil(){
+        this.$emit("profil");
+    },
+    deleteUser(){
+        axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, { headers: {
+        token: localStorage.getItem("token")
+        }})
+      .then((res) => {
+        this.$emit("deleteuser");
+      })
+      .catch(console.error);
     }
   },
   watch: {
