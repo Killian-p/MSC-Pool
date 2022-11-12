@@ -31,13 +31,13 @@
         <h1>TEAMS LIST</h1>
         <div class="dataLine">
           <p class="data little">Team ID</p>
-          <p class="data little">Manager's Id</p>
+          <p class="data little">Manager</p>
           <p class="data little">Team's Name</p>
         </div>
-        <div v-for="team in teams">
+        <div v-for="team in this.teams">
           <div class="dataLine" @click="(this.selectedTeamId = team.id), (this.teamsUsers = team.users), getDataTeam(team), createChart(), setUsersThatAreNotInSelectedTeam()">
             <p class="data little">{{ team.id }}</p>
-            <p class="data little">{{ team.manager_id }}</p>
+            <p class="data little">{{ team.managerName }}</p>
             <p class="data little">{{ team.name }}</p>
           </div>
         </div>
@@ -100,12 +100,13 @@ export default {
   },
   data() {
     return {
+      managersNames : null,
       users: null,
       managers: null,
       selectedManagerId: null,
       teamName: null,
       teams: null,
-      teamsUsers: null,
+      teamsUsers: [],
       selectedTeamId: null,
       usersNotInTeam: [],
       usersOfTeam: [],
@@ -169,8 +170,18 @@ export default {
       axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
-        console.log(res.data.data)
         this.teams = res.data.data.sort((a,b) => {return a.name > b.name})
+        let manager = null
+        this.teams.forEach(team => {
+          manager = this.users.filter(user => user.id === team.manager_id)
+          team.managerName = manager[0].username
+          // console.log(this.managerName);
+          // console.log(manager);
+          // console.log(this.users.filter(user => user.id === team.manager_id));
+          // console.log(this.users.filter(user => user.id === team.manager_id));
+
+          console.log(team.managerName)
+        })
       }
       )
     },
@@ -194,7 +205,10 @@ export default {
       headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
-        console.log(res)
+        let manager = null
+        this.teamsUsers=[]
+        manager = this.users.filter(user => user.id === res.data.data.manager_id)
+        res.data.data.managerName = manager[0].username
         this.teams.push(res.data.data)
       }).catch(console.error)
     },
@@ -224,7 +238,6 @@ export default {
       headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
-          console.log(res)
           this.teamsUsers.push(user)
           this.setUsersThatAreNotInSelectedTeam()
           // this.usersNotInTeam.filter((user) => user.id !== user.id)
@@ -251,17 +264,20 @@ export default {
         headers: {
         token: localStorage.getItem("token")
       }}).then(res => {
-          console.log(res)
           this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id)
           this.setUsersThatAreNotInSelectedTeam()
         }).catch(console.error)
       },
       setUsersThatAreNotInSelectedTeam(){
         this.usersIds = this.users.map(elem => elem.id)
-        this.selectedTeamsUsersIds = this.teamsUsers.map(elem => elem.id)
-        // this.usersNotInSelectedTeam = this.usersIds.filter(x => !this.selectedTeamsUsersIds.includes(x))
-        this.usersNotInTeam = this.users.filter(user => !this.selectedTeamsUsersIds.includes(user.id))
-        console.log(this.usersNotInTeam);
+        if(this.teamsUsers !== undefined){
+          this.selectedTeamsUsersIds = this.teamsUsers.map(elem => elem.id)
+          this.usersNotInTeam = this.users.filter(user => !this.selectedTeamsUsersIds.includes(user.id))
+        }
+        else{
+          this.selectedTeamsUsersIds = []
+          this.usersNotInTeam = this.users
+        }
     },
     // removeUserFromSelectedTeam(user) {
     //   axios
@@ -281,7 +297,6 @@ export default {
       this.workHours = [];
       this.labelDate = [];
       this.dataWork = [];
-      console.log(user);
       user.workingtimes.forEach((_) => {
         this.arrayStart = _.start.split("T");
         this.arrayEnd = _.end.split("T");
@@ -318,7 +333,8 @@ export default {
       this.workHours = [];
       this.labelDate = [];
       this.dataWork = [];
-      team.users.forEach((i) => {
+      if(team.users !== undefined){
+        team.users.forEach((i) => {
         i.workingtimes.forEach((_) => {
           this.arrayStart = _.start.split("T");
           this.arrayEnd = _.end.split("T");
@@ -349,6 +365,7 @@ export default {
           this.date();
         });
       });
+      }
     },
     date() {
       this.dataWork.sort((a, b) => new Date(a.date) - new Date(b.date));
