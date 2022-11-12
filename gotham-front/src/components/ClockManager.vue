@@ -89,27 +89,6 @@ export default {
 </script>
 
 <style scoped>
-.button-clock {
-  /* border-radius: 45px; */
-  /* width: 10vw; */
-  /* height: 5vh; */
-  /* margin-top: 30px; */
-  /* margin-left: 60px; */
-}
-.button-in {
-  background-color: #3c4048;
-  color: #00abb3;
-}
-.button-in:hover {
-  background-color: #00abb3;
-  color: #3c4048;
-}
-
-.button-out {
-  background-color: #00abb3;
-  color: #3c4048;
-}
-
 .clock {
   padding: 10px;
   display: flex;
@@ -120,10 +99,5 @@ export default {
   width: 155px;
   background-color: #b2b2b2;
   font-size: small;
-}
-
-.sub {
-  margin-top: 10px;
-  margin-left: 20px;
 }
 </style>

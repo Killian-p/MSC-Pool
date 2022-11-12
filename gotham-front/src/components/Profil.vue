@@ -27,46 +27,50 @@
 </template>
 
 <script>
-import axios from 'axios'   
+import axios from "axios";
 export default {
-  components: {
-  },
+  components: {},
   props: {
     idUser: {
       type: Number,
-    }
+    },
   },
-  data () {
+  data() {
     return {
-        users: [],
-        currentUser: null,
-    }
+      users: [],
+      currentUser: null,
+    };
   },
-  mounted () {
-    
-  },
-  created () {
+  mounted() {},
+  created() {
     this.getUser();
   },
-  computed: {
-  },
+  computed: {},
   methods: {
-    getUser(){
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`)
-        .then(res => {
-            this.currentUser = res.data.data
-        });
+    getUser() {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`).then((res) => {
+        this.currentUser = res.data.data;
+      });
     },
-    updateUser(){
-        axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, {
+    updateUser() {
+      axios
+        .put(
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`,
+          {
             user: {
-                username: this.currentUser.username,
-                email: this.currentUser.email,
-            }
-        },{
+              username: this.currentUser.username,
+              email: this.currentUser.email,
+            },
+          },
+          {
             headers: {
-                token: localStorage.getItem("token")
-            }
+              token: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          alert("Update successful");
+          this.currentUser = res.data.data;
         })
         .then(res => {
             alert("Update successful")
@@ -86,58 +90,57 @@ export default {
       .catch(console.error);
     }
   },
-  watch: {
-  }
-}
+  watch: {},
+};
 </script>
 
 <style scoped>
-.navUser{
-    background-color: rgb(173, 173, 238);
-    position: relative;
-    top: 0;
-    width: 100%;
-    border: 1px;
-    height: 20vh;
+.navUser {
+  background-color: rgb(173, 173, 238);
+  position: relative;
+  top: 0;
+  width: 100%;
+  border: 1px;
+  height: 20vh;
 }
-.nav{
-    justify-content: space-between;
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-.box{
-    display: flex;
-    justify-content: center;
-    width: 50vw;
+.nav {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
-.createUser{
-    flex-direction: column;
+.box {
+  display: flex;
+  justify-content: center;
+  width: 50vw;
 }
 
-.profilModal{
-    position: fixed;
-    background-color: #d9d9d9;
-    border-radius: 16px;
-    width: 400px;
-    height: 200px;
-    border: solid #3c4048 1px;
-    opacity: 2;
-    padding-top: 15px;
+.createUser {
+  flex-direction: column;
 }
 
-.background{
-    background-color: black;
-    opacity: 50%;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 215px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
+.profilModal {
+  position: fixed;
+  background-color: #d9d9d9;
+  border-radius: 16px;
+  width: 400px;
+  height: 200px;
+  border: solid #3c4048 1px;
+  opacity: 2;
+  padding-top: 15px;
+}
+
+.background {
+  background-color: black;
+  opacity: 50%;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 215px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
 }
 </style>
