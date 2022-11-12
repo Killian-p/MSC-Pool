@@ -1,22 +1,29 @@
 <template>
-  <div class="background"></div>
-  <div class="profilModal">
-    <div v-if="currentUser">
-      <div style="display: flex; justify-content: center">
-        <label>Username: </label>
-        <input type="text" v-model="currentUser.username" />
-      </div>
-      <div style="display: flex; justify-content: center">
-        <label>email: </label>
-        <input type="text" v-model="currentUser.email" />
-      </div>
-      <div style="display: flex; justify-content: center">
-        <label>role: </label>
-        {{ currentUser.roles }}
-      </div>
+    <div class="background" @click="closeProfil">
     </div>
-    <button @click="updateUser()">UPDATE USER</button>
-  </div>
+    <div class="profilModal">
+        <div v-if="currentUser">
+            <div style="display: flex;justify-content:center">
+                <label>Username: </label>
+                <input type="text" v-model="currentUser.username"/>
+                
+            </div>
+            <div style="display: flex;justify-content:center">
+                <label>email: </label>
+                <input type="text" v-model="currentUser.email"/>
+            </div>
+            <div style="display: flex;justify-content:center">
+                <label>role: </label>
+                {{currentUser.roles}}
+            </div>
+            </div>
+                <button @click="updateUser()">
+                    UPDATE USER
+                </button>
+                <button @click="deleteUser">
+                    DELETE USER
+                </button>
+        </div>
 </template>
 
 <script>
@@ -65,8 +72,23 @@ export default {
           alert("Update successful");
           this.currentUser = res.data.data;
         })
-        .catch(console.error);
+        .then(res => {
+            alert("Update successful")
+            this.currentUser = res.data.data
+        }).catch(console.error);
     },
+    closeProfil(){
+        this.$emit("profil");
+    },
+    deleteUser(){
+        axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, { headers: {
+        token: localStorage.getItem("token")
+        }})
+      .then((res) => {
+        this.$emit("deleteuser");
+      })
+      .catch(console.error);
+    }
   },
   watch: {},
 };

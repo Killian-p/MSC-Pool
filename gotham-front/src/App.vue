@@ -55,7 +55,7 @@ import Login from "./components/Login.vue";
 
       <UsersManager v-if="currentComponent == 'usersManager'" :id-user="idCurrentUser"> </UsersManager>
 
-      <Profil v-if="showProfile" :id-user="idCurrentUser"> </Profil>
+      <Profil v-if="showProfile" :id-user="idCurrentUser" @profil="triggerProfil" @deleteuser="deleteUserFromProfil"> </Profil>
 
       <Login v-if="currentComponent == 'Login' && idCurrentUser == null" @logged="loggin" @username="setUsername" :id-user="idCurrentUser"> </Login>
     </div>
@@ -109,6 +109,11 @@ export default {
     },
     triggerProfil(){
       this.showProfile = this.showProfile ? false : true;
+    },
+    deleteUserFromProfil(){
+      localStorage.removeItem("token");
+      this.currentComponent = "Login";
+      (this.currentUserRole = null), (this.idCurrentUser = null), (this.connected = false);
     }
   },
 };
