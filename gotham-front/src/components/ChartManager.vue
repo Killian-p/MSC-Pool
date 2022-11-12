@@ -58,8 +58,6 @@ export default {
       arrayStart: null,
       arrayEnd: null,
 
-      filteredData: null, //?
-
       workTime: null,
       nightTimes: null,
       nightTimesBis: null,
@@ -74,8 +72,6 @@ export default {
       searchEnd: null,
       searchStart: null,
 
-      // startingDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("Z")[0].slice(0,16),
-      // endingDate: new Date().toISOString().split("Z")[0].slice(0,16),
     };
   },
   async mounted() {
@@ -422,11 +418,6 @@ export default {
 };
 </script>
 <style scoped>
-.pageContainer {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
 .container {
   display: flex;
   flex-direction: column;

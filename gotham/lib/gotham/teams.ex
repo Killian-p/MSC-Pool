@@ -129,10 +129,7 @@ defmodule Gotham.Teams do
   end
 
   def delete_team_user(team, user) do
-    IO.inspect team.users
-    IO.inspect user
     users = List.delete(team.users, user)
-    IO.inspect users
 
     with {:ok, _struct} <-
       team
