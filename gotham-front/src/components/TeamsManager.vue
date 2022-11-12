@@ -1,40 +1,38 @@
 <template>
   <div class="container">
-    <div class="containerLine">
+    <div class="cardContainer">
       <div class="whiteCard">
-        <h1>create a team:</h1>
-        <label> Team's name: </label>
-        <input type="text" placeholder="Enter your Team's name." v-model="teamName" />
-        <div v-if="userRole === 'ADMIN'">
-          <label> Selecter your manager: </label>
-          <table>
-            <thead>
-              <tr>
-                <th>UserName</th>
-                <th>Email</th>
-                <th>Role</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="manager in managers">
-                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id, setUsersThatAreNotInSelectedTeam()">{{ manager.username }}</td>
-                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id, setUsersThatAreNotInSelectedTeam()">{{ manager.email }}</td>
-                <td :style="this.selectedManagerId == manager.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedManagerId = manager.id, setUsersThatAreNotInSelectedTeam()">{{ manager.roles }}</td>
-              </tr>
-            </tbody>
-          </table>
+        <h1>Create team:</h1>
+        <div class="labelInput">
+          <label> Team's name: </label>
+          <input type="text" placeholder="Enter your Team's name." v-model="teamName" />
+        </div>
+        <div v-if="userRole === 'ADMIN'" class="containerSelectManager">
+          <label> Select team's manager: </label>
+          <div class="dataLine">
+            <p class="data little bold">UserName</p>
+            <p class="data little bold">Email</p>
+            <!-- <p class="data little">Role</p> -->
+          </div>
+          <div v-for="manager in managers" class="lineContainer">
+            <div class="dataLine" @click="(this.selectedManagerId = manager.id), setUsersThatAreNotInSelectedTeam()">
+              <p class="data little">{{ manager.username }}</p>
+              <p class="data little">{{ manager.email }}</p>
+              <!-- <p class="data little">{{ manager.roles }}</p> -->
+            </div>
+          </div>
           <button @click="createATeam(), setUsersThatAreNotInSelectedTeam()">CREATE A TEAM</button>
         </div>
       </div>
 
-      <div class="whiteCard">
+      <div class="whiteCard lineContainer">
         <h1>TEAMS LIST</h1>
         <div class="dataLine">
           <p class="data little">Team ID</p>
           <p class="data little">Manager's Id</p>
           <p class="data little">Team's Name</p>
         </div>
-        <div v-for="team in teams">
+        <div v-for="team in teams" class="lineContainer">
           <div class="dataLine" @click="(this.selectedTeamId = team.id), (this.teamsUsers = team.users), getDataTeam(team), createChart(), setUsersThatAreNotInSelectedTeam()">
             <p class="data little">{{ team.id }}</p>
             <p class="data little">{{ team.manager_id }}</p>
@@ -43,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="containerLine">
+    <div class="cardContainer">
       <div class="whiteCard">
         <h1>TEAM'S USERS LIST</h1>
         <table>
@@ -132,14 +130,29 @@ export default {
   },
   computed: {},
   methods: {
-    getUsers(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, { headers: {
-        token: localStorage.getItem("token")
-      }}).then(res => {
-        this.users = res.data.data.sort((a,b) => {return a.email > b.email})
-        this.employees = res.data.data.filter((elem) => elem.roles === "EMPLOYEE").sort((a,b) => {return a.email > b.email})
-        this.managers = res.data.data.filter((elem) => elem.roles === "MANAGER").sort((a,b) => {return a.email > b.email})
-      }).catch(console.error);
+    getUsers() {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          this.users = res.data.data.sort((a, b) => {
+            return a.email > b.email;
+          });
+          this.employees = res.data.data
+            .filter((elem) => elem.roles === "EMPLOYEE")
+            .sort((a, b) => {
+              return a.email > b.email;
+            });
+          this.managers = res.data.data
+            .filter((elem) => elem.roles === "MANAGER")
+            .sort((a, b) => {
+              return a.email > b.email;
+            });
+        })
+        .catch(console.error);
     },
     // getUsers() {
     //   axios
@@ -165,14 +178,19 @@ export default {
     //     })
     //     .catch(console.error);
     // },
-    getAllTeams(){
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { headers: {
-        token: localStorage.getItem("token")
-      }}).then(res => {
-        console.log(res.data.data)
-        this.teams = res.data.data.sort((a,b) => {return a.name > b.name})
-      }
-      )
+    getAllTeams() {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          this.teams = res.data.data.sort((a, b) => {
+            return a.name > b.name;
+          });
+        });
     },
     // getAllTeams() {
     //   axios
@@ -187,16 +205,27 @@ export default {
     //       });
     //     });
     // },
-    createATeam(){
-      axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, { team:{
-        name: this.teamName,
-        manager_id: this?.selectedManagerId ?? this.idUser}}, {
-      headers: {
-        token: localStorage.getItem("token")
-      }}).then(res => {
-        console.log(res)
-        this.teams.push(res.data.data)
-      }).catch(console.error)
+    createATeam() {
+      axios
+        .post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/teams`,
+          {
+            team: {
+              name: this.teamName,
+              manager_id: this?.selectedManagerId ?? this.idUser,
+            },
+          },
+          {
+            headers: {
+              token: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          this.teams.push(res.data.data);
+        })
+        .catch(console.error);
     },
     // createATeam() {
     //   axios
@@ -219,16 +248,24 @@ export default {
     //     })
     //     .catch(console.error);
     // },
-    addUserToSelectedTeam(user){
-      axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {}, {
-      headers: {
-        token: localStorage.getItem("token")
-      }}).then(res => {
-          console.log(res)
-          this.teamsUsers.push(user)
-          this.setUsersThatAreNotInSelectedTeam()
+    addUserToSelectedTeam(user) {
+      axios
+        .put(
+          `${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`,
+          {},
+          {
+            headers: {
+              token: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          this.teamsUsers.push(user);
+          this.setUsersThatAreNotInSelectedTeam();
           // this.usersNotInTeam.filter((user) => user.id !== user.id)
-      }).catch(console.error)
+        })
+        .catch(console.error);
     },
     // addUserToSelectedTeam(user) {
     //   axios
@@ -246,22 +283,26 @@ export default {
     //     })
     //     .catch(console.error);
     // },
-    removeUserFromSelectedTeam(user){
-      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
-        headers: {
-        token: localStorage.getItem("token")
-      }}).then(res => {
-          console.log(res)
-          this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id)
-          this.setUsersThatAreNotInSelectedTeam()
-        }).catch(console.error)
-      },
-      setUsersThatAreNotInSelectedTeam(){
-        this.usersIds = this.users.map(elem => elem.id)
-        this.selectedTeamsUsersIds = this.teamsUsers.map(elem => elem.id)
-        // this.usersNotInSelectedTeam = this.usersIds.filter(x => !this.selectedTeamsUsersIds.includes(x))
-        this.usersNotInTeam = this.users.filter(user => !this.selectedTeamsUsersIds.includes(user.id))
-        console.log(this.usersNotInTeam);
+    removeUserFromSelectedTeam(user) {
+      axios
+        .delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${this.selectedTeamId}/users/${user.id}`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id);
+          this.setUsersThatAreNotInSelectedTeam();
+        })
+        .catch(console.error);
+    },
+    setUsersThatAreNotInSelectedTeam() {
+      this.usersIds = this.users.map((elem) => elem.id);
+      this.selectedTeamsUsersIds = this.teamsUsers.map((elem) => elem.id);
+      // this.usersNotInSelectedTeam = this.usersIds.filter(x => !this.selectedTeamsUsersIds.includes(x))
+      this.usersNotInTeam = this.users.filter((user) => !this.selectedTeamsUsersIds.includes(user.id));
+      console.log(this.usersNotInTeam);
     },
     // removeUserFromSelectedTeam(user) {
     //   axios
@@ -465,7 +506,14 @@ export default {
   background-color: white;
   border-radius: 16px;
   padding: 20px;
-  flex: 1;
+  /* background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1; */
 }
 .container {
   display: flex;
@@ -473,7 +521,7 @@ export default {
   justify-content: center;
   gap: 20px;
 }
-.containerLine {
+.cardContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -486,8 +534,35 @@ export default {
 .data {
   display: flex;
   justify-content: center;
+  margin: 0px;
 }
 .little {
+  flex: 1;
+}
+.bold {
+  font-weight: bold;
+}
+.lineContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.labelInput {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.createContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.containerSelectManager {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* align-items: center; */
   flex: 1;
 }
 </style>
