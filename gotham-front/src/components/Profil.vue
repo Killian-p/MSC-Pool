@@ -1,29 +1,26 @@
 <template>
-    <div v-if="currentUser">
-        <div>
-        ~My Profile~
+    <div class="background">
     </div>
-    <div>
-        <button @click="updateUser()">
-            UPDATE USER
-        </button>
-    </div>
-    <div style='background-color: #3C4048;color: #00ABB3'>
-        <a>Username: </a>
-        <input style='background-color: #3C4048;color: #00ABB3' type="text" v-model="currentUser.username"/>
-    </div>
-    <div style='background-color: #3C4048;color: #00ABB3'>
-        <a>email: </a>
-        <input style='background-color: #3C4048;color: #00ABB3' type="text" v-model="currentUser.email"/>
-    </div>
-    <div style='background-color: #3C4048;color: #00ABB3'>
-        <a>role: </a>
-        <a>
-            {{currentUser.roles}}
-        </a>
-    </div>
-    </div>
-    
+    <div class="profilModal">
+        <div v-if="currentUser">
+            <div style="display: flex;justify-content:center">
+                <label>Username: </label>
+                <input type="text" v-model="currentUser.username"/>
+                
+            </div>
+            <div style="display: flex;justify-content:center">
+                <label>email: </label>
+                <input type="text" v-model="currentUser.email"/>
+            </div>
+            <div style="display: flex;justify-content:center">
+                <label>role: </label>
+                {{currentUser.roles}}
+            </div>
+            </div>
+            <button @click="updateUser()">
+                    UPDATE USER
+                </button>
+        </div>
 </template>
 
 <script>
@@ -103,5 +100,29 @@ export default {
 
 .createUser{
     flex-direction: column;
+}
+
+.profilModal{
+    position: fixed;
+    background-color: #d9d9d9;
+    border-radius: 16px;
+    width: 400px;
+    height: 200px;
+    border: solid #3c4048 1px;
+    opacity: 2;
+    padding-top: 15px;
+}
+
+.background{
+    background-color: black;
+    opacity: 50%;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 215px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
 }
 </style>
