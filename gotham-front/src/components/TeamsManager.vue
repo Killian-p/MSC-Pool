@@ -33,12 +33,16 @@
           <p class="data little">Team ID</p>
           <p class="data little">Manager</p>
           <p class="data little">Team's Name</p>
+          <p class="data little"> Actions </p>
         </div>
         <div v-for="team in this.teams">
           <div class="dataLine" @click="(this.selectedTeamId = team.id), (this.teamsUsers = team.users), getDataTeam(team), createChart(), setUsersThatAreNotInSelectedTeam()">
             <p class="data little">{{ team.id }}</p>
             <p class="data little">{{ team.managerName }}</p>
             <p class="data little">{{ team.name }}</p>
+            <button @click="deleteTeam(team)">
+              DELETE
+            </button>
           </div>
         </div>
       </div>
@@ -473,6 +477,16 @@ export default {
         },
       });
     },
+    deleteTeam(deletedteam){
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/teams/${deletedteam.id}`, {
+      headers: {
+        token: localStorage.getItem("token")
+      }}).then(
+        this.teams = this.teams.filter((team) => team.id !== deletedteam.id),
+        this.usersNotInTeam=[]
+      )
+
+    }
   },
   watch: {},
 };
