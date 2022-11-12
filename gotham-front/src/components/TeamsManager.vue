@@ -63,9 +63,9 @@
       </thead>
       <tbody>
         <tr v-for="team in teams">
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users, setUsersThatAreNotInSelectedTeam(team)">{{team.id}}</td>
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users, setUsersThatAreNotInSelectedTeam(team)">{{team.manager_id}}</td>
-          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users, setUsersThatAreNotInSelectedTeam(team)">{{team.name}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users, setUsersThatAreNotInSelectedTeam()">{{team.id}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users, setUsersThatAreNotInSelectedTeam()">{{team.manager_id}}</td>
+          <td :style="this.selectedTeamId == team.id ? 'background-color: #00ABB3;color: #3C4048' : 'background-color: #3C4048;color: #00ABB3'" @click="this.selectedTeamId = team.id, this.teamsUsers=team.users, setUsersThatAreNotInSelectedTeam()">{{team.name}}</td>
         </tr>
       </tbody>
     </table>
@@ -99,7 +99,7 @@
         <th> Email </th>
       </thead>
       <tbody>
-        <tr v-for="user in this.usersOfTeam">
+        <tr v-for="user in this.usersNotInTeam">
           <td >{{user.username}}</td>
           <td >{{user.email}}</td>
           <button @click="this.addUserToSelectedTeam(user)"> ADD </button>
@@ -130,6 +130,7 @@
         teamsUsers: [],
         selectedTeamId: null,
         usersOfTeam: [],
+        usersNotInTeam: null,
       }
     },
     mounted () {
@@ -180,6 +181,8 @@
       }}).then(res => {
           console.log(res)
           this.teamsUsers.push(user)
+          this.setUsersThatAreNotInSelectedTeam()
+          // this.usersNotInTeam.filter((user) => user.id !== user.id)
       }).catch(console.error)
     },
     removeUserFromSelectedTeam(user){
@@ -189,27 +192,15 @@
       }}).then(res => {
           console.log(res)
           this.teamsUsers = this.teamsUsers.filter((elem) => elem.id !== user.id)
+          this.setUsersThatAreNotInSelectedTeam()
         }).catch(console.error)
       },
-      setUsersThatAreNotInSelectedTeam(team){
+      setUsersThatAreNotInSelectedTeam(){
         this.usersIds = this.users.map(elem => elem.id)
         this.selectedTeamsUsersIds = this.teamsUsers.map(elem => elem.id)
-        this.usersNotInSelectedTeam = this.usersIds.filter(x => !this.selectedTeamsUsersIds.includes(x))
-        console.log("user ids", this.usersIds);
-        console.log("selected team's users ids",this.selectedTeamsUsersIds);
-        console.log("ids that are not in selected team id list",this.usersNotInSelectedTeam);
-        this.UsersNotInTeam = this.users.filter(user => !this.usersIds.find(id => (id === user.id)))
-        console.log(this.UsersNotInTeam);
-        // this.UsersNotInSelectedTeamsIds = this.usersIds.filter(x => !this.usersIds.includes(x))
-        // console.log("Users of Selected Team", team.users)
-        // delete team.users.workingtimes;
-        // console.log("Users of Selected Team APRES CHANGEMENT", team.users)
-        // this.usersOfTeam = this.users.filter(x => !team.users.includes(x))
-        // console.log("team", team)
-        // console.log("Users of Selected Team", team.users)
-        // console.log("Tableau de tout les users", this.users);
-        // console.log("Tableau resultat", this.usersOfTeam);
-        // console.log(this.usersOfTeam);
+        // this.usersNotInSelectedTeam = this.usersIds.filter(x => !this.selectedTeamsUsersIds.includes(x))
+        this.usersNotInTeam = this.users.filter(user => !this.selectedTeamsUsersIds.includes(user.id))
+        console.log(this.usersNotInTeam);
     }
   },
     watch: {
