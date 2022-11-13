@@ -22,10 +22,10 @@
                 <p class="data little">{{ manager.email }}</p>
               </div>
             </div>
-            <div class="createButtonContainer">
+          </div>
+          <div class="createButtonContainer">
               <button class="createButton" @click="createATeam(), setUsersThatAreNotInSelectedTeam()">Create team</button>
             </div>
-          </div>
         </div>
       </div>
 
@@ -227,7 +227,7 @@ export default {
       }
       if(this.userRole === "MANAGER"){
         axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams/users/${idUser}`, {
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams/users/${this.idUser}`, {
           headers: {
             token: localStorage.getItem("token"),
           },
