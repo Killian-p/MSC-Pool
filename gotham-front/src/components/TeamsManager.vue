@@ -216,12 +216,6 @@ export default {
           this.teams.forEach((team) => {
             manager = this.users.filter((user) => user.id === team.manager_id);
             team.managerName = manager[0].username;
-            // console.log(this.managerName);
-            // console.log(manager);
-            // console.log(this.users.filter(user => user.id === team.manager_id));
-            // console.log(this.users.filter(user => user.id === team.manager_id));
-
-            // console.log(team.managerName)
           });
         });
       }
@@ -240,12 +234,6 @@ export default {
           this.teams.forEach((team) => {
             manager = this.users.filter((user) => user.id === team.manager_id);
             team.managerName = manager[0].username;
-            // console.log(this.managerName);
-            // console.log(manager);
-            // console.log(this.users.filter(user => user.id === team.manager_id));
-            // console.log(this.users.filter(user => user.id === team.manager_id));
-
-            // console.log(team.managerName)
           });
         });
       }
@@ -330,6 +318,7 @@ export default {
           // this.usersNotInTeam.filter((user) => user.id !== user.id)
         })
         .catch(console.error);
+        this.getAllTeams()
     },
     // addUserToSelectedTeam(user) {
     //   axios

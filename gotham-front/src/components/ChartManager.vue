@@ -128,7 +128,7 @@ export default {
             },
           },
         },
-      });
+      }),
       new Chart(document.getElementById("doughnut-chart"), {
         type: "doughnut",
         data: {
@@ -153,7 +153,7 @@ export default {
             },
           },
         },
-      });
+      }),
       new Chart(document.getElementById("line-chart1"), {
         type: "line",
         data: {
@@ -193,7 +193,7 @@ export default {
             },
           },
         },
-      });
+      }),
       new Chart(document.getElementById("line-chart2"), {
         type: "line",
         data: {
@@ -233,7 +233,7 @@ export default {
             },
           },
         },
-      });
+      }),
       new Chart(document.getElementById("line-chart3"), {
         type: "line",
         data: {
