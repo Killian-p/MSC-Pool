@@ -60,7 +60,8 @@ defmodule GothamWeb.ClockController do
             claims["user_id"] == String.to_integer(userId) ->
               cond do
                 Clocks.user_has_clock(userId) ->
-                  clock = Clocks.get_clock!(userId)
+                  clockTmp = Clocks.get_user_clock(userId)
+                  clock = Clocks.get_clock!(clockTmp.id)
                   data = %{start: clock.time, end: Map.get(clock_params, "time"), user_id: userId}
                   with {:ok, %Clock{} = clock} <- Clocks.update_clock(clock, Map.put(clock_params, "status", !clock.status)) do
                     cond do
@@ -73,6 +74,7 @@ defmodule GothamWeb.ClockController do
                     render(conn, "show.json", clock: clock)
                   end
                 true ->
+                  IO.inspect "testt"
                   with {:ok, %Clock{} = clock} <- Clocks.create_clock(Map.put(clock_params, "user_id", userId)) do
                     render(conn, "show.json", clock: clock)
                   end

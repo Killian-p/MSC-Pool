@@ -108,4 +108,8 @@ defmodule Gotham.Clocks do
       select: [:status]
     )
   end
+
+  def get_user_clock(userId) do
+    Repo.one(from clock in "clocks", where: clock.user_id == ^String.to_integer(userId), select: [:id, :time, :status, :user_id])
+  end
 end

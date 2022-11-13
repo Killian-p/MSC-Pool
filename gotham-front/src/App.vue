@@ -39,7 +39,7 @@ import Login from "./components/Login.vue";
           </div>
         </div>
         <div class="box">
-          <button class="form-control nav-buttons" @click="logout" style="background-color: #3c4048; color: #00abb3; position: fixed; margin-top: 175px">Se déconnecter</button>
+          <button class="form-control nav-buttons" @click="logout" style="background-color: #3c4048; color: #00abb3; position: fixed; bottom: 130px">Logout</button>
         </div>
       </div>
       <ClockManager :id-user="idCurrentUser"> </ClockManager>
