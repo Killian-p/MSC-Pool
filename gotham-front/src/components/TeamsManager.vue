@@ -17,7 +17,7 @@
               </div>
             </div>
             <div class="lineContainer littleVertScroll">
-              <div class="dataLine" v-for="manager in managers" @click="(this.selectedManagerId = manager.id), setUsersThatAreNotInSelectedTeam()">
+              <div class="dataLine" v-for="manager in managers" :style="this.selectedManagerId == manager.id ? 'background-color: #d9d9d9' : ''" @click="(this.selectedManagerId = manager.id), setUsersThatAreNotInSelectedTeam()">
                 <p class="data little">{{ manager.username }}</p>
                 <p class="data little">{{ manager.email }}</p>
               </div>
