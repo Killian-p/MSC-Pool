@@ -275,7 +275,6 @@ export default {
         },
       });
     },
-
     async getWorkingTimes() {
       await axios
         .get(`${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`, {

@@ -5,11 +5,11 @@
         <form v-on:submit.prevent="createWorkingTime" method="post" class="formDate">
           <div class="labelInput">
             <label> starting date : </label>
-            <input type="datetime-local" id="startingDate" v-model="startingDate" required />
+            <input type="datetime-local" id="startingDate" v-model="startingDateCreate" required />
           </div>
           <div class="labelInput">
             <label> ending date : </label>
-            <input type="datetime-local" id="endingDate" v-model="endingDate" required />
+            <input type="datetime-local" id="endingDate" v-model="endingDateCreate" required />
           </div>
           <button type="submit">Create</button>
         </form>
@@ -18,11 +18,11 @@
         <form v-on:submit.prevent="getWorkingTimesForAPerdiod" method="post" class="formDate">
           <div class="labelInput">
             <label> starting date : </label>
-            <input type="datetime-local" id="startingDate" v-model="startingDate" required />
+            <input type="datetime-local" id="startingDate" v-model="startingDateSearch" required />
           </div>
           <div class="labelInput">
             <label> ending date : </label>
-            <input type="datetime-local" id="endingDate" v-model="endingDate" required />
+            <input type="datetime-local" id="endingDate" v-model="endingDateSearch" required />
           </div>
           <button type="submit">Search</button>
         </form>
@@ -72,8 +72,10 @@ export default {
   },
   data() {
     return {
-      startingDate: null,
-      endingDate: null,
+      startingDateCreate: null,
+      endingDateCreate: null,
+      startingDateSearch: null,
+      endingDateSearch: null,
       datas: [],
       updateMode: false,
       idSelectedWorkingTime: null,
@@ -120,8 +122,8 @@ export default {
             token: localStorage.getItem("token"),
           },
           params: {
-            start: new Date(this.startingDate).toISOString(),
-            end: new Date(this.endingDate).toISOString(),
+            start: new Date(this.startingDateSearch).toISOString(),
+            end: new Date(this.endingDateSearch).toISOString(),
           },
         })
         .then((res) => {
@@ -143,8 +145,8 @@ export default {
           `${import.meta.env.VITE_BACKEND_URL}/api/workingtimes/${this.idUser}`,
           {
             workingtime: {
-              start: new Date(this.startingDate).toISOString(),
-              end: new Date(this.endingDate).toISOString(),
+              start: new Date(this.startingDateCreate).toISOString(),
+              end: new Date(this.endingDateCreate).toISOString(),
             },
           },
           {

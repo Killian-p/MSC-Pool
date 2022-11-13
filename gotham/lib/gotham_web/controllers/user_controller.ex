@@ -68,6 +68,18 @@ defmodule GothamWeb.UserController do
         with {:ok, %User{}} <- Users.delete_user(user) do
           send_resp(conn, :no_content, "")
         end
+      GothamWeb.Token.is_token_valid(List.first(token), ["EMPLOYEE", "MANAGER", "ADMIN"]) ->
+        user = Users.get_user!(id)
+        with {:ok, claims} <- GothamWeb.Token.get_token_data(List.first(token)) do
+          cond do
+            user.id == claims["user_id"] ->
+              with {:ok, %User{}} <- Users.delete_user(user) do
+                send_resp(conn, :no_content, "")
+              end
+            true ->
+              put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
+          end
+        end
       true ->
         put_status(conn, :unauthorized) |> json(%{message: "You're not authorized to perform this action"})
     end

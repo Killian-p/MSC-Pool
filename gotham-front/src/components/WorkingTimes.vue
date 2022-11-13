@@ -62,9 +62,7 @@ export default {
   methods: {
     calcPassedTime(start, end) {
       let mom = moment.utc(new Date(end) - new Date(start))
-      // let date = new Date(Date.UTC(time));
       return mom.format("HH:mm:ss");
-      // return `${date.getUTCMilliseconds()}:${date.getUTCHours()}:${date.getUTCHours()}`
     },
   },
   watch: {},
