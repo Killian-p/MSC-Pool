@@ -1,29 +1,26 @@
 <template>
-    <div class="background" @click="closeProfil">
+  <div class="background" @click="closeProfil"></div>
+  <div class="profilModal">
+    <div v-if="currentUser" class="formContainer">
+      <p class="title">My Account</p>
+      <div class="labelInput">
+        <label>email: </label>
+        <input type="text" v-model="currentUser.email" />
+      </div>
+      <div class="labelInput">
+        <label>Username: </label>
+        <input type="text" v-model="currentUser.username" />
+      </div>
+      <div class="labelInput">
+        <label>role: </label>
+        {{ currentUser.roles }}
+      </div>
+      <div class="buttonContainer">
+        <button @click="deleteUser">Delete account</button>
+        <button @click="updateUser()">Update</button>
+      </div>
     </div>
-    <div class="profilModal">
-        <div v-if="currentUser">
-            <div style="display: flex;justify-content:center">
-                <label>Username: </label>
-                <input type="text" v-model="currentUser.username"/>
-                
-            </div>
-            <div style="display: flex;justify-content:center">
-                <label>email: </label>
-                <input type="text" v-model="currentUser.email"/>
-            </div>
-            <div style="display: flex;justify-content:center">
-                <label>role: </label>
-                {{currentUser.roles}}
-            </div>
-            </div>
-                <button @click="updateUser()">
-                    UPDATE USER
-                </button>
-                <button @click="deleteUser">
-                    DELETE USER
-                </button>
-        </div>
+  </div>
 </template>
 
 <script>
@@ -72,30 +69,34 @@ export default {
           alert("Update successful");
           this.currentUser = res.data.data;
         })
-        .then(res => {
-            alert("Update successful")
-            this.currentUser = res.data.data
-        }).catch(console.error);
+        .then((res) => {
+          alert("Update successful");
+          this.currentUser = res.data.data;
+        })
+        .catch(console.error);
     },
-    closeProfil(){
-        this.$emit("profil");
+    closeProfil() {
+      this.$emit("profil");
     },
-    deleteUser(){
-        axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, { headers: {
-        token: localStorage.getItem("token")
-        }})
-      .then((res) => {
-        this.$emit("deleteuser");
-      })
-      .catch(console.error);
-    }
+    deleteUser() {
+      axios
+        .delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/${this.idUser}`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          this.$emit("deleteuser");
+        })
+        .catch(console.error);
+    },
   },
   watch: {},
 };
 </script>
 
 <style scoped>
-.navUser {
+/* .navUser {
   background-color: rgb(173, 173, 238);
   position: relative;
   top: 0;
@@ -118,17 +119,18 @@ export default {
 
 .createUser {
   flex-direction: column;
-}
+} */
 
 .profilModal {
   position: fixed;
-  background-color: #d9d9d9;
+  background-color: white;
   border-radius: 16px;
-  width: 400px;
-  height: 200px;
-  border: solid #3c4048 1px;
-  opacity: 2;
-  padding-top: 15px;
+  width: 300px;
+  /* height: 200px; */
+  /* border: solid #3c4048 1px; */
+  opacity: 1;
+  flex: 1;
+  padding: 20px;
 }
 
 .background {
@@ -142,5 +144,27 @@ export default {
   justify-content: center;
   align-items: center;
   position: fixed;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+.title {
+  font-weight: bold;
+  margin: 0;
+  font-size: 25px;
+}
+.labelInput {
+  display: flex;
+  width: 80%;
+  gap: 5px;
+}
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 70%;
 }
 </style>

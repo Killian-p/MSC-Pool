@@ -14,7 +14,7 @@
           <p class="data little">{{ worktime.user_id }}</p>
           <p class="data medium">{{ new Date(worktime.start).toLocaleString() }}</p>
           <p class="data medium">{{ new Date(worktime.end).toLocaleString() }}</p>
-          <p class="data medium">{{ new Date(new Date(worktime.end) - new Date(worktime.start)).toLocaleTimeString() }}</p>
+          <p class="data medium">{{ calcPassedTime(worktime.start, worktime.end) }}</p>
         </div>
       </div>
     </div>
@@ -23,6 +23,7 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 export default {
   props: {
     idUser: {
@@ -58,7 +59,14 @@ export default {
   },
   created() {},
   computed: {},
-  methods: {},
+  methods: {
+    calcPassedTime(start, end) {
+      let mom = moment.utc(new Date(end) - new Date(start))
+      // let date = new Date(Date.UTC(time));
+      return mom.format("HH:mm:ss");
+      // return `${date.getUTCMilliseconds()}:${date.getUTCHours()}:${date.getUTCHours()}`
+    },
+  },
   watch: {},
 };
 </script>
