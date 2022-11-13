@@ -43,7 +43,7 @@
           <input v-if="this.idSelectedWorkingTime === worktime.id" class="data medium" style="width: 220px" type="datetime-local" id="updateStartingDate" step="1" v-model="worktime.start" :readonly="!(this.idSelectedWorkingTime === worktime.id)" required />
           <input v-if="this.idSelectedWorkingTime === worktime.id" class="data medium" type="datetime-local" id="updateEndingDate" step="1" v-model="worktime.end" :readonly="!(this.idSelectedWorkingTime === worktime.id)" required />
 
-          <p class="data little">{{ new Date(new Date(worktime.end) - new Date(worktime.start)).toLocaleTimeString() }}</p>
+          <p class="data little">{{ calcPassedTime(worktime.start, worktime.end) }}</p>
           <div class="data little">
             <button v-if="!(this.idSelectedWorkingTime === worktime.id)" class="button" @click="deleteAWorkingTime(worktime.id)">
               <img src="../assets/icons8-trash-can.svg" />
@@ -63,6 +63,8 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
+
 export default {
   components: {},
   props: {
@@ -85,6 +87,10 @@ export default {
   created() {},
   computed: {},
   methods: {
+    calcPassedTime(start, end) {
+      let mom = moment.utc(new Date(end) - new Date(start))
+      return mom.format("HH:mm:ss");
+    },
     updateAWorkingTime(idWorkingTime, start, end) {
       axios
         .put(
