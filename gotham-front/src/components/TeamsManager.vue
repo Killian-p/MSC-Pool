@@ -22,10 +22,10 @@
                 <p class="data little">{{ manager.email }}</p>
               </div>
             </div>
-            <div class="createButtonContainer">
+          </div>
+          <div class="createButtonContainer">
               <button class="createButton" @click="createATeam(), setUsersThatAreNotInSelectedTeam()">Create team</button>
             </div>
-          </div>
         </div>
       </div>
 
@@ -201,7 +201,8 @@ export default {
     //     .catch(console.error);
     // },
     getAllTeams() {
-      axios
+      if(this.userRole === "ADMIN"){
+        axios
         .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams`, {
           headers: {
             token: localStorage.getItem("token"),
@@ -223,6 +224,32 @@ export default {
             // console.log(team.managerName)
           });
         });
+      }
+      if(this.userRole === "MANAGER"){
+        axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/teams/users/${this.idUser}`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          this.teams = res.data.data.sort((a, b) => {
+            return a.name > b.name;
+          });
+          let manager = null;
+          this.teams.forEach((team) => {
+            manager = this.users.filter((user) => user.id === team.manager_id);
+            team.managerName = manager[0].username;
+            // console.log(this.managerName);
+            // console.log(manager);
+            // console.log(this.users.filter(user => user.id === team.manager_id));
+            // console.log(this.users.filter(user => user.id === team.manager_id));
+
+            // console.log(team.managerName)
+          });
+        });
+      }
+      
     },
     // getAllTeams() {
     //   axios
@@ -295,6 +322,9 @@ export default {
           }
         )
         .then((res) => {
+          if(this.teamsUsers === undefined){
+            this.teamsUsers = []
+          }
           this.teamsUsers.push(user);
           this.setUsersThatAreNotInSelectedTeam();
           // this.usersNotInTeam.filter((user) => user.id !== user.id)
